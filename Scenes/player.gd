@@ -3,8 +3,8 @@ extends CharacterBody2D
 @export var horizontal_acceleration := 100
 @export var horizontal_deceleration := 800
 @export var max_horizontal_speed := 40
-@export var jump_velocity := -40
-@export var gravity_up := 120
+@export var jump_velocity := -50
+@export var gravity_up := 150
 @export var gravity_down := 300
 
 
