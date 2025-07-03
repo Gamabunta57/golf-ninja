@@ -9,8 +9,6 @@ extends CharacterBody2D
 
 
 func _physics_process(delta: float) -> void:
-
-	
 	# Gravity
 	if not is_on_floor():
 		if velocity.y <= 0:
@@ -25,9 +23,16 @@ func _physics_process(delta: float) -> void:
 		velocity.x = clamp(velocity.x, -max_horizontal_speed, max_horizontal_speed)
 	else:
 		velocity.x = move_toward(velocity.x, 0, horizontal_deceleration * delta)
-
+	
 	# Jumping
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = jump_velocity
+	
+	# Down the one-way
+	if Input.is_action_just_pressed("down") and is_on_floor():
+		print('down')
+		
+		velocity.y = 1
+
 
 	move_and_slide()

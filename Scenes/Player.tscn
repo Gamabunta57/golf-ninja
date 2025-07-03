@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bwexbr086g5sj" path="res://Assets/player.png" id="1_rpqav"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qbkls"]
-size = Vector2(2, 4)
+size = Vector2(2, 3)
 
 [node name="Player" type="CharacterBody2D"]
 collision_mask = 2
@@ -16,7 +16,7 @@ scale = Vector2(0.2, 0.2)
 texture = ExtResource("1_rpqav")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -2)
+position = Vector2(0, -1.5)
 shape = SubResource("RectangleShape2D_qbkls")
 
 [node name="Camera2D" type="Camera2D" parent="."]
