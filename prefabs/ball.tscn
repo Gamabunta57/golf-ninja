@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3 uid="uid://bdovvt3n4n8yy"]
+
+[ext_resource type="Script" uid="uid://cfctoh0lrnjry" path="res://scripts/baballe.gd" id="1_10x6a"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ucka5"]
+friction = 2.0
+bounce = 0.5
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ucka5"]
+
+[sub_resource type="Gradient" id="Gradient_10x6a"]
+offsets = PackedFloat32Array(0, 0.701299, 0.714286, 1)
+colors = PackedColorArray(0.662745, 0.568627, 1, 1, 0.768627, 0.686275, 1, 1, 0.866667, 0.866667, 0.866667, 0, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_f6quk"]
+gradient = SubResource("Gradient_10x6a")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[node name="Ball" type="RigidBody2D"]
+collision_mask = 2
+physics_material_override = SubResource("PhysicsMaterial_ucka5")
+script = ExtResource("1_10x6a")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ucka5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 5.96046e-07)
+scale = Vector2(0.3125, 0.3125)
+texture = SubResource("GradientTexture2D_f6quk")

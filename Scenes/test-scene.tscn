@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://cfw6fwdigvp7y"]
+
+[ext_resource type="PackedScene" uid="uid://4srbswm2axu" path="res://prefabs/Player.tscn" id="1_vjmrj"]
+[ext_resource type="PackedScene" uid="uid://8j1cdjl0i6p6" path="res://prefabs/Boundary.tscn" id="2_cjygo"]
+[ext_resource type="PackedScene" uid="uid://0mpy8olsc3yc" path="res://prefabs/camera.tscn" id="2_lu4tt"]
+
+[node name="Test-scene" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_vjmrj")]
+collision_mask = 2
+
+[node name="Camera2D" parent="." instance=ExtResource("2_lu4tt")]
+
+[node name="Boundary2" parent="." instance=ExtResource("2_cjygo")]
+position = Vector2(95, 0)
+rotation = -1.5708
+
+[node name="Boundary" parent="." instance=ExtResource("2_cjygo")]
+position = Vector2(0, 21)
+
+[node name="Boundary3" parent="." instance=ExtResource("2_cjygo")]
+position = Vector2(-97, 0)
+rotation = 1.5708
