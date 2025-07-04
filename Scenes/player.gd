@@ -31,18 +31,15 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = jump_velocity
 	
-	# Down the staircase
-	if Input.is_action_just_pressed("down"):
+		# Vertical Movement
+	var y_input = Input.get_axis("down","up")
+	
+	#  Staircase collision
+	if y_input < -0.5 :
 		set_collision_mask_value(5, false)
-		
-	if Input.is_action_just_released("down"):
-		set_collision_mask_value(5, true)
-	
-	#Climb stairs
-	if Input.is_action_just_pressed("up"):
+	elif y_input > 0.5:
 		set_collision_mask_value(4, true)
-	
-	if Input.is_action_just_released("up"):
+	else:
+		set_collision_mask_value(5, true)
 		set_collision_mask_value(4, false)
-		
 	move_and_slide()
