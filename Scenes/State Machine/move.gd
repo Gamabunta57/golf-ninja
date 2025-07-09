@@ -10,14 +10,12 @@ extends State
 
 func enter() -> void:
 	super()
-	#parent.velocity.x = 0
 	parent.velocity.y = 0
 
 func process_physics(delta: float) -> State:
 	var x_input = Input.get_axis("left", "right")
 	var y_input = Input.get_axis("down", "up")
 	
-	print(x_input)
 	# HORIZONTAL MOVEMENT
 	if x_input != 0:
 		# --- SNAPPY DIRECTION CHANGE LOGIC ---
@@ -40,7 +38,7 @@ func process_physics(delta: float) -> State:
 		parent.set_collision_mask_value(5, false) 
 	elif y_input > 0.5:
 		# move down the one way platform
-		parent.set_collision_mask_value(4, true) 
+		parent.set_collision_mask_value(4, true)
 	else:
 		# reset collision
 		parent.set_collision_mask_value(5, true)
@@ -55,6 +53,7 @@ func process_physics(delta: float) -> State:
 	if Input.is_action_just_pressed('jump') and parent.is_on_floor():
 		return jump_state
 	
+	print(parent.velocity.x)
 	parent.move_and_slide()
 	
 	

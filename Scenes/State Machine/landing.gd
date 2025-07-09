@@ -10,11 +10,9 @@ func process_physics(delta: float) -> State:
 	var x_input = Input.get_axis("left", "right")
 	
 	parent.velocity.x = move_toward(parent.velocity.x, 0, deceleration * delta)
-
+	
 	parent.move_and_slide()
-	
-	print(parent.velocity.x)
-	
+		
 	if parent.velocity.x == 0 and parent.is_on_floor():
 		return idle_state
 	
