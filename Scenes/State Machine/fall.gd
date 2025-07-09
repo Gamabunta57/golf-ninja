@@ -1,0 +1,42 @@
+extends State
+
+@export var jump_state: State
+@export var idle_state: State
+#@export var move_state: State
+@export var landing_state: State
+
+@export var fall_gravity_multiplier: float = 0.5
+@export var move_speed: float = 100
+@export var max_speed: float = 60
+
+
+
+func enter() -> void:
+	super()
+
+func process_input(event: InputEvent) -> State:
+	if Input.is_action_just_pressed('jump') and parent.is_on_floor():
+		return jump_state
+	
+	return null
+
+func process_physics(delta: float) -> State:
+	var x_input = Input.get_axis("left", "right")
+	
+	
+	parent.velocity.x += x_input * move_speed * delta
+	parent.velocity.x = clamp(parent.velocity.x, -max_speed, max_speed)
+	
+	parent.velocity.y += gravity * fall_gravity_multiplier * delta
+
+	parent.move_and_slide()
+	
+	if parent.is_on_floor():
+		if parent.velocity.x == 0:
+			return idle_state
+		else:
+			return landing_state
+	
+	#print(parent.velocity.x)
+	
+	return null
