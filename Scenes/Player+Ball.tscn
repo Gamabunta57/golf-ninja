@@ -1,11 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://ch6fuyhdibri3"]
+[gd_scene load_steps=11 format=3 uid="uid://ch6fuyhdibri3"]
 
 [ext_resource type="Script" uid="uid://ckoxjkhwpr8gl" path="res://scripts/state_machine.gd" id="1_w3l1w"]
 [ext_resource type="PackedScene" uid="uid://0mpy8olsc3yc" path="res://prefabs/camera.tscn" id="1_yrvbn"]
 [ext_resource type="Script" uid="uid://b5jqqm7cvnr8j" path="res://scripts/state_ball_controlled.gd" id="2_r2u6h"]
 [ext_resource type="PackedScene" uid="uid://4srbswm2axu" path="res://prefabs/Player.tscn" id="3_lpvot"]
 [ext_resource type="PackedScene" uid="uid://bdovvt3n4n8yy" path="res://prefabs/ball.tscn" id="4_psfb6"]
+[ext_resource type="Script" uid="uid://cidkypv7m2syu" path="res://scripts/state_player_controlled.gd" id="4_pul57"]
 [ext_resource type="Script" uid="uid://c1k3nhgvllqa" path="res://scripts/baballe-state-machine.gd" id="5_yrvbn"]
+[ext_resource type="Script" uid="uid://bxu8nhhqd2l8v" path="res://scripts/player-state-machine.gd" id="6_6fexj"]
 [ext_resource type="PackedScene" uid="uid://8j1cdjl0i6p6" path="res://prefabs/Boundary.tscn" id="7_6by5r"]
 [ext_resource type="PackedScene" uid="uid://en7ctpnly0sc" path="res://prefabs/ball_shoot_direction_viewer.tscn" id="8_6by5r"]
 
@@ -17,16 +19,22 @@
 script = ExtResource("1_w3l1w")
 initialState = NodePath("StateBallControlled")
 
-[node name="StateBallControlled" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "ball")]
+[node name="StateBallControlled" type="Node" parent="StateMachine" node_paths=PackedStringArray("playerState", "ball")]
 script = ExtResource("2_r2u6h")
-player = NodePath("../../Player")
+playerState = NodePath("../StatePlayerControlled")
 ball = NodePath("../../Ball")
 
-[node name="StatePlayerControlled" type="Node" parent="StateMachine"]
+[node name="StatePlayerControlled" type="Node" parent="StateMachine" node_paths=PackedStringArray("ballState", "player")]
+script = ExtResource("4_pul57")
+ballState = NodePath("../StateBallControlled")
+player = NodePath("../../Player")
 
 [node name="Player" parent="." instance=ExtResource("3_lpvot")]
+collision_mask = 6
+script = ExtResource("6_6fexj")
 
 [node name="Ball" parent="." instance=ExtResource("4_psfb6")]
+collision_layer = 4
 script = ExtResource("5_yrvbn")
 
 [node name="Boundary" parent="." instance=ExtResource("7_6by5r")]
@@ -42,3 +50,6 @@ rotation = -4.71238
 
 [node name="BallShootDirectionViewer" parent="." node_paths=PackedStringArray("ball") instance=ExtResource("8_6by5r")]
 ball = NodePath("../Ball")
+
+[connection signal="body_entered" from="Ball" to="Player" method="_on_ball_body_entered"]
+[connection signal="body_exited" from="Ball" to="Player" method="_on_ball_body_exited"]

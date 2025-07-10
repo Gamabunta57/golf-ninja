@@ -4,7 +4,7 @@ extends Line2D
 @export var forceColor: Gradient
 
 func _process(delta: float) -> void:
-	visible = ball.canBeShoot
+	visible = ball.canBeShoot && ball.isControlled
 	if (!visible): return
 
 	set_point_position(1, getForceVector())

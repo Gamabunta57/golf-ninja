@@ -7,7 +7,7 @@ var currentState: State
 func _ready() -> void:
 	var childenNode: Array[Node] = get_children()
 	for child in childenNode:
-		if (type_string(typeof(child)) == "State"):
+		if (child is State):
 			child.setStateMachine(self)
 
 	currentState = initialState

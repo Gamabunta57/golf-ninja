@@ -8,6 +8,7 @@ extends RigidBody2D
 @export var forceMin: float = 10
 @export var forceMax: float = 100
 var canBeShoot: bool = true
+var isControlled: bool = false
 
 func _physics_process(delta: float) -> void:
 	canBeShoot = linear_velocity.length_squared() < 4
