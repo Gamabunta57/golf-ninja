@@ -34,15 +34,20 @@ func process_physics(delta: float) -> State:
 	
 		#  Staircase collision
 	if y_input < -0.5 :
-		# move up the staircase
-		parent.set_collision_mask_value(5, false) 
+		# move down the staircase
+		parent.set_collision_mask_value(5, false)
+		parent.set_collision_mask_value(3, true)
+
 	elif y_input > 0.5:
-		# move down the one way platform
+		# move up the one way platform
 		parent.set_collision_mask_value(4, true)
+		parent.set_collision_mask_value(3, true)
+		
 	else:
 		# reset collision
 		parent.set_collision_mask_value(5, true)
 		parent.set_collision_mask_value(4, false)
+		parent.set_collision_mask_value(3, false)
 	
 	if parent.is_on_floor() and parent.velocity.x == 0 and x_input == 0:
 		return idle_state
@@ -53,7 +58,7 @@ func process_physics(delta: float) -> State:
 	if Input.is_action_just_pressed('jump') and parent.is_on_floor():
 		return jump_state
 	
-	print(parent.velocity.x)
+
 	parent.move_and_slide()
 	
 	
