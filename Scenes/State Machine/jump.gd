@@ -18,7 +18,7 @@ func process_physics(delta: float) -> State:
 	
 	parent.velocity.y += gravity * jump_gravity_multiplier * delta
 	
-	var x_input = Input.get_axis("left", "right")
+	var x_input = movement.get_x_movement()
 
 	parent.velocity.x += x_input * move_speed * delta
 	parent.velocity.x = clamp(parent.velocity.x, -max_speed, max_speed)

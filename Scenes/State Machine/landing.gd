@@ -7,7 +7,7 @@ extends State
 @export var deceleration: float = 400
 
 func process_physics(delta: float) -> State:
-	var x_input = Input.get_axis("left", "right")
+	var x_input = movement.get_x_movement()
 	
 	parent.velocity.x = move_toward(parent.velocity.x, 0, deceleration * delta)
 	
@@ -22,7 +22,7 @@ func process_physics(delta: float) -> State:
 	if x_input != 0 and abs(parent.velocity.x) <= 10 and parent.is_on_floor():
 		return move_state
 
-	if Input.is_action_just_pressed('jump') and parent.is_on_floor():
+	if movement.get_jump() and parent.is_on_floor():
 		return jump_state
 	
 	return null

@@ -13,8 +13,8 @@ func enter() -> void:
 	parent.velocity.y = 0
 
 func process_physics(delta: float) -> State:
-	var x_input = Input.get_axis("left", "right")
-	var y_input = Input.get_axis("down", "up")
+	var x_input = movement.get_x_movement()
+	var y_input = movement.get_y_movement()
 	
 	# HORIZONTAL MOVEMENT
 	if x_input != 0:
@@ -55,7 +55,7 @@ func process_physics(delta: float) -> State:
 	if parent.velocity.y > 0 or !parent.is_on_floor():
 		return fall_state
 	
-	if Input.is_action_just_pressed('jump') and parent.is_on_floor():
+	if movement.get_jump() and parent.is_on_floor():
 		return jump_state
 	
 

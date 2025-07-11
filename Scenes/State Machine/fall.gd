@@ -15,13 +15,13 @@ func enter() -> void:
 	super()
 
 func process_input(event: InputEvent) -> State:
-	if Input.is_action_just_pressed('jump') and parent.is_on_floor():
+	if movement.get_jump() and parent.is_on_floor():
 		return jump_state
 	
 	return null
 
 func process_physics(delta: float) -> State:
-	var x_input = Input.get_axis("left", "right")
+	var x_input = movement.get_x_movement()
 	
 	parent.velocity.x += x_input * move_speed * delta
 	parent.velocity.x = clamp(parent.velocity.x, -max_speed, max_speed)

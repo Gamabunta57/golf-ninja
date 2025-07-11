@@ -6,7 +6,8 @@ extends Node
 var gravity: int = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 # Hold a reference to the parent so that it can be controlled by the state
-var parent: Player
+var parent: CharacterBody2D
+var movement
 
 
 func enter() -> void:
@@ -24,3 +25,9 @@ func process_frame(delta: float) -> State:
 
 func process_physics(delta: float) -> State:
 	return null
+
+#func get_x_input() -> float:
+	#return movement.get_x_movement()
+#
+#func get_jump() -> bool:
+	#return movement.get_jump()
