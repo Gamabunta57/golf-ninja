@@ -8,6 +8,9 @@ extends CharacterBody2D
 @export var gravity = 500
 @export var jumpForce = 200
 
+var canGrabBall: bool = false
+var currentBallTarget: BallWithStateMachine = null
+
 func _physics_process(delta: float):
 
 	var direction = Input.get_axis("left", "right");
@@ -19,9 +22,9 @@ func _physics_process(delta: float):
 		velocity.x += horizontalDeceleration * delta
 	else:
 		velocity.x = 0
-		
+
 	velocity.x = clamp(velocity.x, -maxHorizontalSpeed, maxHorizontalSpeed)
-	
+
 	if (is_on_floor()):
 		velocity.y = 0
 		if (Input.is_action_just_pressed("jump")):
@@ -29,6 +32,20 @@ func _physics_process(delta: float):
 	elif velocity.y < 0:
 		velocity.y += gravity * delta	
 	else:
-		velocity.y += gravity * 3 * delta	
+		velocity.y += gravity * 3 * delta
+
+	if (currentBallTarget != null):
+		canGrabBall = currentBallTarget.canBeShoot
 
 	move_and_slide()
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	if (body is not Ball || currentBallTarget != null):
+		return
+
+	if (body.canBeShoot):
+		currentBallTarget = body
+
+func _on_area_2d_body_exited(body: Node2D) -> void:
+	if (body is Ball && currentBallTarget == body):
+		currentBallTarget = null

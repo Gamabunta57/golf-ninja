@@ -2,12 +2,21 @@ class_name StateBallControlled
 extends State
 
 @export var playerState: StatePlayerControlled
-@export var ball: BallWithStateMachine 
+@export var player: PlayerWithStateMachine
+var ball: BallWithStateMachine
 
 func onEnter() -> void:
-	ball.isControlled = true
+	if (player.currentBallTarget == null):
+		"""
+		player.currentBallTarget can be null if the player slides and exit the area
+		or if the ball itself moves outside the player
+		"""
+		stateMachine.changeState(playerState)
+	else:
+		ball = player.currentBallTarget
+		ball.isControlled = true
 	
-func physics_process(delta: float) -> void:
+func physics_process(_delta: float) -> void:
 	ball.canBeShoot = true
 	ball.isShot = Input.is_action_just_pressed("shoot")
 	ball.angleUpdateDirection = Input.get_axis("left", "right")
@@ -17,4 +26,5 @@ func physics_process(delta: float) -> void:
 		self.stateMachine.changeState(playerState)
 
 func onExit() -> void:
-	ball.isControlled = false
+	if (ball != null):
+		ball.isControlled = false

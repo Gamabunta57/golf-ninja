@@ -3,7 +3,6 @@ extends Player
 
 var shouldJump: bool = false
 var xDirectionUpdate: float = 0.0
-var canGrabBall: bool = false
 
 func _physics_process(delta: float):
 	if (!is_zero_approx(xDirectionUpdate)):
@@ -14,9 +13,9 @@ func _physics_process(delta: float):
 		velocity.x += horizontalDeceleration * delta
 	else:
 		velocity.x = 0.0
-		
+
 	velocity.x = clamp(velocity.x, -maxHorizontalSpeed, maxHorizontalSpeed)
-	
+
 	if (is_on_floor()):
 		velocity.y = 0
 		if (shouldJump):
@@ -25,19 +24,9 @@ func _physics_process(delta: float):
 	elif velocity.y < 0:
 		velocity.y += gravity * delta	
 	else:
-		velocity.y += gravity * 3 * delta	
+		velocity.y += gravity * 3 * delta
+
+	if (currentBallTarget != null):
+		canGrabBall = currentBallTarget.canBeShoot
 
 	move_and_slide()
-
-
-func _on_ball_body_entered(body: Node) -> void:
-	print_debug("enter", body)
-	if (body is Ball):
-		if (body.canBeShoot):
-			canGrabBall = true
-
-
-func _on_ball_body_exited(body: Node) -> void:
-	print_debug("exit", body)
-	if (body is Ball):
-		canGrabBall = true

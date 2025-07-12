@@ -11,11 +11,11 @@ interpolation_mode = 2
 offsets = PackedFloat32Array(0, 0.478395, 1)
 colors = PackedColorArray(0, 0.87, 0.406, 1, 0.6806, 0.82, 0.2624, 1, 0.89, 0.178, 0.178, 1)
 
-[node name="BallShootDirectionViewer" type="Line2D" node_paths=PackedStringArray("ball")]
+[node name="BallShootDirectionViewer" type="Line2D"]
+scale = Vector2(0.359999, 0.359999)
 points = PackedVector2Array(0, 0, 50, 0)
 width_curve = SubResource("Curve_lriwu")
 begin_cap_mode = 2
 end_cap_mode = 2
 script = ExtResource("1_1nb8u")
-ball = NodePath("")
 forceColor = SubResource("Gradient_lriwu")

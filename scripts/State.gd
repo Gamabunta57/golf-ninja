@@ -3,13 +3,13 @@ extends Node
 
 var stateMachine: StateMachine
 
-func setStateMachine(stateMachine: StateMachine) -> void:
-	self.stateMachine = stateMachine
+func setStateMachine(newStateMachine: StateMachine) -> void:
+	stateMachine = newStateMachine
 
 func onEnter() -> void:
 	pass
 
-func physics_process(delta: float) -> void:
+func physics_process(_delta: float) -> void:
 	pass
 
 func onExit() -> void:

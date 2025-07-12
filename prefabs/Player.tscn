@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://4srbswm2axu"]
+[gd_scene load_steps=6 format=3 uid="uid://4srbswm2axu"]
 
 [ext_resource type="Script" uid="uid://cofiysj078jmk" path="res://scripts/player.gd" id="1_1fna3"]
 
@@ -13,6 +13,9 @@ gradient = SubResource("Gradient_ify7s")
 fill_from = Vector2(0.495413, 1)
 fill_to = Vector2(0.545872, 0.00458716)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_fjjwp"]
+radius = 4.0
+
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_1fna3")
 
@@ -24,3 +27,14 @@ shape = SubResource("RectangleShape2D_1fna3")
 position = Vector2(0, -16)
 scale = Vector2(0.15625, 0.5)
 texture = SubResource("GradientTexture2D_l8qxc")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, -4)
+shape = SubResource("CircleShape2D_fjjwp")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

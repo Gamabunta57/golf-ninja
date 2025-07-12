@@ -7,6 +7,11 @@ var forceUpdateDirection: float = 0.0
 
 func _physics_process(delta: float) -> void:
 	canBeShoot = linear_velocity.length_squared() < 4
+	if (canBeShoot):
+		activeStateLine.set_default_color(colorShootable)
+	else:
+		activeStateLine.set_default_color(colorNonShootable)
+
 	if (canBeShoot && isShot):
 		isShot = false
 		linear_velocity += getForceVector() * 20

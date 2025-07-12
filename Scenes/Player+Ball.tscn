@@ -17,12 +17,12 @@
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initialState")]
 script = ExtResource("1_w3l1w")
-initialState = NodePath("StateBallControlled")
+initialState = NodePath("StatePlayerControlled")
 
-[node name="StateBallControlled" type="Node" parent="StateMachine" node_paths=PackedStringArray("playerState", "ball")]
+[node name="StateBallControlled" type="Node" parent="StateMachine" node_paths=PackedStringArray("playerState", "player")]
 script = ExtResource("2_r2u6h")
 playerState = NodePath("../StatePlayerControlled")
-ball = NodePath("../../Ball")
+player = NodePath("../../Player")
 
 [node name="StatePlayerControlled" type="Node" parent="StateMachine" node_paths=PackedStringArray("ballState", "player")]
 script = ExtResource("4_pul57")
@@ -30,11 +30,22 @@ ballState = NodePath("../StateBallControlled")
 player = NodePath("../../Player")
 
 [node name="Player" parent="." instance=ExtResource("3_lpvot")]
-collision_mask = 6
+collision_mask = 2
 script = ExtResource("6_6fexj")
 
 [node name="Ball" parent="." instance=ExtResource("4_psfb6")]
-collision_layer = 4
+script = ExtResource("5_yrvbn")
+
+[node name="Ball2" parent="." instance=ExtResource("4_psfb6")]
+position = Vector2(25, -8)
+script = ExtResource("5_yrvbn")
+
+[node name="Ball3" parent="." instance=ExtResource("4_psfb6")]
+position = Vector2(-19, -19)
+script = ExtResource("5_yrvbn")
+
+[node name="Ball4" parent="." instance=ExtResource("4_psfb6")]
+position = Vector2(-44, 8)
 script = ExtResource("5_yrvbn")
 
 [node name="Boundary" parent="." instance=ExtResource("7_6by5r")]
@@ -48,8 +59,5 @@ rotation = -1.57079
 position = Vector2(-96, 0)
 rotation = -4.71238
 
-[node name="BallShootDirectionViewer" parent="." node_paths=PackedStringArray("ball") instance=ExtResource("8_6by5r")]
-ball = NodePath("../Ball")
-
-[connection signal="body_entered" from="Ball" to="Player" method="_on_ball_body_entered"]
-[connection signal="body_exited" from="Ball" to="Player" method="_on_ball_body_exited"]
+[node name="BallShootDirectionViewer" parent="." node_paths=PackedStringArray("player") instance=ExtResource("8_6by5r")]
+player = NodePath("../Player")
