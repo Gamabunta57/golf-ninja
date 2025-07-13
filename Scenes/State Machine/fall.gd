@@ -4,8 +4,10 @@ extends State
 @export var idle_state: State
 @export var move_state: State
 @export var landing_state: State
+@export var landing_threshold: float = 600
 
-@export var fall_gravity_multiplier: float = 0.5
+
+@export var fall_gravity_multiplier: float = 2
 
 var last_y_velocity: float = 0
 
@@ -28,11 +30,10 @@ func process_physics(delta: float) -> State:
 	
 	parent.move_and_slide()
 	
-	
 	if parent.is_on_floor():
 		if is_zero_approx(parent.velocity.x):
 			return idle_state
-		elif not is_zero_approx(parent.velocity.x) and last_y_velocity < 100 and last_y_velocity != 0:
+		elif not is_zero_approx(parent.velocity.x) and last_y_velocity < landing_threshold and last_y_velocity != 0:
 			return move_state
 		else:
 			return landing_state

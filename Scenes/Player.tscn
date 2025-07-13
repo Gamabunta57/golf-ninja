@@ -12,27 +12,23 @@
 [ext_resource type="Script" uid="uid://cqym3jl820dxf" path="res://Scenes/State Machine/landing.gd" id="8_bhhdu"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kyqiw"]
-radius = 1.0
-height = 2.0
+radius = 12.0
+height = 36.0
 
 [node name="Player" type="CharacterBody2D"]
 collision_mask = 14
 floor_stop_on_slope = false
 floor_constant_speed = true
+floor_snap_length = 6.0
 script = ExtResource("1_kyqiw")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(-2.98023e-08, -2)
-scale = Vector2(0.2, 0.2)
+position = Vector2(0, -25)
 texture = ExtResource("1_rpqav")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -1)
+position = Vector2(0, -18)
 shape = SubResource("CapsuleShape2D_kyqiw")
-
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(4, 4)
-position_smoothing_enabled = true
 
 [node name="Inputs" type="Node" parent="."]
 script = ExtResource("4_megsn")
@@ -68,6 +64,7 @@ jump_state = NodePath("../Jump")
 idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
 landing_state = NodePath("../Landing")
+landing_threshold = 500.0
 
 [node name="Landing" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "jump_state", "move_state", "fall_state")]
 script = ExtResource("8_bhhdu")

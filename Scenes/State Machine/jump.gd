@@ -5,8 +5,8 @@ extends State
 @export var idle_state: State
 @export var move_state: State
 
-@export var jump_force: float = 60
-@export var jump_gravity_multiplier: float = 0.3
+@export var jump_force: float = 400
+@export var jump_gravity_multiplier: float = 1.7
 
 
 func enter() -> void:

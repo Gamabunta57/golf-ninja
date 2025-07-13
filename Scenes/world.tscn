@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=4 uid="uid://p4dtrhu4i74n"]
+[gd_scene load_steps=17 format=4 uid="uid://p4dtrhu4i74n"]
 
 [ext_resource type="Texture2D" uid="uid://biblo0ai88jo1" path="res://Assets/tile-stairs-low.png" id="1_5ukr8"]
 [ext_resource type="PackedScene" uid="uid://cocj0moh400bm" path="res://Scenes/Player.tscn" id="2_5a7ea"]
@@ -7,55 +7,55 @@
 [ext_resource type="Texture2D" uid="uid://yxdn2n74uspt" path="res://Assets/tile-ground-V2.png" id="3_k7acu"]
 [ext_resource type="Texture2D" uid="uid://vcrjp2wkbeh4" path="res://Assets/tile-stairs-floor.png" id="4_5v1tr"]
 [ext_resource type="Texture2D" uid="uid://bt7u47o1ikk0s" path="res://Assets/tile-stairs-high.png" id="5_0fj1v"]
+[ext_resource type="Script" uid="uid://do45b84hat0g8" path="res://Scenes/camera_2d.gd" id="8_k7acu"]
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_o06y3"]
 tile_data = PackedInt32Array(0, 8, 0, 65536, 9, 0, 65537, 10, 0)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ikia7"]
 texture = ExtResource("1_5ukr8")
-texture_region_size = Vector2i(10, 10)
+texture_region_size = Vector2i(128, 128)
 0:0/0 = 0
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-5, 5, 5, 5, 5, 4, -5, 4)
-0:0/0/physics_layer_2/polygon_0/points = PackedVector2Array(-5, -1, 5, 4, 3, 4, -5, 0)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, 64, 64, 64, 64, 48, -64, 48)
+0:0/0/physics_layer_2/polygon_0/points = PackedVector2Array(-64, -16, 64, 48, 32, 48, -64, 0)
 0:0/0/physics_layer_2/polygon_0/one_way = true
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5v1tr"]
 texture = ExtResource("2_k7acu")
-texture_region_size = Vector2i(10, 10)
+texture_region_size = Vector2i(128, 128)
 0:0/0 = 0
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-5, 5, 5, 5, 5, 4, -4, 4, -4, -5, -5, -5)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, -64, 64, 64, 64, 64, 48, -48, 48, -48, -64)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7yui6"]
 texture = ExtResource("2_o06y3")
-texture_region_size = Vector2i(10, 10)
+texture_region_size = Vector2i(128, 128)
 0:0/0 = 0
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-5, 4, 4, 4, 4, 5, -5, 5)
-0:0/0/physics_layer_0/polygon_1/points = PackedVector2Array(4, 1, 5, 1, 5, 5, 4, 5)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, 48, 48, 48, 48, 16, 64, 16, 64, 64, -64, 64)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_c5t2i"]
 texture = ExtResource("3_k7acu")
-texture_region_size = Vector2i(10, 10)
+texture_region_size = Vector2i(128, 128)
 0:0/0 = 0
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-5, 5, 5, 5, 5, 4, -5, 4)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, 64, 64, 64, 64, 48, -64, 48)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_e0ngr"]
 texture = ExtResource("4_5v1tr")
-texture_region_size = Vector2i(10, 10)
+texture_region_size = Vector2i(128, 128)
 0:0/0 = 0
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-5, 5, -5, 4, -3, 5)
-0:0/0/physics_layer_1/polygon_0/points = PackedVector2Array(-5, 4, 5, 4, 5, 5, -5, 5)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, 64, -64, 48, -32, 64)
+0:0/0/physics_layer_1/polygon_0/points = PackedVector2Array(-64, 48, 64, 48, 64, 64, -64, 64)
 0:0/0/physics_layer_1/polygon_0/one_way = true
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kn0ld"]
 texture = ExtResource("5_0fj1v")
-texture_region_size = Vector2i(10, 10)
+texture_region_size = Vector2i(128, 128)
 0:0/0 = 0
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-5, 4, 5, 4, 5, 5, -5, 5)
-0:0/0/physics_layer_2/polygon_0/points = PackedVector2Array(-4, -5, 5, 0, 5, -1, -2, -5)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, 48, 64, 48, 64, 64, -64, 64)
+0:0/0/physics_layer_2/polygon_0/points = PackedVector2Array(-32, -64, 64, -16, 64, 0, -64, -64)
 0:0/0/physics_layer_2/polygon_0/one_way = true
 
 [sub_resource type="TileSet" id="TileSet_yp4wr"]
-tile_size = Vector2i(10, 10)
+tile_size = Vector2i(128, 128)
 physics_layer_0/collision_layer = 2
 physics_layer_1/collision_layer = 4
 physics_layer_2/collision_layer = 8
@@ -75,6 +75,11 @@ tile_set = SubResource("TileSet_yp4wr")
 
 [node name="Player" parent="." instance=ExtResource("2_5a7ea")]
 texture_filter = 1
-position = Vector2(52, 28)
+position = Vector2(312, -39)
 collision_mask = 30
 floor_constant_speed = false
+
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("target")]
+position = Vector2(312, -39)
+script = ExtResource("8_k7acu")
+target = NodePath("../Player")

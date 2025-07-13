@@ -1,9 +1,9 @@
 @icon("res://Icons/move.png")
 extends Node
 
-@export var move_speed: float = 100
-@export var max_speed: float = 60
-@export var deceleration: float = 300
+@export var move_speed: float = 800
+@export var max_speed: float = 400
+@export var deceleration: float = 1500
 @export var stairs_threshold: float = 0.5
 
 
