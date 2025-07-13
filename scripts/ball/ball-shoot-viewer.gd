@@ -2,19 +2,17 @@ extends Line2D
 
 @export var player: Player
 @export var forceColor: Gradient
+@export var ballInput: BallInput
 
-func _process(_delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if (player.currentBallTarget == null): return
 
 	var ball = player.currentBallTarget
 	visible = ball.canBeShoot && ball.isControlled
 	if (!visible): return
 
-	set_point_position(1, getForceVector(ball))
+	set_point_position(1, ballInput.getDirectionWithStrength())
 	position = ball.position
 	
-	var forcePercentage: float = inverse_lerp(ball.forceMin, ball.forceMax, ball.force)
+	var forcePercentage: float = inverse_lerp(ball.strengthMin, ball.strengthMax, ballInput.strength)
 	set_default_color(forceColor.sample(forcePercentage))
-
-func getForceVector(ball: Ball) -> Vector2:
-	return Vector2(cos(ball.angle), sin(ball.angle)) * ball.force 

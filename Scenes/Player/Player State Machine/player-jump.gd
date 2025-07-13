@@ -13,22 +13,20 @@ func enter() -> void:
 	super()
 	parent.velocity.y = -jump_force
 
-func process_physics(delta: float) -> State:
-	
+func process_physics(delta: float) -> void:
 	parent.velocity.y += gravity * jump_gravity_multiplier * delta
 	parent.velocity.x = movements.horizontal_movement(parent.velocity.x, delta, inputs, parent)
 
 	var x_input = inputs.get_x_input()
-
 	
 	if parent.velocity.y > 0:
-		return fall_state
+		change_state(fall_state)
+		return
 		
 	parent.move_and_slide()
 	
 	if parent.is_on_floor():
 		if parent.velocity.x != 0:
-			return move_state
-		return idle_state
-	
-	return null
+			change_state(move_state)
+		else: 
+			change_state(idle_state)

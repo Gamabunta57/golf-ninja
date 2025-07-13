@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://en7ctpnly0sc"]
 
-[ext_resource type="Script" uid="uid://djyinf6vfaruj" path="res://scripts/ball_shoot_direction_viewer.gd" id="1_1nb8u"]
+[ext_resource type="Script" uid="uid://djyinf6vfaruj" path="res://scripts/ball/ball-shoot-viewer.gd" id="1_1nb8u"]
 
 [sub_resource type="Curve" id="Curve_lriwu"]
 _data = [Vector2(0, 0.502924), 0.0, 0.0, 0, 0, Vector2(0.997354, 0.0994152), 0.0, 0.0, 0, 0]

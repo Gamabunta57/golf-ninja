@@ -1,6 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://4srbswm2axu"]
+[gd_scene load_steps=8 format=3 uid="uid://4srbswm2axu"]
 
-[ext_resource type="Script" uid="uid://cofiysj078jmk" path="res://scripts/player.gd" id="1_1fna3"]
+[ext_resource type="Script" uid="uid://bxu8nhhqd2l8v" path="res://scripts/player/player.gd" id="1_fjjwp"]
+[ext_resource type="Script" uid="uid://bgmb176xk2uel" path="res://Scenes/state_machine.gd" id="2_ay6yh"]
+[ext_resource type="Script" uid="uid://cvldfddrs8qu5" path="res://scripts/player/player-state-moving.gd" id="3_p3xyx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1fna3"]
 size = Vector2(10, 32)
@@ -17,7 +19,7 @@ fill_to = Vector2(0.545872, 0.00458716)
 radius = 4.0
 
 [node name="Player" type="CharacterBody2D"]
-script = ExtResource("1_1fna3")
+script = ExtResource("1_fjjwp")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -16)
@@ -35,6 +37,14 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(0, -4)
 shape = SubResource("CircleShape2D_fjjwp")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
+script = ExtResource("2_ay6yh")
+starting_state = NodePath("StateMoving")
+metadata/_custom_type_script = "uid://ckoxjkhwpr8gl"
+
+[node name="StateMoving" type="Node" parent="StateMachine"]
+script = ExtResource("3_p3xyx")
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

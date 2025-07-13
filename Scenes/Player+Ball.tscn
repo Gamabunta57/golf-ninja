@@ -1,52 +1,49 @@
 [gd_scene load_steps=11 format=3 uid="uid://ch6fuyhdibri3"]
 
-[ext_resource type="Script" uid="uid://ckoxjkhwpr8gl" path="res://scripts/state_machine.gd" id="1_w3l1w"]
 [ext_resource type="PackedScene" uid="uid://0mpy8olsc3yc" path="res://prefabs/camera.tscn" id="1_yrvbn"]
-[ext_resource type="Script" uid="uid://b5jqqm7cvnr8j" path="res://scripts/state_ball_controlled.gd" id="2_r2u6h"]
+[ext_resource type="Script" uid="uid://bgmb176xk2uel" path="res://Scenes/state_machine.gd" id="2_6fexj"]
+[ext_resource type="Script" uid="uid://b5jqqm7cvnr8j" path="res://scripts/world/state-controlling-ball.gd" id="2_r2u6h"]
 [ext_resource type="PackedScene" uid="uid://4srbswm2axu" path="res://prefabs/Player.tscn" id="3_lpvot"]
 [ext_resource type="PackedScene" uid="uid://bdovvt3n4n8yy" path="res://prefabs/ball.tscn" id="4_psfb6"]
-[ext_resource type="Script" uid="uid://cidkypv7m2syu" path="res://scripts/state_player_controlled.gd" id="4_pul57"]
-[ext_resource type="Script" uid="uid://c1k3nhgvllqa" path="res://scripts/baballe-state-machine.gd" id="5_yrvbn"]
-[ext_resource type="Script" uid="uid://bxu8nhhqd2l8v" path="res://scripts/player-state-machine.gd" id="6_6fexj"]
+[ext_resource type="Script" uid="uid://cidkypv7m2syu" path="res://scripts/world/state-controlling-player.gd" id="4_pul57"]
 [ext_resource type="PackedScene" uid="uid://8j1cdjl0i6p6" path="res://prefabs/Boundary.tscn" id="7_6by5r"]
 [ext_resource type="PackedScene" uid="uid://en7ctpnly0sc" path="res://prefabs/ball_shoot_direction_viewer.tscn" id="8_6by5r"]
+[ext_resource type="Script" uid="uid://dowwwwtwwshus" path="res://scripts/ball/ball-keyboard-input.gd" id="9_pul57"]
+[ext_resource type="Script" uid="uid://ofr4mhh40mw7" path="res://scripts/player/player-keyboard-input.gd" id="10_6fexj"]
 
 [node name="Player+ball" type="Node2D"]
 
 [node name="Camera2D" parent="." instance=ExtResource("1_yrvbn")]
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initialState")]
-script = ExtResource("1_w3l1w")
-initialState = NodePath("StatePlayerControlled")
+[node name="ControlStateMachine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
+script = ExtResource("2_6fexj")
+starting_state = NodePath("StateControllingPlayer")
 
-[node name="StateBallControlled" type="Node" parent="StateMachine" node_paths=PackedStringArray("playerState", "player")]
+[node name="StateControllingBall" type="Node" parent="ControlStateMachine" node_paths=PackedStringArray("statePlayer", "player", "ballInput")]
 script = ExtResource("2_r2u6h")
-playerState = NodePath("../StatePlayerControlled")
+statePlayer = NodePath("../StateControllingPlayer")
 player = NodePath("../../Player")
+ballInput = NodePath("../../Inputs/BallInput")
 
-[node name="StatePlayerControlled" type="Node" parent="StateMachine" node_paths=PackedStringArray("ballState", "player")]
+[node name="StateControllingPlayer" type="Node" parent="ControlStateMachine" node_paths=PackedStringArray("ballState", "player", "playerInput")]
 script = ExtResource("4_pul57")
-ballState = NodePath("../StateBallControlled")
+ballState = NodePath("../StateControllingBall")
 player = NodePath("../../Player")
+playerInput = NodePath("../../Inputs/PlayerInput")
 
 [node name="Player" parent="." instance=ExtResource("3_lpvot")]
 collision_mask = 2
-script = ExtResource("6_6fexj")
 
 [node name="Ball" parent="." instance=ExtResource("4_psfb6")]
-script = ExtResource("5_yrvbn")
 
 [node name="Ball2" parent="." instance=ExtResource("4_psfb6")]
 position = Vector2(25, -8)
-script = ExtResource("5_yrvbn")
 
 [node name="Ball3" parent="." instance=ExtResource("4_psfb6")]
 position = Vector2(-19, -19)
-script = ExtResource("5_yrvbn")
 
 [node name="Ball4" parent="." instance=ExtResource("4_psfb6")]
 position = Vector2(-44, 8)
-script = ExtResource("5_yrvbn")
 
 [node name="Boundary" parent="." instance=ExtResource("7_6by5r")]
 position = Vector2(0, 54)
@@ -59,5 +56,14 @@ rotation = -1.57079
 position = Vector2(-96, 0)
 rotation = -4.71238
 
-[node name="BallShootDirectionViewer" parent="." node_paths=PackedStringArray("player") instance=ExtResource("8_6by5r")]
+[node name="BallShootDirectionViewer" parent="." node_paths=PackedStringArray("player", "ballInput") instance=ExtResource("8_6by5r")]
 player = NodePath("../Player")
+ballInput = NodePath("../Inputs/BallInput")
+
+[node name="Inputs" type="Node" parent="."]
+
+[node name="BallInput" type="Node" parent="Inputs"]
+script = ExtResource("9_pul57")
+
+[node name="PlayerInput" type="Node" parent="Inputs"]
+script = ExtResource("10_6fexj")

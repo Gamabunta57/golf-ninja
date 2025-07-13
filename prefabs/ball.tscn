@@ -1,6 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://bdovvt3n4n8yy"]
+[gd_scene load_steps=9 format=3 uid="uid://bdovvt3n4n8yy"]
 
-[ext_resource type="Script" uid="uid://cfctoh0lrnjry" path="res://scripts/baballe.gd" id="1_10x6a"]
+[ext_resource type="Script" uid="uid://c1k3nhgvllqa" path="res://scripts/ball/ball.gd" id="1_10x6a"]
+[ext_resource type="Script" uid="uid://bgmb176xk2uel" path="res://Scenes/state_machine.gd" id="2_5nmth"]
+[ext_resource type="Script" uid="uid://dytfel4jveram" path="res://scripts/ball/ball-state-shootable.gd" id="3_gdc8w"]
+[ext_resource type="Script" uid="uid://cet35mwy13oc0" path="res://scripts/ball/ball-state-shot.gd" id="4_kydjn"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ucka5"]
 friction = 2.0
@@ -40,3 +43,20 @@ end_cap_mode = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 scale = Vector2(0.36, 0.36)
 shape = SubResource("CircleShape2D_ucka5")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
+script = ExtResource("2_5nmth")
+starting_state = NodePath("StateShootable")
+metadata/_custom_type_script = "uid://ckoxjkhwpr8gl"
+
+[node name="StateShootable" type="Node" parent="StateMachine" node_paths=PackedStringArray("ball", "activeStateLine", "stateShot")]
+script = ExtResource("3_gdc8w")
+ball = NodePath("../..")
+activeStateLine = NodePath("../../Line2D")
+stateShot = NodePath("../StateShot")
+
+[node name="StateShot" type="Node" parent="StateMachine" node_paths=PackedStringArray("ball", "activeStateLine", "stateShootable")]
+script = ExtResource("4_kydjn")
+ball = NodePath("../..")
+activeStateLine = NodePath("../../Line2D")
+stateShootable = NodePath("../StateShootable")

@@ -5,8 +5,6 @@ extends State
 @export var move_state: State
 @export var landing_state: State
 @export var landing_threshold: float = 600
-
-
 @export var fall_gravity_multiplier: float = 2
 
 var last_y_velocity: float = 0
@@ -14,14 +12,12 @@ var last_y_velocity: float = 0
 func enter() -> void:
 	super()
 
-func process_input(event: InputEvent) -> State:
+func process_input(event: InputEvent) -> void:
 	if inputs.get_jump_input() and parent.is_on_floor():
-		return jump_state
-	
-	return null
+		change_state(jump_state)
 
-func process_physics(delta: float) -> State:
-	
+
+func process_physics(delta: float) -> void:
 	parent.velocity.y += gravity * fall_gravity_multiplier * delta
 	parent.velocity.x = movements.horizontal_movement(parent.velocity.x, delta, inputs, parent)
 
@@ -32,10 +28,8 @@ func process_physics(delta: float) -> State:
 	
 	if parent.is_on_floor():
 		if is_zero_approx(parent.velocity.x):
-			return idle_state
+			change_state(idle_state)
 		elif not is_zero_approx(parent.velocity.x) and last_y_velocity < landing_threshold and last_y_velocity != 0:
-			return move_state
+			change_state(move_state)
 		else:
-			return landing_state
-	
-	return null
+			change_state(landing_state)

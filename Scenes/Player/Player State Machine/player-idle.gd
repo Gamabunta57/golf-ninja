@@ -8,18 +8,17 @@ func enter() -> void:
 	super()
 	parent.velocity.x = 0
 
-func process_input(event: InputEvent) -> State:
+func process_input(event: InputEvent) -> void:
 	if inputs.get_jump_input() and parent.is_on_floor():
-		return jump_state
+		change_state(jump_state)
+		return
 		
 	if inputs.get_x_input() != 0:
-		return move_state
-	
-	return null
+		change_state(move_state)
+		return
 
-func process_physics(delta: float) -> State:
+func process_physics(delta: float) -> void:
 	#parent.velocity.y += gravity * delta
 	#parent.move_and_slide()
 	if !parent.is_on_floor():
-		return fall_state
-	return null
+		change_state(fall_state)

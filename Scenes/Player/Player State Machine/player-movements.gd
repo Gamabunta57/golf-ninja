@@ -8,9 +8,8 @@ extends Node
 
 
 func horizontal_deceleration(velocityX: float, delta: float) -> float:
-	velocityX = move_toward(velocityX, 0, deceleration * delta)
-	return velocityX
-	
+	return move_toward(velocityX, 0, deceleration * delta)
+
 func horizontal_movement(velocityX: float, delta: float, inputs, parent: CharacterBody2D) -> float:
 	var x_input = inputs.get_x_input()
 	var y_input = inputs.get_y_input()
