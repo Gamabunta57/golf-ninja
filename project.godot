@@ -67,9 +67,8 @@ up={
 
 2d_physics/layer_1="Player"
 2d_physics/layer_2="World"
-2d_physics/layer_3="Stairs"
-2d_physics/layer_4="Bottom Stair"
-2d_physics/layer_5="Staircase"
+2d_physics/layer_3="One way"
+2d_physics/layer_4="Stairs"
 
 [rendering]
 

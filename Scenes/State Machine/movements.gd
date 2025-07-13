@@ -4,6 +4,8 @@ extends Node
 @export var move_speed: float = 100
 @export var max_speed: float = 60
 @export var deceleration: float = 300
+@export var stairs_threshold: float = 0.5
+
 
 func horizontal_deceleration(velocityX: float, delta: float) -> float:
 	velocityX = move_toward(velocityX, 0, deceleration * delta)
@@ -18,18 +20,21 @@ func horizontal_movement(velocityX: float, delta: float, inputs, parent: Charact
 	else:
 		velocityX += x_input * move_speed * delta
 		velocityX = clamp(velocityX, -max_speed, max_speed)
-
 	
 	# Staircase collision
-	if y_input < -0.5:
-		parent.set_collision_mask_value(5, false)
+	if y_input >= -stairs_threshold and y_input <= stairs_threshold :
 		parent.set_collision_mask_value(3, true)
-	elif y_input > 0.5:
-		parent.set_collision_mask_value(4, true)
-		parent.set_collision_mask_value(3, true)
-	else:
-		parent.set_collision_mask_value(5, true)
 		parent.set_collision_mask_value(4, false)
+	
+	if parent.get_floor_angle() != 0 :
+		parent.set_collision_mask_value(4, true)
+	else:
+		parent.set_collision_mask_value(4, false)
+		
+	if y_input < -stairs_threshold:
 		parent.set_collision_mask_value(3, false)
+		
+	if y_input > stairs_threshold:
+		parent.set_collision_mask_value(4, true)
 		
 	return velocityX
