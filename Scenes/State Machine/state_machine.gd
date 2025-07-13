@@ -1,3 +1,4 @@
+@icon("res://Icons/brain-circuit.png")
 extends Node
 
 @export var starting_state: State
@@ -7,11 +8,11 @@ var current_state: State
 
 # Initialize the state machine by giving each child state a reference to the
 # parent object it belongs to and enter the default starting_state.
-func init(parent: CharacterBody2D, movement) -> void:
+func init(parent: CharacterBody2D, inputs, movements) -> void:
 	for child in get_children():
 		child.parent = parent
-		child.movement = movement
-
+		child.inputs = inputs
+		child.movements = movements
 	# Initialize to the default state
 	change_state(starting_state)
 

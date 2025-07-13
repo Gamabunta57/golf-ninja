@@ -23,6 +23,13 @@ window/stretch/mode="viewport"
 window/stretch/scale=4.0
 window/stretch/scale_mode="integer"
 
+[file_customization]
+
+folder_colors={
+"res://Assets/": "orange",
+"res://Scenes/State Machine/": "purple"
+}
+
 [input]
 
 left={

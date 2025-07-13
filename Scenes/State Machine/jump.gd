@@ -1,3 +1,4 @@
+
 extends State
 
 @export var fall_state: State
@@ -7,8 +8,6 @@ extends State
 @export var jump_force: float = 60
 @export var jump_gravity_multiplier: float = 0.3
 
-@export var move_speed: float = 50
-@export var max_speed: float = 40
 
 func enter() -> void:
 	super()
@@ -17,11 +16,10 @@ func enter() -> void:
 func process_physics(delta: float) -> State:
 	
 	parent.velocity.y += gravity * jump_gravity_multiplier * delta
-	
-	var x_input = movement.get_x_movement()
+	parent.velocity.x = movements.horizontal_movement(parent.velocity.x, delta, inputs, parent)
 
-	parent.velocity.x += x_input * move_speed * delta
-	parent.velocity.x = clamp(parent.velocity.x, -max_speed, max_speed)
+	var x_input = inputs.get_x_input()
+
 	
 	if parent.velocity.y > 0:
 		return fall_state

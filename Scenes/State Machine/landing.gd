@@ -7,9 +7,10 @@ extends State
 @export var deceleration: float = 400
 
 func process_physics(delta: float) -> State:
-	var x_input = movement.get_x_movement()
+	var x_input = inputs.get_x_input()
 	
-	parent.velocity.x = move_toward(parent.velocity.x, 0, deceleration * delta)
+	parent.velocity.x = movements.horizontal_deceleration(parent.velocity.x, delta)
+	#move_toward(parent.velocity.x, 0, deceleration * delta)
 	
 	parent.move_and_slide()
 		
@@ -22,7 +23,7 @@ func process_physics(delta: float) -> State:
 	if x_input != 0 and abs(parent.velocity.x) <= 10 and parent.is_on_floor():
 		return move_state
 
-	if movement.get_jump() and parent.is_on_floor():
+	if inputs.get_jump_input() and parent.is_on_floor():
 		return jump_state
 	
 	return null

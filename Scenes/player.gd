@@ -3,13 +3,14 @@ extends CharacterBody2D
 
 #@onready var animations = $animations
 @onready var state_machine = $state_machine
-@onready var movement: Node = $Movement
+@onready var inputs: Node = $Inputs
+@onready var movements: Node = $Movements
 
 
 func _ready() -> void:
 	# Initialize the state machine, passing a reference of the player to the states,
 	# that way they can move and react accordingly
-	state_machine.init(self, movement)
+	state_machine.init(self, inputs, movements)
 
 func _unhandled_input(event: InputEvent) -> void:
 	state_machine.process_input(event)

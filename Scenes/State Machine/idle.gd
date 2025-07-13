@@ -9,10 +9,10 @@ func enter() -> void:
 	parent.velocity.x = 0
 
 func process_input(event: InputEvent) -> State:
-	if movement.get_jump() and parent.is_on_floor():
+	if inputs.get_jump_input() and parent.is_on_floor():
 		return jump_state
 		
-	if movement.get_x_movement() != 0:
+	if inputs.get_x_input() != 0:
 		return move_state
 	
 	return null
