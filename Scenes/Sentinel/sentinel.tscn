@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://d2egjrgf8hnpc"]
+
+[ext_resource type="Texture2D" uid="uid://o5qgwor5qhaq" path="res://Assets/sentinel/sentinel.png" id="1_cuxs6"]
+[ext_resource type="Script" uid="uid://bgmb176xk2uel" path="res://Scenes/State Machine/state_machine.gd" id="2_51je0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_51je0"]
+size = Vector2(64, 64)
+
+[node name="Sentinel" type="CharacterBody2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -32)
+texture = ExtResource("1_cuxs6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -32)
+shape = SubResource("RectangleShape2D_51je0")
+
+[node name="GroundCheck" type="RayCast2D" parent="."]
+position = Vector2(33, 1)
+target_position = Vector2(0, 16)
+collision_mask = 6
+
+[node name="PlayerCheck" type="RayCast2D" parent="."]
+position = Vector2(0, -32)
+target_position = Vector2(128, 0)
+
+[node name="state_machine" type="Node" parent="."]
+script = ExtResource("2_51je0")
+
+[node name="Idle" type="Node" parent="state_machine"]
+
+[node name="Scout" type="Node" parent="state_machine"]
+
+[node name="Chase" type="Node" parent="state_machine"]
+
+[node name="Attack" type="Node" parent="state_machine"]

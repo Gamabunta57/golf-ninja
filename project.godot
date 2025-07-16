@@ -29,6 +29,8 @@ window/vsync/vsync_mode=0
 
 folder_colors={
 "res://Assets/": "orange",
+"res://Scenes/Player/": "yellow",
+"res://Scenes/Sentinel/": "red",
 "res://Scenes/State Machine/": "purple"
 }
 

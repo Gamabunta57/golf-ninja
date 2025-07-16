@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chr5v530nqpxo"
-path="res://.godot/imported/tile-ground-rail.png-68a272be22947b7b1167aec1735fdb05.ctex"
+uid="uid://o5qgwor5qhaq"
+path="res://.godot/imported/sentinel.png-56a9df2b10344782a0b0fd15c49ce20c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/tile-ground-rail.png"
-dest_files=["res://.godot/imported/tile-ground-rail.png-68a272be22947b7b1167aec1735fdb05.ctex"]
+source_file="res://Assets/sentinel/sentinel.png"
+dest_files=["res://.godot/imported/sentinel.png-56a9df2b10344782a0b0fd15c49ce20c.ctex"]
 
 [params]
 

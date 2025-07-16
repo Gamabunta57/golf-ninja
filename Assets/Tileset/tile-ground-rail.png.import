@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://yxdn2n74uspt"
-path="res://.godot/imported/tile-ground-V2.png-cbd700d76b4c1695b953d5e28e15f6f9.ctex"
+uid="uid://chr5v530nqpxo"
+path="res://.godot/imported/tile-ground-rail.png-6bfa97eab3138675f7df16e1ed78ac50.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/tile-ground-V2.png"
-dest_files=["res://.godot/imported/tile-ground-V2.png-cbd700d76b4c1695b953d5e28e15f6f9.ctex"]
+source_file="res://Assets/Tileset/tile-ground-rail.png"
+dest_files=["res://.godot/imported/tile-ground-rail.png-6bfa97eab3138675f7df16e1ed78ac50.ctex"]
 
 [params]
 
