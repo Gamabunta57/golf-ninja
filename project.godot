@@ -73,6 +73,9 @@ up={
 2d_physics/layer_2="World"
 2d_physics/layer_3="One way"
 2d_physics/layer_4="Stairs"
+2d_physics/layer_5="Ball"
+2d_physics/layer_6="Bin"
+2d_physics/layer_7="Enemy"
 
 [rendering]
 

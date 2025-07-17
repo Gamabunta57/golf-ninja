@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=4 uid="uid://p4dtrhu4i74n"]
+[gd_scene load_steps=21 format=4 uid="uid://p4dtrhu4i74n"]
 
 [ext_resource type="Texture2D" uid="uid://biblo0ai88jo1" path="res://Assets/Tileset/tile-stairs-low.png" id="1_5ukr8"]
 [ext_resource type="Texture2D" uid="uid://cui1qu8ciexqe" path="res://Assets/Tileset/tile-hole.png" id="1_5v1tr"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://bt7u47o1ikk0s" path="res://Assets/Tileset/tile-stairs-high.png" id="5_0fj1v"]
 [ext_resource type="Script" uid="uid://do45b84hat0g8" path="res://Scenes/camera_2d.gd" id="8_k7acu"]
 [ext_resource type="PackedScene" uid="uid://d2egjrgf8hnpc" path="res://Scenes/Sentinel/sentinel.tscn" id="9_0fj1v"]
+[ext_resource type="PackedScene" uid="uid://cfmtjk3kwvpo4" path="res://Scenes/bin.tscn" id="11_ikia7"]
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_o06y3"]
 tile_data = PackedInt32Array(0, 8, 0, 65536, 9, 0, 65537, 10, 0)
@@ -96,3 +97,6 @@ position = Vector2(968, 240)
 position = Vector2(312, -39)
 script = ExtResource("8_k7acu")
 target = NodePath("../Player")
+
+[node name="Bin" parent="." instance=ExtResource("11_ikia7")]
+position = Vector2(744, 368)
