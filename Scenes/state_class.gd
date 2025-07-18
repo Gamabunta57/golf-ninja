@@ -8,7 +8,7 @@ var gravity: int = ProjectSettings.get_setting("physics/2d/default_gravity")
 # Hold a reference to the parent so that it can be controlled by the state
 var parent: CharacterBody2D
 var inputs
-var movements
+var movements: Movement
 
 
 func enter() -> void:
