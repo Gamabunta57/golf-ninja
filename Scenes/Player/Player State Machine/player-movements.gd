@@ -1,4 +1,5 @@
 @icon("res://Icons/move.png")
+class_name PlayerMovement
 extends Node
 
 @export var move_speed: float = 800
