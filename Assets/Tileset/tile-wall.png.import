@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://biblo0ai88jo1"
-path="res://.godot/imported/tile-stairs-low.png-ec32f7395688385e4751f1acbc213d11.ctex"
+uid="uid://cbemxagmg46qo"
+path="res://.godot/imported/tile-wall.png-1075343dc3450b1d6f4082097a3cb1d9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/tile-stairs-low.png"
-dest_files=["res://.godot/imported/tile-stairs-low.png-ec32f7395688385e4751f1acbc213d11.ctex"]
+source_file="res://Assets/Tileset/tile-wall.png"
+dest_files=["res://.godot/imported/tile-wall.png-1075343dc3450b1d6f4082097a3cb1d9.ctex"]
 
 [params]
 

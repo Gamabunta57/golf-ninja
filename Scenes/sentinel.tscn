@@ -1,0 +1,50 @@
+[gd_scene load_steps=7 format=3 uid="uid://cwfkdmyy53qiv"]
+
+[ext_resource type="Texture2D" uid="uid://o5qgwor5qhaq" path="res://Assets/sentinel/sentinel.png" id="1_cuxs6"]
+[ext_resource type="Script" uid="uid://cciq2qkl606er" path="res://Scenes/Sentinel/sentinel.gd" id="1_u3sj5"]
+[ext_resource type="Script" uid="uid://bgmb176xk2uel" path="res://Scenes/state_machine.gd" id="2_51je0"]
+[ext_resource type="Script" uid="uid://kppqgyoriqpr" path="res://Scenes/Sentinel/Sentinel State Machine/sentinel-idle.gd" id="3_4wiga"]
+[ext_resource type="Script" uid="uid://b133q8oyn8jv0" path="res://Scenes/Sentinel/Sentinel State Machine/sentinel-fall.gd" id="4_omg0t"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_51je0"]
+size = Vector2(64, 64)
+
+[node name="Sentinel" type="CharacterBody2D"]
+collision_layer = 65
+collision_mask = 63
+script = ExtResource("1_u3sj5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -32)
+texture = ExtResource("1_cuxs6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -32)
+shape = SubResource("RectangleShape2D_51je0")
+
+[node name="GroundCheck" type="RayCast2D" parent="."]
+position = Vector2(33, 1)
+target_position = Vector2(0, 16)
+collision_mask = 6
+
+[node name="PlayerCheck" type="RayCast2D" parent="."]
+position = Vector2(0, -32)
+target_position = Vector2(128, 0)
+
+[node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
+script = ExtResource("2_51je0")
+starting_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state")]
+script = ExtResource("3_4wiga")
+fall_state = NodePath("../Fall")
+
+[node name="Patrol" type="Node" parent="state_machine"]
+
+[node name="Chase" type="Node" parent="state_machine"]
+
+[node name="Attack" type="Node" parent="state_machine"]
+
+[node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
+script = ExtResource("4_omg0t")
+idle_state = NodePath("../Idle")

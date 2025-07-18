@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://cfmtjk3kwvpo4"]
+
+[ext_resource type="Texture2D" uid="uid://4ioqqqxrnjpr" path="res://Assets/bucket.png" id="1_k6cno"]
+
+[node name="Bin" type="StaticBody2D"]
+collision_layer = 32
+collision_mask = 30
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -16)
+texture = ExtResource("1_k6cno")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-16, -32, -14, -32, -8, -2, 8, -2, 14, -32, 16, -32, 10, 0, -10, 0)

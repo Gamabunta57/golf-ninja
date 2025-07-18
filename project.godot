@@ -13,15 +13,26 @@ config_version=5
 config/name="Golf Ninja"
 run/main_scene="uid://p4dtrhu4i74n"
 config/features=PackedStringArray("4.4", "GL Compatibility")
+run/max_fps=60
 config/icon="res://icon.svg"
 
 [display]
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/initial_position_type=3
 window/stretch/mode="viewport"
-window/stretch/scale=4.0
 window/stretch/scale_mode="integer"
+window/vsync/vsync_mode=0
+
+[file_customization]
+
+folder_colors={
+"res://Assets/": "orange",
+"res://Scenes/Player/": "yellow",
+"res://Scenes/Sentinel/": "red",
+"res://Scenes/State Machine/": "purple"
+}
 
 [input]
 
@@ -60,9 +71,11 @@ up={
 
 2d_physics/layer_1="Player"
 2d_physics/layer_2="World"
-2d_physics/layer_3="Stairs"
-2d_physics/layer_4="Bottom Stair"
-2d_physics/layer_5="Staircase"
+2d_physics/layer_3="One way"
+2d_physics/layer_4="Stairs"
+2d_physics/layer_5="Ball"
+2d_physics/layer_6="Bin"
+2d_physics/layer_7="Enemy"
 
 [rendering]
 

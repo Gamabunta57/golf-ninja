@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cbemxagmg46qo"
-path="res://.godot/imported/tile-wall.png-04b6b9ac9ce89de2f702920c9ef552a7.ctex"
+uid="uid://fsea6vqomdqj"
+path="res://.godot/imported/person-standing.png-48ff2c7819b25b55b78e0061cf8681f0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/tile-wall.png"
-dest_files=["res://.godot/imported/tile-wall.png-04b6b9ac9ce89de2f702920c9ef552a7.ctex"]
+source_file="res://Icons/person-standing.png"
+dest_files=["res://.godot/imported/person-standing.png-48ff2c7819b25b55b78e0061cf8681f0.ctex"]
 
 [params]
 
