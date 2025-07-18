@@ -97,6 +97,7 @@ position = Vector2(968, 240)
 position = Vector2(312, -39)
 script = ExtResource("8_k7acu")
 target = NodePath("../Player")
+smooth = false
 
 [node name="Bin" parent="." instance=ExtResource("11_ikia7")]
 position = Vector2(744, 368)

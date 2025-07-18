@@ -13,7 +13,7 @@ func _physics_process(delta: float) -> void:
 		var camera_position : Vector2
 		
 		if smooth:
-			position = position.lerp(target.global_position, delta * intensity)
+			camera_position = position.lerp(target.global_position, delta * intensity)
 		else:
 			camera_position = target.global_position#.round()
 		#print(camera_position)

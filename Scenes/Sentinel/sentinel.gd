@@ -4,6 +4,9 @@ extends CharacterBody2D
 @onready var state_machine = $state_machine
 #@onready var inputs: Node = $Inputs
 #@onready var movements: Node = $Movements
+@export var target: CharacterBody2D
+
+
 
 
 func _ready() -> void:

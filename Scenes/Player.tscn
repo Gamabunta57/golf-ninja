@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://djvi8dyyfdrkw"]
 
 [ext_resource type="Script" uid="uid://eojnyblkkyhe" path="res://Scenes/player.gd" id="1_kyqiw"]
-[ext_resource type="Texture2D" uid="uid://bwexbr086g5sj" path="res://Assets/player.png" id="1_rpqav"]
+[ext_resource type="Texture2D" uid="uid://dm443rurrb8q0" path="res://Assets/player.png" id="1_rpqav"]
 [ext_resource type="Script" uid="uid://bgmb176xk2uel" path="res://Scenes/state_machine.gd" id="3_gntrk"]
 [ext_resource type="Script" uid="uid://dxn3k220l1ad" path="res://Scenes/Player/Player State Machine/player-idle.gd" id="4_dewec"]
 [ext_resource type="Script" uid="uid://citxnxh7togl4" path="res://Scenes/Player/Player State Machine/player-inputs.gd" id="4_megsn"]
@@ -60,11 +60,11 @@ move_state = NodePath("../Move")
 
 [node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "idle_state", "move_state", "landing_state")]
 script = ExtResource("5_5ixxa")
+landing_threshold = 500.0
 jump_state = NodePath("../Jump")
 idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
 landing_state = NodePath("../Landing")
-landing_threshold = 500.0
 
 [node name="Landing" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "jump_state", "move_state", "fall_state")]
 script = ExtResource("8_bhhdu")
