@@ -1,10 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://cwfkdmyy53qiv"]
+[gd_scene load_steps=11 format=3 uid="uid://cwfkdmyy53qiv"]
 
 [ext_resource type="Texture2D" uid="uid://o5qgwor5qhaq" path="res://Assets/sentinel/sentinel.png" id="1_cuxs6"]
 [ext_resource type="Script" uid="uid://cciq2qkl606er" path="res://Scenes/Sentinel/sentinel.gd" id="1_u3sj5"]
 [ext_resource type="Script" uid="uid://bgmb176xk2uel" path="res://Scenes/state_machine.gd" id="2_51je0"]
 [ext_resource type="Script" uid="uid://kppqgyoriqpr" path="res://Scenes/Sentinel/Sentinel State Machine/sentinel-idle.gd" id="3_4wiga"]
 [ext_resource type="Script" uid="uid://b133q8oyn8jv0" path="res://Scenes/Sentinel/Sentinel State Machine/sentinel-fall.gd" id="4_omg0t"]
+[ext_resource type="Script" uid="uid://cj7gb6cg4sjk4" path="res://Scenes/Sentinel/Sentinel State Machine/sentinel-attack.gd" id="5_mvde5"]
+[ext_resource type="Script" uid="uid://bss8ujiwobpsd" path="res://Scenes/Sentinel/Sentinel State Machine/sentinel-patrol.gd" id="5_wv7bl"]
+[ext_resource type="Script" uid="uid://ck21gc5448rjd" path="res://Scenes/Sentinel/Sentinel State Machine/sentinel-chase.gd" id="6_jaqww"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u3sj5"]
 size = Vector2(140, 64)
@@ -13,22 +16,26 @@ size = Vector2(140, 64)
 size = Vector2(64, 64)
 
 [node name="Sentinel" type="CharacterBody2D"]
-collision_layer = 65
-collision_mask = 63
+collision_layer = 64
+collision_mask = 6
 script = ExtResource("1_u3sj5")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -32)
 texture = ExtResource("1_cuxs6")
 
-[node name="Area2D" type="Area2D" parent="."]
-collision_layer = 65
-collision_mask = 23
+[node name="AttackArea2D" type="Area2D" parent="."]
+collision_layer = 64
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea2D"]
 position = Vector2(0, -32)
 shape = SubResource("RectangleShape2D_u3sj5")
 debug_color = Color(0.702837, 0.272691, 1, 0.42)
+
+[node name="IdleTimer" type="Timer" parent="."]
+
+[node name="PatrolTimer" type="Timer" parent="."]
+wait_time = 2.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -32)
@@ -47,18 +54,33 @@ target_position = Vector2(128, 0)
 script = ExtResource("2_51je0")
 starting_state = NodePath("Idle")
 
-[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state")]
+[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "attack_state", "patrol_state", "idle_timer")]
 script = ExtResource("3_4wiga")
 fall_state = NodePath("../Fall")
+attack_state = NodePath("../Attack")
+patrol_state = NodePath("../Patrol")
+idle_timer = NodePath("../../IdleTimer")
 
-[node name="Patrol" type="Node" parent="state_machine"]
+[node name="Patrol" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "attack_state", "idle_state", "patrol_timer")]
+script = ExtResource("5_wv7bl")
+fall_state = NodePath("../Fall")
+attack_state = NodePath("../Attack")
+idle_state = NodePath("../Idle")
+patrol_timer = NodePath("../../PatrolTimer")
 
 [node name="Chase" type="Node" parent="state_machine"]
+script = ExtResource("6_jaqww")
 
-[node name="Attack" type="Node" parent="state_machine"]
+[node name="Attack" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "sprite")]
+script = ExtResource("5_mvde5")
+idle_state = NodePath("../Idle")
+sprite = NodePath("../../Sprite2D")
 
 [node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
 script = ExtResource("4_omg0t")
 idle_state = NodePath("../Idle")
 
-[connection signal="body_entered" from="Area2D" to="state_machine/Idle" method="_on_area_2d_body_entered"]
+[connection signal="body_entered" from="AttackArea2D" to="." method="_on_attack_area_2d_body_entered"]
+[connection signal="body_exited" from="AttackArea2D" to="." method="_on_attack_area_2d_body_exited"]
+[connection signal="timeout" from="IdleTimer" to="state_machine/Idle" method="_on_idle_timer_timeout"]
+[connection signal="timeout" from="PatrolTimer" to="state_machine/Patrol" method="_on_patrol_timer_timeout"]

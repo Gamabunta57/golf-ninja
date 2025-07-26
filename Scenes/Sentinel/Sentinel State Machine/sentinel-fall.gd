@@ -1,7 +1,6 @@
 extends State
 
 @export var idle_state: State
-
 @export var landing_threshold: float = 600
 
 

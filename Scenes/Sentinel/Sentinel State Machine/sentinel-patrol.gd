@@ -2,30 +2,32 @@ extends State
 
 @export var fall_state: State
 @export var attack_state: State
-@export var patrol_state: State
-@export var idle_timer: Timer
-var should_patrol : bool = false
+@export var idle_state: State
+@export var patrol_timer: Timer
+
+
+var should_idle: bool = false
 
 func enter() -> void:
 	super()
-	parent.velocity.x = 0
-	idle_timer.start()
-	idle_timer.connect("timeout", Callable(self, "_on_timer_timeout"))
-	print("sentinel idle")
+	parent.velocity.x = 10
+	print("patroling")
+	patrol_timer.start()
+	patrol_timer.connect("timeout", Callable(self, "_on_timer_timeout"))
+
 
 func exit() -> void:
-	idle_timer.stop()
-	should_patrol = false
-	
+	patrol_timer.stop()
+	should_idle = false
+
 func _on_timer_timeout() -> void:
-	should_patrol = true
+	should_idle = true
 
 func process_physics(delta: float) -> State:
 	if !parent.is_on_floor():
 		return fall_state
-	
-	if should_patrol:
-		return patrol_state
+	if should_idle:
+		return idle_state
 		
 	return null
 

@@ -8,13 +8,19 @@ var current_state: State
 
 # Initialize the state machine by giving each child state a reference to the
 # parent object it belongs to and enter the default starting_state.
-func init(parent: CharacterBody2D, inputs, movements) -> void:
+func init(parent: CharacterBody2D, inputs: Node = null, movements: PlayerMovement = null) -> void:
 	for child in get_children():
 		child.parent = parent
-		child.inputs = inputs
-		child.movements = movements
+	# Assign inputs, movements, and body only if they are provided (not null)
+		if inputs != null:
+			child.inputs = inputs
+
+		if movements != null:
+			child.movements = movements
+
 	# Initialize to the default state
 	change_state(starting_state)
+
 
 # Change to the new state by first calling any exit logic on the current state.
 func change_state(new_state: State) -> void:
@@ -40,5 +46,15 @@ func process_input(event: InputEvent) -> void:
 
 func process_frame(delta: float) -> void:
 	var new_state = current_state.process_frame(delta)
+	if new_state:
+		change_state(new_state)
+		
+func on_body_entered(body: Node2D) -> void:
+	var new_state = current_state.on_body_entered(body)
+	if new_state:
+		change_state(new_state)
+
+func on_body_exited(body: Node2D) -> void:
+	var new_state = current_state.on_body_exited(body)
 	if new_state:
 		change_state(new_state)

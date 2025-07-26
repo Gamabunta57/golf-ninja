@@ -5,7 +5,6 @@ extends CharacterBody2D
 @onready var inputs: Node = $Inputs
 @onready var movements: Node = $Movements
 
-
 func _ready() -> void:
 	# Initialize the state machine, passing a reference of the player to the states,
 	# that way they can move and react accordingly
