@@ -4,6 +4,7 @@ extends CharacterBody2D
 @onready var state_machine = $state_machine
 @onready var attack_area = $AttackArea2D
 #var target: CharacterBody2D = null 
+var direction: int = 1
 
 func _ready() -> void:
 	state_machine.init(self)
