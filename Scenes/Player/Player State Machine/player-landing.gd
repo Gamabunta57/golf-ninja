@@ -4,6 +4,8 @@ extends State
 @export var jump_state: State
 @export var move_state: State
 @export var fall_state: State
+@export var hurt_state: State
+
 @export var deceleration: float = 400
 @export var moving_threshold: float = 100
 
@@ -28,3 +30,7 @@ func process_physics(delta: float) -> State:
 		return jump_state
 	
 	return null
+
+func on_area_entered(body: Node2D) -> State:
+	parent.last_attacker = body
+	return hurt_state

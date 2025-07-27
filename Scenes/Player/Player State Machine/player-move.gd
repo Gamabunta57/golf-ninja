@@ -3,6 +3,7 @@ extends State
 @export var fall_state: State
 @export var idle_state: State
 @export var jump_state: State
+@export var hurt_state: State
 
 func enter() -> void:
 	super()
@@ -27,3 +28,7 @@ func process_physics(delta: float) -> State:
 	parent.move_and_slide()
 	
 	return null
+	
+func on_area_entered(body: Node2D) -> State:
+	parent.last_attacker = body
+	return hurt_state

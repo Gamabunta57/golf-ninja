@@ -4,6 +4,7 @@ extends State
 @export var fall_state: State
 @export var idle_state: State
 @export var move_state: State
+@export var hurt_state: State
 
 @export var jump_force: float = 400
 @export var jump_gravity_multiplier: float = 1.7
@@ -32,3 +33,7 @@ func process_physics(delta: float) -> State:
 		return idle_state
 	
 	return null
+
+func on_area_entered(body: Node2D) -> State:
+	parent.last_attacker = body
+	return hurt_state

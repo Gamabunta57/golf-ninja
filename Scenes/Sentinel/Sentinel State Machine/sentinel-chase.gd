@@ -10,8 +10,6 @@ extends State
 
 func enter() -> void:
 	super()
-	print("chasing")
-
 
 func process_physics(delta: float) -> State:
 		# Flip on wall or no ground	
@@ -33,9 +31,6 @@ func process_physics(delta: float) -> State:
 	return null
 
 func on_body_entered(body: Node2D) -> State:
-	# Check for the player and set it as the target
 	if body.is_in_group("Player"):
-		#parent.target = body # Store the target
-		print("Player detected, attacking!")
 		return attack_state
 	return null

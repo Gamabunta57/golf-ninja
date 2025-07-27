@@ -32,3 +32,6 @@ func on_body_entered(body: Node2D) -> State:
 
 func on_body_exited(body: Node2D) -> State:
 	return null
+
+func on_area_entered(area: Area2D) -> State:
+	return null

@@ -58,3 +58,8 @@ func on_body_exited(body: Node2D) -> void:
 	var new_state = current_state.on_body_exited(body)
 	if new_state:
 		change_state(new_state)
+
+func on_area_entered(area: Area2D) -> void:
+	var new_state = current_state.on_area_entered(area)
+	if new_state:
+		change_state(new_state)

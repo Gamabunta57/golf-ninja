@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cwfkdmyy53qiv"]
+[gd_scene load_steps=12 format=3 uid="uid://cwfkdmyy53qiv"]
 
 [ext_resource type="Texture2D" uid="uid://o5qgwor5qhaq" path="res://Assets/sentinel/sentinel.png" id="1_cuxs6"]
 [ext_resource type="Script" uid="uid://cciq2qkl606er" path="res://Scenes/Sentinel/sentinel.gd" id="1_u3sj5"]
@@ -9,13 +9,16 @@
 [ext_resource type="Script" uid="uid://bss8ujiwobpsd" path="res://Scenes/Sentinel/Sentinel State Machine/sentinel-patrol.gd" id="5_wv7bl"]
 [ext_resource type="Script" uid="uid://ck21gc5448rjd" path="res://Scenes/Sentinel/Sentinel State Machine/sentinel-chase.gd" id="6_jaqww"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_u3sj5"]
-size = Vector2(140, 64)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_51je0"]
 size = Vector2(64, 64)
 
-[node name="Sentinel" type="CharacterBody2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u3sj5"]
+size = Vector2(64, 64)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wv7bl"]
+radius = 9.05539
+
+[node name="Sentinel" type="CharacterBody2D" groups=["Sentinel"]]
 collision_layer = 64
 collision_mask = 6
 script = ExtResource("1_u3sj5")
@@ -24,19 +27,19 @@ script = ExtResource("1_u3sj5")
 position = Vector2(0, -32)
 texture = ExtResource("1_cuxs6")
 
-[node name="AttackArea2D" type="Area2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -32)
+shape = SubResource("RectangleShape2D_51je0")
+
+[node name="DetectionArea2D" type="Area2D" parent="."]
 collision_layer = 64
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea2D"]
 position = Vector2(0, -32)
 shape = SubResource("RectangleShape2D_u3sj5")
 debug_color = Color(0.702837, 0.272691, 1, 0.42)
 
 [node name="IdleTimer" type="Timer" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -32)
-shape = SubResource("RectangleShape2D_51je0")
 
 [node name="GroundCheck" type="RayCast2D" parent="."]
 position = Vector2(33, 1)
@@ -47,6 +50,21 @@ hit_from_inside = true
 [node name="PlayerCheck" type="RayCast2D" parent="."]
 position = Vector2(0, -32)
 target_position = Vector2(500, 0)
+
+[node name="AttackGrowth" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="AttackCoolDown" type="Timer" parent="."]
+wait_time = 0.8
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 128
+collision_mask = 256
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, -32)
+shape = SubResource("CircleShape2D_wv7bl")
+debug_color = Color(1, 0, 0.0166664, 0.576471)
 
 [node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
 script = ExtResource("2_51je0")
@@ -68,6 +86,7 @@ fall_state = NodePath("../Fall")
 chase_state = NodePath("../Chase")
 attack_state = NodePath("../Attack")
 idle_state = NodePath("../Idle")
+speed = null
 ground_check = NodePath("../../GroundCheck")
 player_check = NodePath("../../PlayerCheck")
 
@@ -77,17 +96,24 @@ fall_state = NodePath("../Fall")
 attack_state = NodePath("../Attack")
 idle_state = NodePath("../Idle")
 patrol_state = NodePath("../Patrol")
+speed = null
 ground_check = NodePath("../../GroundCheck")
 player_check = NodePath("../../PlayerCheck")
 
-[node name="Attack" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
+[node name="Attack" type="Node" parent="state_machine" node_paths=PackedStringArray("patrol_state", "attack_growth", "attack_cool_down", "hitbox")]
 script = ExtResource("5_mvde5")
-idle_state = NodePath("../Idle")
+patrol_state = NodePath("../Patrol")
+attack_growth = NodePath("../../AttackGrowth")
+attack_cool_down = NodePath("../../AttackCoolDown")
+hitbox = NodePath("../../Hitbox/CollisionShape2D")
+hitbox_scale_growth = Vector2(1.09, 1.09)
 
 [node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
 script = ExtResource("4_omg0t")
 idle_state = NodePath("../Idle")
+landing_threshold = null
+fall_gravity_multiplier = null
 
-[connection signal="body_entered" from="AttackArea2D" to="." method="_on_attack_area_2d_body_entered"]
-[connection signal="body_exited" from="AttackArea2D" to="." method="_on_attack_area_2d_body_exited"]
+[connection signal="body_entered" from="DetectionArea2D" to="." method="_on_attack_area_2d_body_entered"]
+[connection signal="body_exited" from="DetectionArea2D" to="." method="_on_attack_area_2d_body_exited"]
 [connection signal="timeout" from="IdleTimer" to="state_machine/Idle" method="_on_idle_timer_timeout"]

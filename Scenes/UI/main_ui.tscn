@@ -1,0 +1,58 @@
+[gd_scene load_steps=3 format=3 uid="uid://bjwcnk1relq0h"]
+
+[ext_resource type="Texture2D" uid="uid://bic1eppdrxclc" path="res://Assets/UI/empty-heart.png" id="1_mcebo"]
+[ext_resource type="Script" uid="uid://bytymxwfdt52n" path="res://Scenes/UI/main_ui.gd" id="1_xltjf"]
+
+[node name="MainUI" type="Control" groups=["UI"]]
+layout_direction = 2
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_xltjf")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -42.0
+offset_right = 206.0
+grow_vertical = 0
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_bottom = 10
+
+[node name="hearts" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="empty hearts" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/empty hearts"]
+layout_mode = 2
+texture = ExtResource("1_mcebo")
+stretch_mode = 2
+
+[node name="TextureRect2" type="TextureRect" parent="MarginContainer/empty hearts"]
+layout_mode = 2
+texture = ExtResource("1_mcebo")
+stretch_mode = 2
+
+[node name="TextureRect3" type="TextureRect" parent="MarginContainer/empty hearts"]
+layout_mode = 2
+texture = ExtResource("1_mcebo")
+stretch_mode = 2
+
+[node name="TextureRect4" type="TextureRect" parent="MarginContainer/empty hearts"]
+layout_mode = 2
+texture = ExtResource("1_mcebo")
+stretch_mode = 2
+
+[node name="TextureRect5" type="TextureRect" parent="MarginContainer/empty hearts"]
+layout_mode = 2
+texture = ExtResource("1_mcebo")
+stretch_mode = 2

@@ -6,10 +6,13 @@ extends CharacterBody2D
 @onready var inputs: Node = $Inputs
 @onready var movements: Node = $Movements
 
+@export var player_health: int = 5
+@export var game_over: PackedScene
+
+var last_attacker: Node2D
 
 func _ready() -> void:
-	# Initialize the state machine, passing a reference of the player to the states,
-	# that way they can move and react accordingly
+	health()
 	state_machine.init(self, inputs, movements)
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -20,3 +23,11 @@ func _physics_process(delta: float) -> void:
 
 func _process(delta: float) -> void:
 	state_machine.process_frame(delta)
+
+func _on_hurtbox_area_entered(area: Area2D) -> void:
+	state_machine.on_area_entered(area)
+
+func health():
+	get_tree().call_group('UI', 'set_health', player_health)
+	if player_health <= 0:
+		get_tree().change_scene_to_packed(game_over)

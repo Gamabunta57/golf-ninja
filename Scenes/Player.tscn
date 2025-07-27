@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://djvi8dyyfdrkw"]
+[gd_scene load_steps=15 format=3 uid="uid://djvi8dyyfdrkw"]
 
 [ext_resource type="Script" uid="uid://eojnyblkkyhe" path="res://Scenes/player.gd" id="1_kyqiw"]
 [ext_resource type="Texture2D" uid="uid://dm443rurrb8q0" path="res://Assets/player.png" id="1_rpqav"]
+[ext_resource type="PackedScene" uid="uid://yoqrhnc4doia" path="res://Scenes/UI/game_over.tscn" id="2_glx4g"]
 [ext_resource type="Script" uid="uid://bgmb176xk2uel" path="res://Scenes/state_machine.gd" id="3_gntrk"]
 [ext_resource type="Script" uid="uid://dxn3k220l1ad" path="res://Scenes/Player/Player State Machine/player-idle.gd" id="4_dewec"]
 [ext_resource type="Script" uid="uid://citxnxh7togl4" path="res://Scenes/Player/Player State Machine/player-inputs.gd" id="4_megsn"]
@@ -10,17 +11,22 @@
 [ext_resource type="Script" uid="uid://cvifrmoiqkhmr" path="res://Scenes/Player/Player State Machine/player-move.gd" id="5_52ee3"]
 [ext_resource type="Script" uid="uid://b3p30u3docj7x" path="res://Scenes/Player/Player State Machine/player-jump.gd" id="5_nn08x"]
 [ext_resource type="Script" uid="uid://cqym3jl820dxf" path="res://Scenes/Player/Player State Machine/player-landing.gd" id="8_bhhdu"]
+[ext_resource type="Script" uid="uid://1tiwoc1g5a47" path="res://Scenes/Player/Player State Machine/player-hurt.gd" id="11_ksbbd"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kyqiw"]
 radius = 12.0
 height = 36.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ksbbd"]
+size = Vector2(24, 50)
+
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
-collision_mask = 14
+collision_mask = 142
 floor_stop_on_slope = false
 floor_constant_speed = true
 floor_snap_length = 6.0
 script = ExtResource("1_kyqiw")
+game_over = ExtResource("2_glx4g")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -25)
@@ -30,8 +36,23 @@ texture = ExtResource("1_rpqav")
 position = Vector2(0, -18)
 shape = SubResource("CapsuleShape2D_kyqiw")
 
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 256
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -25)
+shape = SubResource("RectangleShape2D_ksbbd")
+debug_color = Color(0.613335, 0.507526, 0.491255, 0.42)
+
 [node name="Inputs" type="Node" parent="."]
 script = ExtResource("4_megsn")
+
+[node name="HurtTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="KnockbackTimer" type="Timer" parent="."]
+wait_time = 0.1
 
 [node name="Movements" type="Node" parent="."]
 script = ExtResource("4_yoq75")
@@ -40,35 +61,49 @@ script = ExtResource("4_yoq75")
 script = ExtResource("3_gntrk")
 starting_state = NodePath("Idle")
 
-[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "jump_state", "move_state")]
+[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "jump_state", "move_state", "hurt_state")]
 script = ExtResource("4_dewec")
 fall_state = NodePath("../Fall")
 jump_state = NodePath("../Jump")
 move_state = NodePath("../Move")
+hurt_state = NodePath("../Hurt")
 
-[node name="Move" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "jump_state")]
+[node name="Move" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "jump_state", "hurt_state")]
 script = ExtResource("5_52ee3")
 fall_state = NodePath("../Fall")
 idle_state = NodePath("../Idle")
 jump_state = NodePath("../Jump")
+hurt_state = NodePath("../Hurt")
 
-[node name="Jump" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "move_state")]
+[node name="Jump" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "move_state", "hurt_state")]
 script = ExtResource("5_nn08x")
 fall_state = NodePath("../Fall")
 idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
+hurt_state = NodePath("../Hurt")
 
-[node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "idle_state", "move_state", "landing_state")]
+[node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "idle_state", "move_state", "landing_state", "hurt_state")]
 script = ExtResource("5_5ixxa")
 jump_state = NodePath("../Jump")
 idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
 landing_state = NodePath("../Landing")
+hurt_state = NodePath("../Hurt")
 landing_threshold = 500.0
 
-[node name="Landing" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "jump_state", "move_state", "fall_state")]
+[node name="Landing" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "jump_state", "move_state", "fall_state", "hurt_state")]
 script = ExtResource("8_bhhdu")
 idle_state = NodePath("../Idle")
 jump_state = NodePath("../Jump")
 move_state = NodePath("../Move")
 fall_state = NodePath("../Fall")
+hurt_state = NodePath("../Hurt")
+
+[node name="Hurt" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "hurt_timer", "knockback_timer")]
+script = ExtResource("11_ksbbd")
+idle_state = NodePath("../Idle")
+hurt_timer = NodePath("../../HurtTimer")
+knockback_timer = NodePath("../../KnockbackTimer")
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
+[connection signal="body_entered" from="Hurtbox" to="." method="_on_hurtbox_body_entered"]

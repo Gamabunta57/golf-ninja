@@ -49,9 +49,9 @@ func process_physics(delta: float) -> State:
 	return null
 
 func on_body_entered(body: Node2D) -> State:
-	
-	if body.is_in_group("Player"):
-		print("Player detected, attacking!")
-		return attack_state
-		
-	return null
+	return attack_state
+	#if body.is_in_group("Player"):
+		#print("Player detected, attacking!")
+		#return attack_state
+		#
+	#return null

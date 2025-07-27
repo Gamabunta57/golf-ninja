@@ -31,12 +31,15 @@ folder_colors={
 "res://Assets/": "orange",
 "res://Scenes/Player/": "yellow",
 "res://Scenes/Sentinel/": "red",
-"res://Scenes/State Machine/": "purple"
+"res://Scenes/State Machine/": "purple",
+"res://Scenes/UI/": "teal"
 }
 
 [global_group]
 
 Player=""
+Sentinel=""
+UI=""
 
 [input]
 
@@ -80,6 +83,8 @@ up={
 2d_physics/layer_5="Ball"
 2d_physics/layer_6="Bin"
 2d_physics/layer_7="Enemy"
+2d_physics/layer_8="Hitbox"
+2d_physics/layer_9="Hurtbox"
 
 [rendering]
 

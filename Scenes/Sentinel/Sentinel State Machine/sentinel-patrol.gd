@@ -13,7 +13,6 @@ var should_idle: bool = false
 func enter() -> void:
 	super()
 	parent.velocity.x = 0
-	print("patroling")
 
 func exit() -> void:
 	should_idle = false
@@ -41,9 +40,6 @@ func process_physics(delta: float) -> State:
 	return null
 
 func on_body_entered(body: Node2D) -> State:
-	# Check for the player and set it as the target
 	if body.is_in_group("Player"):
-		#parent.target = body # Store the target
-		print("Player detected, attacking!")
 		return attack_state
 	return null
