@@ -34,9 +34,6 @@ debug_color = Color(0.702837, 0.272691, 1, 0.42)
 
 [node name="IdleTimer" type="Timer" parent="."]
 
-[node name="PatrolTimer" type="Timer" parent="."]
-wait_time = 6.0
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -32)
 shape = SubResource("RectangleShape2D_51je0")
@@ -49,35 +46,43 @@ hit_from_inside = true
 
 [node name="PlayerCheck" type="RayCast2D" parent="."]
 position = Vector2(0, -32)
-target_position = Vector2(128, 0)
+target_position = Vector2(500, 0)
 
 [node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
 script = ExtResource("2_51je0")
 starting_state = NodePath("Idle")
 
-[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "attack_state", "patrol_state", "idle_timer")]
+[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "attack_state", "patrol_state", "chase_state", "idle_timer", "player_check")]
 script = ExtResource("3_4wiga")
 fall_state = NodePath("../Fall")
 attack_state = NodePath("../Attack")
 patrol_state = NodePath("../Patrol")
+chase_state = NodePath("../Chase")
 idle_timer = NodePath("../../IdleTimer")
+player_check = NodePath("../../PlayerCheck")
 detection_range = 1000.0
 
-[node name="Patrol" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "attack_state", "idle_state", "patrol_timer", "ground_check")]
+[node name="Patrol" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "chase_state", "attack_state", "idle_state", "ground_check", "player_check")]
 script = ExtResource("5_wv7bl")
+fall_state = NodePath("../Fall")
+chase_state = NodePath("../Chase")
+attack_state = NodePath("../Attack")
+idle_state = NodePath("../Idle")
+ground_check = NodePath("../../GroundCheck")
+player_check = NodePath("../../PlayerCheck")
+
+[node name="Chase" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "attack_state", "idle_state", "patrol_state", "ground_check", "player_check")]
+script = ExtResource("6_jaqww")
 fall_state = NodePath("../Fall")
 attack_state = NodePath("../Attack")
 idle_state = NodePath("../Idle")
-patrol_timer = NodePath("../../PatrolTimer")
+patrol_state = NodePath("../Patrol")
 ground_check = NodePath("../../GroundCheck")
+player_check = NodePath("../../PlayerCheck")
 
-[node name="Chase" type="Node" parent="state_machine"]
-script = ExtResource("6_jaqww")
-
-[node name="Attack" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "sprite")]
+[node name="Attack" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
 script = ExtResource("5_mvde5")
 idle_state = NodePath("../Idle")
-sprite = NodePath("../../Sprite2D")
 
 [node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
 script = ExtResource("4_omg0t")
@@ -86,4 +91,3 @@ idle_state = NodePath("../Idle")
 [connection signal="body_entered" from="AttackArea2D" to="." method="_on_attack_area_2d_body_entered"]
 [connection signal="body_exited" from="AttackArea2D" to="." method="_on_attack_area_2d_body_exited"]
 [connection signal="timeout" from="IdleTimer" to="state_machine/Idle" method="_on_idle_timer_timeout"]
-[connection signal="timeout" from="PatrolTimer" to="state_machine/Patrol" method="_on_patrol_timer_timeout"]

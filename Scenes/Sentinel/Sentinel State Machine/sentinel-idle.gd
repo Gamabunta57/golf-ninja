@@ -3,7 +3,9 @@ extends State
 @export var fall_state: State
 @export var attack_state: State
 @export var patrol_state: State
+@export var chase_state: State
 @export var idle_timer: Timer
+@export var player_check: RayCast2D
 @export var detection_range: float = 500.0
 
 var should_patrol : bool = false
@@ -15,7 +17,6 @@ func enter() -> void:
 	parent.velocity.x = 0
 	player = get_tree().get_first_node_in_group("Player")
 	idle_timer.connect("timeout", Callable(self, "_on_timer_timeout"))
-	print("sentinel idle")
 
 func exit() -> void:
 	idle_timer.stop()
@@ -38,7 +39,10 @@ func process_physics(delta: float) -> State:
 	else:
 		if idle_timer.time_left > 0.0:
 			idle_timer.stop()
-			
+	
+	if player_check.is_colliding():
+		return chase_state
+		
 	if should_patrol:
 		return patrol_state
 		

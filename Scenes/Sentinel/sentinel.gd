@@ -23,3 +23,7 @@ func _on_attack_area_2d_body_entered(body: Node2D) -> void:
 
 func _on_attack_area_2d_body_exited(body: Node2D) -> void:
 	state_machine.on_body_exited(body)
+
+func flip_direction():
+	direction *= -1
+	scale.x *= -1
