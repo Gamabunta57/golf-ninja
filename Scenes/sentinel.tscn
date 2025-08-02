@@ -13,10 +13,10 @@
 size = Vector2(64, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u3sj5"]
-size = Vector2(64, 64)
+size = Vector2(82, 64)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wv7bl"]
-radius = 9.05539
+radius = 16.0
 
 [node name="Sentinel" type="CharacterBody2D" groups=["Sentinel"]]
 collision_layer = 64
@@ -52,7 +52,7 @@ position = Vector2(0, -32)
 target_position = Vector2(500, 0)
 
 [node name="AttackGrowth" type="Timer" parent="."]
-wait_time = 0.5
+wait_time = 0.355
 
 [node name="AttackCoolDown" type="Timer" parent="."]
 wait_time = 0.8
@@ -106,7 +106,6 @@ patrol_state = NodePath("../Patrol")
 attack_growth = NodePath("../../AttackGrowth")
 attack_cool_down = NodePath("../../AttackCoolDown")
 hitbox = NodePath("../../Hitbox/CollisionShape2D")
-hitbox_scale_growth = Vector2(1.09, 1.09)
 
 [node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
 script = ExtResource("4_omg0t")

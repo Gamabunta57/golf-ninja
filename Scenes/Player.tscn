@@ -15,7 +15,7 @@
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kyqiw"]
 radius = 12.0
-height = 36.0
+height = 50.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ksbbd"]
 size = Vector2(24, 50)
@@ -33,7 +33,7 @@ position = Vector2(0, -25)
 texture = ExtResource("1_rpqav")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -18)
+position = Vector2(0, -25)
 shape = SubResource("CapsuleShape2D_kyqiw")
 
 [node name="Hurtbox" type="Area2D" parent="."]

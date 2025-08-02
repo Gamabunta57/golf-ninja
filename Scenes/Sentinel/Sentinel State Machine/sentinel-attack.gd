@@ -10,7 +10,7 @@ var delta_x: float
 var should_patrol: bool
 
 @export var initial_hitbox_scale: Vector2 = Vector2(1.0, 1.0) # Starting scale
-@export var hitbox_scale_growth: Vector2 = Vector2(1.05, 1.05)   # Scale at the end of growth
+@export var hitbox_scale_growth: Vector2 = Vector2(1.12, 1.12)   # Scale at the end of growth
 
 func enter() -> void:
 	super()

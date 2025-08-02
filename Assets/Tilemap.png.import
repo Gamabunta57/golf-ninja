@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cui1qu8ciexqe"
-path="res://.godot/imported/tile-hole.png-484cd3b7e4517829c70bd79a42ea7b5f.ctex"
+uid="uid://c7scxxc4gx8sh"
+path="res://.godot/imported/Tilemap.png-a581bee5a48cdd2ed50c15852808c409.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Tileset/tile-hole.png"
-dest_files=["res://.godot/imported/tile-hole.png-484cd3b7e4517829c70bd79a42ea7b5f.ctex"]
+source_file="res://Assets/Tilemap.png"
+dest_files=["res://.godot/imported/Tilemap.png-a581bee5a48cdd2ed50c15852808c409.ctex"]
 
 [params]
 
