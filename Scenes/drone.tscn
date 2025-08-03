@@ -14,11 +14,12 @@ radius = 12.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_n202n"]
 radius = 248.018
 
-[node name="Drone" type="CharacterBody2D"]
+[node name="Drone" type="CharacterBody2D" node_paths=PackedStringArray("player_check")]
 collision_layer = 64
 collision_mask = 2
 motion_mode = 1
 script = ExtResource("1_o36xs")
+player_check = NodePath("PlayerCheck")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_i3b1v")
@@ -42,7 +43,7 @@ script = ExtResource("3_y2b23")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 path_desired_distance = 26.0
-target_desired_distance = 100.0
+target_desired_distance = 1.0
 path_postprocessing = 1
 simplify_path = true
 simplify_epsilon = 1.476

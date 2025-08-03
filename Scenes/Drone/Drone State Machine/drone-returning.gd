@@ -10,13 +10,10 @@ extends State
 func enter() -> void:
 	super()
 	print("returning")
-	print(parent.origin_position)
 	navigation_agent.target_position = parent.origin_position
 	
 func process_physics(delta: float) -> State:
-	if player_check.is_colliding():
-		var collider = player_check.get_collider()
-		if collider.is_in_group("Player"):
+	if parent.player_visible:
 			return chase_state
 	
 	var next_path_position = navigation_agent.get_next_path_position()
@@ -24,9 +21,10 @@ func process_physics(delta: float) -> State:
 	
 	parent.velocity = direction_to_next_point * speed
 	
-	parent.move_and_slide()
 	
-	if parent.global_position.distance_to(parent.origin_position) <= 1 :
+	if parent.distance_to_origin <= 1 :
 		return idle_state
+		
+	parent.move_and_slide()
 	
 	return null

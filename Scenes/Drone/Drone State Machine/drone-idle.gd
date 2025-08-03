@@ -13,17 +13,16 @@ var player: CharacterBody2D
 
 func enter() -> void:
 	super()
-	parent.velocity.x = 0
+	parent.velocity = Vector2(0.0, 0.0)
+	print("idle")
 	return_timer.start()
 
 
 func process_physics(delta: float) -> State:
-	if player_check.is_colliding():
-		var collider = player_check.get_collider()
-		if collider.is_in_group("Player"):
+	if parent.player_visible:
 			return chase_state 
 	
-	if parent.global_position.distance_to(parent.origin_position) > 1 and should_return:
+	if parent.distance_to_origin > 1 and should_return:
 		return returning_state
 	
 	return null

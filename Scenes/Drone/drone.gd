@@ -3,8 +3,13 @@ extends CharacterBody2D
 @onready var state_machine = $state_machine
 #@onready var attack_area = $AttackArea2D
 @onready var navigation_agent_2d: NavigationAgent2D = $NavigationAgent2D
+@export var player_check: RayCast2D
+
 var origin_position: Vector2
 var direction : int = 1
+var player_visible: bool = false
+var distance_to_origin: float = 0.0
+var last_player_position: Vector2
 
 func _ready() -> void:
 	state_machine.init(self)
@@ -14,6 +19,16 @@ func _unhandled_input(event: InputEvent) -> void:
 	state_machine.process_input(event)
 
 func _physics_process(delta: float) -> void:
+	if player_check.is_colliding():
+		var collider = player_check.get_collider()
+		if collider.is_in_group("Player"):
+			player_visible = true
+			last_player_position = collider.global_position - Vector2(0.0, 50.0)
+		else:
+			player_visible = false
+	
+	distance_to_origin = global_position.distance_to(origin_position)
+	
 	state_machine.process_physics(delta)
 
 func _process(delta: float) -> void:
