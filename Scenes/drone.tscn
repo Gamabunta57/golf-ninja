@@ -1,0 +1,77 @@
+[gd_scene load_steps=10 format=3 uid="uid://b1id28axcsihs"]
+
+[ext_resource type="Script" uid="uid://c4km22eh44djy" path="res://Scenes/Drone/drone.gd" id="1_o36xs"]
+[ext_resource type="Texture2D" uid="uid://cotlsmt0dmm3n" path="res://Assets/Drone/drone.png" id="2_i3b1v"]
+[ext_resource type="Script" uid="uid://bgmb176xk2uel" path="res://Scenes/state_machine.gd" id="3_x74uf"]
+[ext_resource type="Script" uid="uid://b7df1mni43fao" path="res://Scenes/Drone/drone-player_check-raycast.gd" id="3_y2b23"]
+[ext_resource type="Script" uid="uid://un2wu10teutt" path="res://Scenes/Drone/Drone State Machine/drone-idle.gd" id="4_y2b23"]
+[ext_resource type="Script" uid="uid://s4h8vgh5ln3k" path="res://Scenes/Drone/Drone State Machine/drone-chase.gd" id="6_n202n"]
+[ext_resource type="Script" uid="uid://bwq2cux3fd5ui" path="res://Scenes/Drone/Drone State Machine/drone-returning.gd" id="7_mmlcq"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mmlcq"]
+radius = 12.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_n202n"]
+radius = 248.018
+
+[node name="Drone" type="CharacterBody2D"]
+collision_layer = 64
+collision_mask = 2
+motion_mode = 1
+script = ExtResource("1_o36xs")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_i3b1v")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_mmlcq")
+
+[node name="ReturnTimer" type="Timer" parent="."]
+wait_time = 3.0
+
+[node name="DetectionZone" type="Area2D" parent="."]
+
+[node name="DetectionArea" type="CollisionShape2D" parent="DetectionZone"]
+shape = SubResource("CircleShape2D_n202n")
+debug_color = Color(0, 0.64, 0.384, 0.0901961)
+
+[node name="PlayerCheck" type="RayCast2D" parent="."]
+target_position = Vector2(0, 250)
+collision_mask = 3
+script = ExtResource("3_y2b23")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 26.0
+target_desired_distance = 100.0
+path_postprocessing = 1
+simplify_path = true
+simplify_epsilon = 1.476
+debug_enabled = true
+
+[node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
+script = ExtResource("3_x74uf")
+starting_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("chase_state", "returning_state", "return_timer", "player_check")]
+script = ExtResource("4_y2b23")
+chase_state = NodePath("../Chase")
+returning_state = NodePath("../Returning")
+return_timer = NodePath("../../ReturnTimer")
+player_check = NodePath("../../PlayerCheck")
+
+[node name="Chase" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "player_check", "navigation_agent")]
+script = ExtResource("6_n202n")
+idle_state = NodePath("../Idle")
+player_check = NodePath("../../PlayerCheck")
+navigation_agent = NodePath("../../NavigationAgent2D")
+
+[node name="Returning" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "chase_state", "player_check", "navigation_agent")]
+script = ExtResource("7_mmlcq")
+idle_state = NodePath("../Idle")
+chase_state = NodePath("../Chase")
+player_check = NodePath("../../PlayerCheck")
+navigation_agent = NodePath("../../NavigationAgent2D")
+
+[connection signal="timeout" from="ReturnTimer" to="state_machine/Idle" method="_on_return_timer_timeout"]
+[connection signal="body_entered" from="DetectionZone" to="PlayerCheck" method="_on_detection_zone_body_entered"]
+[connection signal="body_exited" from="DetectionZone" to="PlayerCheck" method="_on_detection_zone_body_exited"]
