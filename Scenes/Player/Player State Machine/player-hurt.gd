@@ -5,7 +5,8 @@ extends State
 @export var knockback_timer: Timer
 
 @export var fall_gravity_multiplier: float = 3
-@export var knockback: float = 500
+@export var knockback_strength: float = 500
+@export var game_over: PackedScene
 
 var is_hurt : bool
 var is_backlash: bool
@@ -15,7 +16,8 @@ func enter() -> void:
 	super()
 	is_hurt = true
 	
-	parent.velocity += (parent.global_position - Global.last_attacker_position).normalized() * knockback
+	var knockback_direction = sign(parent.global_position.x - parent.enemy_position.x)
+	parent.velocity.x = knockback_direction * knockback_strength
 	
 	hurt_timer.start()
 	knockback_timer.start()
@@ -29,11 +31,13 @@ func _on_hurt_timer_timeout():
 	hurt_timer.stop()
 
 func process_physics(delta: float) -> State:
-	
 	parent.velocity.y += gravity * fall_gravity_multiplier * delta
 	parent.move_and_slide()
 	
 	if not is_hurt:
-		return idle_state
+		if Global.player_health <= 0 :
+			get_tree().change_scene_to_packed(game_over)
+		else:
+			return idle_state
 	
 	return null

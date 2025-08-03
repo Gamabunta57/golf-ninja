@@ -14,10 +14,10 @@
 radius = 12.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_n202n"]
-radius = 425.029
+radius = 324.014
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_uuft2"]
-radius = 226.08
+radius = 169.074
 
 [node name="Drone" type="CharacterBody2D" node_paths=PackedStringArray("player_check", "attack_cooldown_timer")]
 collision_layer = 64
@@ -61,7 +61,6 @@ target_desired_distance = 1.0
 path_postprocessing = 1
 simplify_path = true
 simplify_epsilon = 1.476
-debug_enabled = true
 
 [node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
 script = ExtResource("3_x74uf")

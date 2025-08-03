@@ -7,9 +7,8 @@ extends CharacterBody2D
 @onready var movements: Node = $Movements
 
 @export var player_health: int = 5
-@export var game_over: PackedScene
 
-var last_attacker: Node2D
+var enemy_position: Vector2
 
 func _ready() -> void:
 	get_tree().call_group('UI', 'set_health')
@@ -22,12 +21,6 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	state_machine.process_physics(delta)
 
-func _process(delta: float) -> void:
-	if Global.player_health <= 0:
-		get_tree().change_scene_to_packed(game_over)
-		Global.player_health = Global.player_max_health
-		
-	state_machine.process_frame(delta)
-
-func _on_damage_received() -> void:
+func _on_damage_received(origin_position) -> void:
+	enemy_position = origin_position
 	state_machine._on_damage_received()

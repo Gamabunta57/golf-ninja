@@ -21,6 +21,7 @@ func process_physics(delta: float) -> State:
 		
 		var bullet_direction = (parent.last_player_position - parent.global_position).normalized()
 		new_bullet.set_bullet_direction(bullet_direction)
+		new_bullet.set_origin_position(parent.global_position)
 		
 		attack_cooldown_timer.start()
 	

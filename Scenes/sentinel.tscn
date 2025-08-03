@@ -109,6 +109,7 @@ idle_state = NodePath("../Idle")
 [connection signal="body_entered" from="AttackZone" to="." method="_on_attack_zone_body_entered"]
 [connection signal="body_entered" from="AttackZone" to="state_machine/Attack" method="_on_attack_zone_body_entered"]
 [connection signal="body_exited" from="AttackZone" to="." method="_on_attack_zone_body_exited"]
+[connection signal="body_exited" from="AttackZone" to="state_machine/Idle" method="_on_attack_zone_body_exited"]
 [connection signal="timeout" from="IdleTimer" to="." method="_on_idle_timer_timeout"]
 [connection signal="timeout" from="IdleTimer" to="state_machine/Idle" method="_on_idle_timer_timeout"]
 [connection signal="timeout" from="AttackCooldown" to="." method="_on_attack_cooldown_timeout"]

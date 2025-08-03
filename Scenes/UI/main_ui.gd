@@ -4,10 +4,10 @@ static var empty_heart_texture = load("res://Assets/UI/empty-heart.png")
 static var full_heart_texture = load("res://Assets/UI/full-heart.png")
 
 func _ready() -> void:
-	set_health()
+	set_health(null)
 	SignalBus.damage.connect(set_health)
 
-func set_health():
+func set_health(origin_position):
 	for child in $MarginContainer/hearts.get_children():
 		child.queue_free()
 	

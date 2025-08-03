@@ -37,7 +37,7 @@ func _on_attack_zone_body_entered(body: Node2D) -> void:
 
 func _on_attack_zone_body_exited(body: Node2D) -> void:
 	player_in_attack_zone = false # Replace with function body.
-
+	
 func _on_attack_cooldown_timeout() -> void:
 	attack_cooldown = false
 	cooldown_timer.stop()

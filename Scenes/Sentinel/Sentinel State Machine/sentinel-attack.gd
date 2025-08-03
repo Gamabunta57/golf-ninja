@@ -17,8 +17,7 @@ func process_physics(delta: float) -> State:
 		parent.attack_cooldown = true
 		cooldown.start()
 		Global.player_health -= damage
-		Global.last_attacker_position = parent.global_position
-		SignalBus.damage.emit()
+		SignalBus.damage.emit(parent.global_position)
 	else:
 		return idle_state
 	return null

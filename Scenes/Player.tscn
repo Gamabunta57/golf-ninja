@@ -23,7 +23,6 @@ floor_stop_on_slope = false
 floor_constant_speed = true
 floor_snap_length = 6.0
 script = ExtResource("1_kyqiw")
-game_over = ExtResource("2_glx4g")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -25)
@@ -92,6 +91,7 @@ script = ExtResource("11_ksbbd")
 idle_state = NodePath("../Idle")
 hurt_timer = NodePath("../../HurtTimer")
 knockback_timer = NodePath("../../KnockbackTimer")
+game_over = ExtResource("2_glx4g")
 
 [connection signal="timeout" from="HurtTimer" to="state_machine/Hurt" method="_on_hurt_timer_timeout"]
 [connection signal="timeout" from="KnockbackTimer" to="state_machine/Hurt" method="_on_knockback_timer_timeout"]

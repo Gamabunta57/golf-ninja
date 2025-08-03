@@ -27,7 +27,7 @@ func _physics_process(delta: float) -> void:
 		var collider = player_check.get_collider()
 		if collider.is_in_group("Player"):
 			player_visible = true
-			last_player_position = collider.global_position - Vector2(0.0, 50.0)
+			last_player_position = collider.global_position - Vector2(0.0, 25.0)
 		else:
 			player_visible = false
 	

@@ -42,9 +42,10 @@ func process_physics(delta: float) -> State:
 	if player_check.is_colliding() and not parent.attack_cooldown:
 		return chase_state
 	
-	if parent.attack_cooldown and not player_check.is_colliding():
-		print("should flip")
-		parent.flip_direction()
+	if parent.attack_cooldown and not player_check.is_colliding() :
+		var delta_x = parent.player_position.x - parent.global_position.x
+		if delta_x * parent.direction > 0:
+			parent.flip_direction()
 	
 	if should_patrol:
 		return patrol_state

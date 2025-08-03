@@ -1,3 +1,3 @@
 extends Node
 
-signal damage()
+signal damage(origin_position)
