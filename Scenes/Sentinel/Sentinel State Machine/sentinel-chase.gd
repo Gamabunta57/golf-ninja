@@ -26,11 +26,8 @@ func process_physics(delta: float) -> State:
 	
 	if not player_check.is_colliding():
 		return patrol_state
-		
 	
-	return null
-
-func on_body_entered(body: Node2D) -> State:
-	if body.is_in_group("Player"):
+	if parent.player_in_attack_zone:
 		return attack_state
+	
 	return null

@@ -158,10 +158,12 @@ position = Vector2(-848, 1773)
 position = Vector2(55, 2032)
 
 [node name="Sentinel2" parent="." instance=ExtResource("11_7yui6")]
-position = Vector2(371, 1647)
+position = Vector2(419, 2020)
 
 [node name="Sentinel3" parent="." instance=ExtResource("11_7yui6")]
 position = Vector2(340, 1391)
 
 [node name="Drone" parent="." instance=ExtResource("7_o06y3")]
-position = Vector2(-210, 1836)
+position = Vector2(-327, 1455)
+
+[node name="Bullets" type="Node2D" parent="."]

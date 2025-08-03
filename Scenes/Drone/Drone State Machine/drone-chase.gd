@@ -3,8 +3,7 @@ extends State
 @export var attack_state: State
 @export var idle_state: State
 @export var speed: float = 100.0
-@export var chase_threshold: float = 20
-@export var player_check: RayCast2D
+@export var min_distance_to_target: float = 50
 @export var navigation_agent: NavigationAgent2D
 
 var player_visible: bool = false
@@ -34,13 +33,16 @@ func process_physics(delta: float) -> State:
 	# Stop before reaching the player
 	var distance_to_target: float = parent.global_position.distance_to(parent.last_player_position)
 	
-	if distance_to_target >= 50:
+	if distance_to_target >= min_distance_to_target:
 		direction_to_next_point = (next_path_position - parent.global_position).normalized()
 	
 	parent.velocity = direction_to_next_point * speed
 	
 	parent.move_and_slide()
 	
+	if parent.player_in_attack_zone and parent.player_visible:
+		return attack_state
+		
 	if parent.velocity.is_zero_approx() and not player_visible:
 			return idle_state
 		

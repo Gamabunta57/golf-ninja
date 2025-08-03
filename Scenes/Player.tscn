@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://djvi8dyyfdrkw"]
+[gd_scene load_steps=14 format=3 uid="uid://djvi8dyyfdrkw"]
 
 [ext_resource type="Script" uid="uid://eojnyblkkyhe" path="res://Scenes/player.gd" id="1_kyqiw"]
 [ext_resource type="Texture2D" uid="uid://dm443rurrb8q0" path="res://Assets/player.png" id="1_rpqav"]
@@ -17,9 +17,6 @@
 radius = 12.0
 height = 50.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ksbbd"]
-size = Vector2(24, 50)
-
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 collision_mask = 142
 floor_stop_on_slope = false
@@ -36,20 +33,11 @@ texture = ExtResource("1_rpqav")
 position = Vector2(0, -25)
 shape = SubResource("CapsuleShape2D_kyqiw")
 
-[node name="Hurtbox" type="Area2D" parent="."]
-collision_layer = 256
-collision_mask = 128
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
-position = Vector2(0, -25)
-shape = SubResource("RectangleShape2D_ksbbd")
-debug_color = Color(0.613335, 0.507526, 0.491255, 0.42)
-
 [node name="Inputs" type="Node" parent="."]
 script = ExtResource("4_megsn")
 
 [node name="HurtTimer" type="Timer" parent="."]
-wait_time = 0.5
+wait_time = 0.2
 
 [node name="KnockbackTimer" type="Timer" parent="."]
 wait_time = 0.1
@@ -105,5 +93,5 @@ idle_state = NodePath("../Idle")
 hurt_timer = NodePath("../../HurtTimer")
 knockback_timer = NodePath("../../KnockbackTimer")
 
-[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
-[connection signal="body_entered" from="Hurtbox" to="." method="_on_hurtbox_body_entered"]
+[connection signal="timeout" from="HurtTimer" to="state_machine/Hurt" method="_on_hurt_timer_timeout"]
+[connection signal="timeout" from="KnockbackTimer" to="state_machine/Hurt" method="_on_knockback_timer_timeout"]

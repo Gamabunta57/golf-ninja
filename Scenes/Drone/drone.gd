@@ -4,12 +4,16 @@ extends CharacterBody2D
 #@onready var attack_area = $AttackArea2D
 @onready var navigation_agent_2d: NavigationAgent2D = $NavigationAgent2D
 @export var player_check: RayCast2D
+@export var attack_cooldown_timer: Timer
+@onready var bullets: Node2D = $"../Bullets"
 
 var origin_position: Vector2
 var direction : int = 1
 var player_visible: bool = false
 var distance_to_origin: float = 0.0
 var last_player_position: Vector2
+var player_in_attack_zone: bool = false
+var ready_to_fire: bool = true
 
 func _ready() -> void:
 	state_machine.init(self)
@@ -34,12 +38,19 @@ func _physics_process(delta: float) -> void:
 func _process(delta: float) -> void:
 	state_machine.process_frame(delta)
 
-func _on_attack_area_2d_body_entered(body: Node2D) -> void:
-	state_machine.on_body_entered(body)
-
-func _on_attack_area_2d_body_exited(body: Node2D) -> void:
-	state_machine.on_body_exited(body)
-
 func flip_direction():
 	direction *= -1
 	scale.x *= -1
+
+func _on_attack_zone_body_entered(body: Node2D) -> void:
+	if body.is_in_group("Player"):
+		player_in_attack_zone = true
+	else:
+		player_in_attack_zone = false
+
+func _on_attack_zone_body_exited(body: Node2D) -> void:
+	player_in_attack_zone = false # Replace with function body.
+
+func _on_attack_cooldown_timeout() -> void:
+	ready_to_fire = true
+	attack_cooldown_timer.start()

@@ -1,12 +1,25 @@
 extends Control
 
-static var full_heart = load("res://Assets/UI/full-heart.png")
+static var empty_heart_texture = load("res://Assets/UI/empty-heart.png")
+static var full_heart_texture = load("res://Assets/UI/full-heart.png")
 
-func set_health(amount):
+func _ready() -> void:
+	set_health()
+	SignalBus.damage.connect(set_health)
+
+func set_health():
 	for child in $MarginContainer/hearts.get_children():
 		child.queue_free()
 	
-	for i in amount:
+	for child in $MarginContainer/empty_hearts.get_children():
+		child.queue_free()
+	
+	for i in Global.player_max_health:
+		var empty_heart = TextureRect.new()
+		empty_heart.texture = empty_heart_texture
+		$MarginContainer/empty_hearts.add_child(empty_heart)
+		
+	for i in Global.player_health:
 		var heart = TextureRect.new()
-		heart.texture = full_heart
+		heart.texture = full_heart_texture
 		$MarginContainer/hearts.add_child(heart)

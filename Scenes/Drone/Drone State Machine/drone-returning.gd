@@ -4,12 +4,10 @@ extends State
 @export var idle_state: State
 @export var chase_state: State
 @export var speed: float = 100.0
-@export var player_check: RayCast2D
 @export var navigation_agent: NavigationAgent2D
 
 func enter() -> void:
 	super()
-	print("returning")
 	navigation_agent.target_position = parent.origin_position
 	
 func process_physics(delta: float) -> State:
@@ -26,5 +24,8 @@ func process_physics(delta: float) -> State:
 		return idle_state
 		
 	parent.move_and_slide()
+	
+	if parent.player_in_attack_zone and parent.player_visible:
+		return attack_state
 	
 	return null

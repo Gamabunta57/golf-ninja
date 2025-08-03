@@ -27,11 +27,5 @@ func process_frame(delta: float) -> State:
 func process_physics(delta: float) -> State:
 	return null
 
-func on_body_entered(body: Node2D) -> State:
-	return null
-
-func on_body_exited(body: Node2D) -> State:
-	return null
-
-func on_area_entered(area: Area2D) -> State:
+func _on_damage_received() -> State:
 	return null

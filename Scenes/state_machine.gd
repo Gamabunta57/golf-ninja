@@ -49,17 +49,7 @@ func process_frame(delta: float) -> void:
 	if new_state:
 		change_state(new_state)
 		
-func on_body_entered(body: Node2D) -> void:
-	var new_state = current_state.on_body_entered(body)
-	if new_state:
-		change_state(new_state)
-
-func on_body_exited(body: Node2D) -> void:
-	var new_state = current_state.on_body_exited(body)
-	if new_state:
-		change_state(new_state)
-
-func on_area_entered(area: Area2D) -> void:
-	var new_state = current_state.on_area_entered(area)
+func _on_damage_received() -> void:
+	var new_state = current_state._on_damage_received()
 	if new_state:
 		change_state(new_state)

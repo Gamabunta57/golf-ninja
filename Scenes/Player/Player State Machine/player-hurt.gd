@@ -14,20 +14,14 @@ var sentinel: CharacterBody2D
 func enter() -> void:
 	super()
 	is_hurt = true
-	parent.player_health -= 1
-	parent.health()
 	
-	print(parent.player_health)
-	parent.velocity = (parent.global_position - parent.last_attacker.global_position).normalized() * knockback
+	parent.velocity += (parent.global_position - Global.last_attacker_position).normalized() * knockback
 	
-	knockback_timer.connect("timeout", Callable(self, "_on_knockback_timer_timeout"))
-	hurt_timer.connect("timeout", Callable(self, "_on_hurt_timer_timeout"))
 	hurt_timer.start()
 	knockback_timer.start()
 
 func _on_knockback_timer_timeout():
-	parent.velocity.x = 0
-	parent.velocity.y = 0
+	parent.velocity = Vector2.ZERO
 	knockback_timer.stop()
 
 func _on_hurt_timer_timeout():

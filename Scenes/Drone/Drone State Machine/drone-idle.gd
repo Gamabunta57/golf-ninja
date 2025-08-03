@@ -1,11 +1,9 @@
 extends State
 
 @export var attack_state: State
-@export var patrol_state: State
 @export var chase_state: State
 @export var returning_state: State
 @export var return_timer: Timer
-@export var player_check: RayCast2D
 
 var should_return : bool = false
 var player: CharacterBody2D
@@ -14,23 +12,20 @@ var player: CharacterBody2D
 func enter() -> void:
 	super()
 	parent.velocity = Vector2(0.0, 0.0)
-	print("idle")
 	return_timer.start()
 
 
 func process_physics(delta: float) -> State:
 	if parent.player_visible:
-			return chase_state 
+		return chase_state
 	
 	if parent.distance_to_origin > 1 and should_return:
 		return returning_state
 	
-	return null
+	if parent.player_in_attack_zone and parent.player_visible:
+		return attack_state
 	
-
-func on_body_entered(body: Node2D) -> State:
-	return attack_state
-
+	return null
 
 func _on_return_timer_timeout() -> void:
 	should_return = true

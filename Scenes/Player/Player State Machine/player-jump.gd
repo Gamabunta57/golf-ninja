@@ -34,6 +34,5 @@ func process_physics(delta: float) -> State:
 	
 	return null
 
-func on_area_entered(body: Node2D) -> State:
-	parent.last_attacker = body
+func _on_damage_received() -> State:
 	return hurt_state
