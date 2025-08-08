@@ -9,7 +9,6 @@ var direction: int = 1
 var player_in_attack_zone: bool = false
 var player_position: Vector2
 var attack_cooldown: bool = false
-var delta_x: float
 
 
 func _ready() -> void:
@@ -24,10 +23,6 @@ func _physics_process(delta: float) -> void:
 func _process(delta: float) -> void:
 	state_machine.process_frame(delta)
 
-func flip_direction():
-	direction *= -1
-	scale.x *= -1
-
 func _on_attack_zone_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Player"):
 		player_in_attack_zone = true
@@ -36,13 +31,17 @@ func _on_attack_zone_body_entered(body: Node2D) -> void:
 		player_in_attack_zone = false
 
 func _on_attack_zone_body_exited(body: Node2D) -> void:
-	player_in_attack_zone = false # Replace with function body.
+	player_in_attack_zone = false
 	
 func _on_attack_cooldown_timeout() -> void:
 	attack_cooldown = false
 	cooldown_timer.stop()
 
+func flip_direction():
+	direction *= -1
+	scale.x *= -1
+
 func flip() -> void:
-	delta_x = player_position.x - global_position.x
+	var delta_x = player_position.x - global_position.x
 	if delta_x * direction < 0:
 		flip_direction()
