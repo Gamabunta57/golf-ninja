@@ -3,7 +3,7 @@ extends Camera2D
 @export var target : CharacterBody2D
 @export var smooth: bool = true
 @export_range(1, 10) var intensity: int = 5
-@export var zoomValue : int = 2
+#@export var zoomValue : int = 2
 @export var camera_shake_timer: Timer
 
 @export var camera_shake_intensity: int = 1
@@ -17,7 +17,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	var weight: float
-	set_zoom(Vector2(zoomValue, zoomValue))
+	#set_zoom(Vector2(zoomValue, zoomValue))
 	
 	if target != null:
 		var camera_position : Vector2

@@ -11,6 +11,8 @@ extends CharacterBody2D
 
 var enemy_position: Vector2
 var is_back: bool = false
+var is_ball_nearby: bool = false
+var ball_body: Node2D
 
 func _ready() -> void:
 	get_tree().call_group('UI', 'set_health')
@@ -47,4 +49,12 @@ func _on_door_collision_body_entered(body: Node2D) -> void:
 		set_collision_mask_value(13, true)
 		z_index = 0
 		Global.player_hidden = true
-			
+
+
+func _on_ball_detection_body_entered(body: Node2D) -> void:
+	is_ball_nearby = true
+	ball_body = body
+
+func _on_ball_detection_body_exited(body: Node2D) -> void:
+	is_ball_nearby = false
+	ball_body = null

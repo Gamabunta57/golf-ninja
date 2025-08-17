@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://djvi8dyyfdrkw"]
+[gd_scene load_steps=17 format=3 uid="uid://djvi8dyyfdrkw"]
 
 [ext_resource type="Script" uid="uid://eojnyblkkyhe" path="res://Scenes/player.gd" id="1_kyqiw"]
 [ext_resource type="Texture2D" uid="uid://dm443rurrb8q0" path="res://Assets/player.png" id="1_rpqav"]
@@ -12,10 +12,14 @@
 [ext_resource type="Script" uid="uid://b3p30u3docj7x" path="res://Scenes/Player/Player State Machine/player-jump.gd" id="5_nn08x"]
 [ext_resource type="Script" uid="uid://cqym3jl820dxf" path="res://Scenes/Player/Player State Machine/player-landing.gd" id="8_bhhdu"]
 [ext_resource type="Script" uid="uid://1tiwoc1g5a47" path="res://Scenes/Player/Player State Machine/player-hurt.gd" id="11_ksbbd"]
+[ext_resource type="Script" uid="uid://ge0e831jnq7n" path="res://Scenes/Player/Player State Machine/player-shooting.gd" id="13_miouo"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kyqiw"]
 radius = 12.0
 height = 50.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_miouo"]
+size = Vector2(60, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_glx4g"]
 size = Vector2(14, 7)
@@ -35,6 +39,15 @@ texture = ExtResource("1_rpqav")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -25)
 shape = SubResource("CapsuleShape2D_kyqiw")
+
+[node name="BallDetection" type="Area2D" parent="."]
+collision_layer = 16384
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BallDetection"]
+position = Vector2(0, -8)
+shape = SubResource("RectangleShape2D_miouo")
+debug_color = Color(0.867958, 0.353193, 0, 0.42)
 
 [node name="DoorCollision" type="Area2D" parent="."]
 collision_layer = 256
@@ -60,19 +73,21 @@ script = ExtResource("4_yoq75")
 script = ExtResource("3_gntrk")
 starting_state = NodePath("Idle")
 
-[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "jump_state", "move_state", "hurt_state")]
+[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "jump_state", "move_state", "hurt_state", "shooting_state")]
 script = ExtResource("4_dewec")
 fall_state = NodePath("../Fall")
 jump_state = NodePath("../Jump")
 move_state = NodePath("../Move")
 hurt_state = NodePath("../Hurt")
+shooting_state = NodePath("../Shooting")
 
-[node name="Move" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "jump_state", "hurt_state")]
+[node name="Move" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "jump_state", "hurt_state", "shooting_state")]
 script = ExtResource("5_52ee3")
 fall_state = NodePath("../Fall")
 idle_state = NodePath("../Idle")
 jump_state = NodePath("../Jump")
 hurt_state = NodePath("../Hurt")
+shooting_state = NodePath("../Shooting")
 
 [node name="Jump" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "move_state", "hurt_state")]
 script = ExtResource("5_nn08x")
@@ -105,6 +120,12 @@ hurt_timer = NodePath("../../HurtTimer")
 knockback_timer = NodePath("../../KnockbackTimer")
 game_over = ExtResource("2_glx4g")
 
+[node name="Shooting" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
+script = ExtResource("13_miouo")
+idle_state = NodePath("../Idle")
+
+[connection signal="body_entered" from="BallDetection" to="." method="_on_ball_detection_body_entered"]
+[connection signal="body_exited" from="BallDetection" to="." method="_on_ball_detection_body_exited"]
 [connection signal="body_entered" from="DoorCollision" to="." method="_on_door_collision_body_entered"]
 [connection signal="timeout" from="HurtTimer" to="state_machine/Hurt" method="_on_hurt_timer_timeout"]
 [connection signal="timeout" from="KnockbackTimer" to="state_machine/Hurt" method="_on_knockback_timer_timeout"]

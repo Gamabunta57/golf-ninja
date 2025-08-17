@@ -26,7 +26,7 @@ func set_bullet_direction(direction_vector: Vector2) -> void:
 	initial_direction = direction_vector
 	linear_velocity = initial_direction * bullet_speed 
 
-func set_origin_position(origin: Vector2) -> void: # NEW FUNCTION
+func set_origin_position(origin: Vector2) -> void:
 	drone_origin_position = origin
 	
 func _on_area_2d_body_entered(body: Node2D) -> void:

@@ -4,10 +4,17 @@ extends State
 @export var idle_state: State
 @export var jump_state: State
 @export var hurt_state: State
+@export var shooting_state: State
 
 func enter() -> void:
 	super()
 	parent.velocity.y = 0
+
+func process_input(event: InputEvent) -> State:
+	if inputs.get_shooting_input() and parent.is_ball_nearby:
+		return shooting_state
+	
+	return null
 
 func process_physics(delta: float) -> State:
 	
