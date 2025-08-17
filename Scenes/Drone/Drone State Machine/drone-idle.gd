@@ -13,6 +13,7 @@ func enter() -> void:
 	super()
 	parent.velocity = Vector2(0.0, 0.0)
 	return_timer.start()
+	print('idle')
 
 
 func process_physics(delta: float) -> State:

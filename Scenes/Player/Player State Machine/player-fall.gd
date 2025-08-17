@@ -31,7 +31,7 @@ func process_physics(delta: float) -> State:
 		last_y_velocity = parent.velocity.y
 	
 	parent.move_and_slide()
-	
+
 	if parent.is_on_floor():
 		if is_zero_approx(parent.velocity.x):
 			return idle_state

@@ -23,9 +23,11 @@ SignalBus="*res://Singletons/signal_bus.gd"
 
 [display]
 
-window/size/viewport_width=1920
-window/size/viewport_height=1080
+window/size/viewport_width=960
+window/size/viewport_height=520
 window/size/initial_position_type=3
+window/size/window_width_override=1920
+window/size/window_height_override=1080
 window/stretch/mode="viewport"
 window/stretch/scale_mode="integer"
 window/vsync/vsync_mode=0
@@ -93,6 +95,10 @@ up={
 2d_physics/layer_8="Hitbox"
 2d_physics/layer_9="Hurtbox"
 2d_physics/layer_10="Bullet"
+2d_physics/layer_11="Box"
+2d_physics/layer_12="Door"
+2d_physics/layer_13="Back collision"
+2d_physics/layer_14="Hidden"
 
 [rendering]
 

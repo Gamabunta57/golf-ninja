@@ -9,6 +9,7 @@ extends State
 func enter() -> void:
 	super()
 	navigation_agent.target_position = parent.origin_position
+	print("returning")
 	
 func process_physics(delta: float) -> State:
 	if parent.player_visible:

@@ -25,7 +25,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	if player_check.is_colliding():
 		var collider = player_check.get_collider()
-		if collider.is_in_group("Player"):
+		if collider.is_in_group("Player") and not Global.player_hidden:
 			player_visible = true
 			last_player_position = collider.global_position - Vector2(0.0, 25.0)
 		else:

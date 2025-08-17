@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://djvi8dyyfdrkw"]
+[gd_scene load_steps=15 format=3 uid="uid://djvi8dyyfdrkw"]
 
 [ext_resource type="Script" uid="uid://eojnyblkkyhe" path="res://Scenes/player.gd" id="1_kyqiw"]
 [ext_resource type="Texture2D" uid="uid://dm443rurrb8q0" path="res://Assets/player.png" id="1_rpqav"]
@@ -17,12 +17,16 @@
 radius = 12.0
 height = 50.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_glx4g"]
+size = Vector2(14, 7)
+
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
-collision_mask = 142
+collision_mask = 5262
 floor_stop_on_slope = false
 floor_constant_speed = true
 floor_snap_length = 6.0
 script = ExtResource("1_kyqiw")
+push_force = 1000
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -25)
@@ -31,6 +35,14 @@ texture = ExtResource("1_rpqav")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -25)
 shape = SubResource("CapsuleShape2D_kyqiw")
+
+[node name="DoorCollision" type="Area2D" parent="."]
+collision_layer = 256
+collision_mask = 2048
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorCollision"]
+position = Vector2(0, 4)
+shape = SubResource("RectangleShape2D_glx4g")
 
 [node name="Inputs" type="Node" parent="."]
 script = ExtResource("4_megsn")
@@ -93,5 +105,6 @@ hurt_timer = NodePath("../../HurtTimer")
 knockback_timer = NodePath("../../KnockbackTimer")
 game_over = ExtResource("2_glx4g")
 
+[connection signal="body_entered" from="DoorCollision" to="." method="_on_door_collision_body_entered"]
 [connection signal="timeout" from="HurtTimer" to="state_machine/Hurt" method="_on_hurt_timer_timeout"]
 [connection signal="timeout" from="KnockbackTimer" to="state_machine/Hurt" method="_on_knockback_timer_timeout"]

@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://ct32l8vlqs23g"]
+
+[ext_resource type="Script" uid="uid://bgig06q1741pj" path="res://Scenes/box.gd" id="1_ego7h"]
+[ext_resource type="Texture2D" uid="uid://cld0wjolx55wx" path="res://Assets/box.png" id="1_xkb4e"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_xkb4e"]
+absorbent = true
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2pmoa"]
+size = Vector2(24, 24)
+
+[node name="RigidBody2D" type="RigidBody2D"]
+collision_layer = 1024
+collision_mask = 1055
+mass = 20.0
+physics_material_override = SubResource("PhysicsMaterial_xkb4e")
+linear_damp = 1.0
+angular_damp = 10.0
+script = ExtResource("1_ego7h")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_2pmoa")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_xkb4e")
