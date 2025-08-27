@@ -52,8 +52,9 @@ func _on_door_collision_body_entered(body: Node2D) -> void:
 
 
 func _on_ball_detection_body_entered(body: Node2D) -> void:
-	is_ball_nearby = true
-	ball_body = body
+	if body.outside_bin:
+		is_ball_nearby = true
+		ball_body = body
 
 func _on_ball_detection_body_exited(body: Node2D) -> void:
 	is_ball_nearby = false

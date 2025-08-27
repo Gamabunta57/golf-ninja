@@ -170,8 +170,8 @@ use_texture_padding = false
 6:0/0 = 0
 6:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-128, 48, 128, 48, 128, 64, -128, 64)
 6:0/0/physics_layer_3/polygon_0/points = PackedVector2Array(-48, 64, -48, 48, -32, 48, -32, 64)
-6:0/0/physics_layer_5/polygon_0/points = PackedVector2Array(0, 48, 0, 64, 112, 64, 112, 48)
-6:0/0/physics_layer_5/polygon_1/points = PackedVector2Array(-128, 48, -80, 48, -80, 64, -128, 64)
+6:0/0/physics_layer_5/polygon_0/points = PackedVector2Array(0, 0, 0, 64, 112, 64, 112, 0)
+6:0/0/physics_layer_5/polygon_1/points = PackedVector2Array(-128, 0, -80, 0, -80, 64, -128, 64)
 6:0/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_ixil1")
 
 [resource]

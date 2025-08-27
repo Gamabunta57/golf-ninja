@@ -11,7 +11,6 @@ func enter() -> void:
 	super()
 	parent.velocity.x = 0
 	Global.player_shooting = true
-	#SignalBus.shooting_action.emit(false)
 	if parent.ball_body:
 		ball_pos = parent.ball_body.global_position
 		target_pos = ball_pos + default_delta
@@ -38,6 +37,6 @@ func process_physics(delta: float) -> State:
 	
 	ball_vector = target_pos - ball_pos
 	
-	SignalBus.shooting.emit(ball_vector, parent.ball_body)
+	SignalBus.shooting.emit(ball_vector, parent.ball_body, parent.global_position)
 	
 	return null

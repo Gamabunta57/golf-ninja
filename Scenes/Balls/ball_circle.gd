@@ -7,9 +7,11 @@ var final_vector: Vector2 = Vector2.ZERO
 var points: PackedVector2Array
 
 var ball_body: RigidBody2D
+var player_position: Vector2 = Vector2.ZERO
+var outside_bin: bool = true
 
 @export var default_delta: Vector2 = Vector2(20, -20)
-@export var max_force: float = 100
+@export var max_force: float = 50
 @export var strength: float = 8
 @export var preview_max_points: int = 64
 @export var trajectory_color: Color = Color(1, 1, 1)    # Base color
@@ -17,16 +19,34 @@ var ball_body: RigidBody2D
 
 func _ready() -> void:
 	SignalBus.shooting.connect(_set_vector_and_body)
+	SignalBus.enters_bin.connect(_enters_bin)
+	SignalBus.exits_bin.connect(_exits_bin)
 
-func _set_vector_and_body(vector: Vector2, body: RigidBody2D) -> void:
+
+func _set_vector_and_body(vector: Vector2, body: RigidBody2D, player: Vector2) -> void:
 	ball_body = body
+	player_position = player
 	if ball_body == self:
+		set_default_orientation()
 		shoot_vector = vector + default_delta
 		queue_redraw()
-	
+
+func set_default_orientation() -> void:
+	if global_position.x > player_position.x:
+		default_delta.x = abs(default_delta.x)
+	else:
+		default_delta.x = -abs(default_delta.x)
+
+func _enters_bin(body: RigidBody2D) -> void:
+	if body == self:
+		outside_bin = false
+
+func _exits_bin(body: RigidBody2D) -> void:
+	if body == self:
+		outside_bin = true
 
 func _physics_process(delta: float) -> void:
-	if ball_body == self:
+	if ball_body == self and outside_bin:
 		if Global.player_shooting:
 			linear_velocity = Vector2.ZERO
 			angular_velocity = 0.0
