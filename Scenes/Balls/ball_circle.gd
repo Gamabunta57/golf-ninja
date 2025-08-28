@@ -1,5 +1,8 @@
 extends RigidBody2D
 
+@onready var counter: RichTextLabel = $Tooltip/Panel/RichTextLabel
+@onready var tooltip: Node2D = $Tooltip
+
 var shoot_vector: Vector2 = Vector2.ZERO
 var limited_shoot_vector: Vector2 = Vector2.ZERO
 var final_vector: Vector2 = Vector2.ZERO
@@ -9,6 +12,8 @@ var points: PackedVector2Array
 var ball_body: RigidBody2D
 var player_position: Vector2 = Vector2.ZERO
 var outside_bin: bool = true
+
+var strike_count: int = 0
 
 @export var default_delta: Vector2 = Vector2(20, -20)
 @export var max_force: float = 50
@@ -21,6 +26,8 @@ func _ready() -> void:
 	SignalBus.shooting.connect(_set_vector_and_body)
 	SignalBus.enters_bin.connect(_enters_bin)
 	SignalBus.exits_bin.connect(_exits_bin)
+	update_counter_display()
+	tooltip.hide()
 
 
 func _set_vector_and_body(vector: Vector2, body: RigidBody2D, player: Vector2) -> void:
@@ -53,12 +60,16 @@ func _physics_process(delta: float) -> void:
 			limited_shoot_vector = shoot_vector.limit_length(max_force)
 			final_vector = limited_shoot_vector * strength
 			points = preview_trajectory(final_vector, preview_max_points)
+			tooltip.show()
 			
 		if Global.shooting_action:
 			Global.shooting_action = false
+			strike_count += 1
+			update_counter_display()
 			apply_impulse(final_vector)
 			shoot_vector = Vector2.ZERO
 			queue_redraw()
+			tooltip.hide()
 
 func _draw() -> void:
 	if Global.player_shooting and points.size() > 1:
@@ -69,6 +80,12 @@ func _draw() -> void:
 			var color_with_alpha: Color = trajectory_color
 			color_with_alpha.a = alpha
 			draw_line(to_local(points[i]), to_local(points[i + 1]), color_with_alpha, 1)
+
+func update_counter_display() -> void:
+	counter.text = str("Strikes: ", strike_count)
+
+func _process(delta: float) -> void:
+	tooltip.global_rotation = 0.0
 
 # --- Trajectory Simulation ---
 func preview_trajectory(impulse: Vector2, max_points: int, dt: float = -1.0) -> PackedVector2Array:
