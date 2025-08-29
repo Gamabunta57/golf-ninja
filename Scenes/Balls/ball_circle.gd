@@ -1,7 +1,11 @@
 extends RigidBody2D
 
-@onready var counter: RichTextLabel = $Tooltip/Panel/RichTextLabel
-@onready var tooltip: Node2D = $Tooltip
+@onready var distance: RichTextLabel = %Distance
+@onready var par: RichTextLabel = %Par
+@onready var value: RichTextLabel = %Value
+@onready var score: RichTextLabel = %Score
+
+@onready var tooltip: Node2D = %Tooltip
 
 var shoot_vector: Vector2 = Vector2.ZERO
 var limited_shoot_vector: Vector2 = Vector2.ZERO
@@ -12,8 +16,12 @@ var points: PackedVector2Array
 var ball_body: RigidBody2D
 var player_position: Vector2 = Vector2.ZERO
 var outside_bin: bool = true
+var bin_distance: float = 0.0
+var show_tooltip: bool = false
 
 var strike_count: int = 0
+var par_value: int = 0
+var money: int = 0
 
 @export var default_delta: Vector2 = Vector2(20, -20)
 @export var max_force: float = 50
@@ -21,13 +29,26 @@ var strike_count: int = 0
 @export var preview_max_points: int = 64
 @export var trajectory_color: Color = Color(1, 1, 1)    # Base color
 @export var alpha_increment: float = 0.05
+@export var par_distance: float = 300
+@export var par_cost: float = 10
+
+
+
 
 func _ready() -> void:
 	SignalBus.shooting.connect(_set_vector_and_body)
 	SignalBus.enters_bin.connect(_enters_bin)
 	SignalBus.exits_bin.connect(_exits_bin)
-	update_counter_display()
-	tooltip.hide()
+	SignalBus.ball_in_range.connect(_display_tooltip)
+	tooltip.show()
+	call_deferred("post_ready_setup")
+
+
+func post_ready_setup() -> void:
+	update_bin_distance()
+	calculate_initial_par()
+	update_cost()
+	
 
 
 func _set_vector_and_body(vector: Vector2, body: RigidBody2D, player: Vector2) -> void:
@@ -47,29 +68,29 @@ func set_default_orientation() -> void:
 func _enters_bin(body: RigidBody2D) -> void:
 	if body == self:
 		outside_bin = false
+		SignalBus.update_UI_money_count.emit(money)
 
 func _exits_bin(body: RigidBody2D) -> void:
 	if body == self:
 		outside_bin = true
+		SignalBus.update_UI_money_count.emit(-money)
 
 func _physics_process(delta: float) -> void:
 	if ball_body == self and outside_bin:
 		if Global.player_shooting:
+			update_cost()
 			linear_velocity = Vector2.ZERO
 			angular_velocity = 0.0
 			limited_shoot_vector = shoot_vector.limit_length(max_force)
 			final_vector = limited_shoot_vector * strength
 			points = preview_trajectory(final_vector, preview_max_points)
-			tooltip.show()
 			
 		if Global.shooting_action:
 			Global.shooting_action = false
 			strike_count += 1
-			update_counter_display()
 			apply_impulse(final_vector)
 			shoot_vector = Vector2.ZERO
 			queue_redraw()
-			tooltip.hide()
 
 func _draw() -> void:
 	if Global.player_shooting and points.size() > 1:
@@ -81,11 +102,26 @@ func _draw() -> void:
 			color_with_alpha.a = alpha
 			draw_line(to_local(points[i]), to_local(points[i + 1]), color_with_alpha, 1)
 
-func update_counter_display() -> void:
-	counter.text = str("Strikes: ", strike_count)
 
-func _process(delta: float) -> void:
-	tooltip.global_rotation = 0.0
+func update_bin_distance() -> void:
+	bin_distance = global_position.distance_to(Global.bin_position)
+	distance.text = str("Distance: ", int(bin_distance))
+
+func calculate_initial_par() -> void:
+	par_value = int(ceil(bin_distance/par_distance))
+	par.text = str("Par: ", par_value)
+
+func update_cost() -> void:
+	var score: int = max(0,(par_value - strike_count))
+	money = score * par_cost
+	value.text = str("Money: ", money, "$")
+
+func _display_tooltip(body, nearby) -> void:
+	if nearby and body == self:
+		update_bin_distance()
+		tooltip.show()
+	else:
+		tooltip.hide()
 
 # --- Trajectory Simulation ---
 func preview_trajectory(impulse: Vector2, max_points: int, dt: float = -1.0) -> PackedVector2Array:

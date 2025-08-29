@@ -55,7 +55,9 @@ func _on_ball_detection_body_entered(body: Node2D) -> void:
 	if body.outside_bin:
 		is_ball_nearby = true
 		ball_body = body
+		SignalBus.ball_in_range.emit(body, true)
 
 func _on_ball_detection_body_exited(body: Node2D) -> void:
 	is_ball_nearby = false
 	ball_body = null
+	SignalBus.ball_in_range.emit(body, false)

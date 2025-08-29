@@ -16,7 +16,7 @@ func enter() -> void:
 		navigation_agent.target_position = parent.last_player_position
 	
 	time_since_last_path_recalc = 0.0
-	#print("chasing")
+	#pprint("chasing")
 
 
 func process_physics(delta: float) -> State:

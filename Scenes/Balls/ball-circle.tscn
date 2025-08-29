@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://cxrd7odlckoo0" path="res://Assets/ball.png" id="1_2r1ht"]
 [ext_resource type="Script" uid="uid://yxwpuynrmy1q" path="res://Scenes/Balls/ball_circle.gd" id="1_pfq2l"]
 [ext_resource type="FontFile" uid="uid://cdhh8d4afh4kr" path="res://Assets/Fonts/Tiny5-Regular.ttf" id="3_u8r6l"]
-[ext_resource type="Script" uid="uid://dy12rvh8qvpwb" path="res://Scenes/Balls/panel.gd" id="3_v1uin"]
+[ext_resource type="Script" uid="uid://cr4tr1pwgi5gy" path="res://Scenes/Balls/tooltip.gd" id="3_v1uin"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_pfq2l"]
 rough = true
@@ -17,11 +17,11 @@ content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
 content_margin_bottom = 4.0
-bg_color = Color(0.11, 0.11, 0.11, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 anti_aliasing = false
 
 [node name="BallCircle" type="RigidBody2D"]
@@ -39,6 +39,9 @@ texture = ExtResource("1_2r1ht")
 shape = SubResource("CircleShape2D_pfq2l")
 
 [node name="Tooltip" type="Node2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, 6)
+script = ExtResource("3_v1uin")
 
 [node name="Panel" type="Panel" parent="Tooltip"]
 anchors_preset = 7
@@ -46,28 +49,68 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -29.0
-offset_top = -25.0
-offset_right = 29.0
-offset_bottom = -12.0
+offset_left = -34.0
+offset_top = 1.0
+offset_right = 34.0
+offset_bottom = 33.0
 grow_horizontal = 2
 grow_vertical = 0
 size_flags_horizontal = 4
 size_flags_vertical = 8
 theme_override_styles/panel = SubResource("StyleBoxFlat_v1uin")
-script = ExtResource("3_v1uin")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Tooltip/Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Tooltip/Panel"]
+clip_contents = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Distance" type="RichTextLabel" parent="Tooltip/Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("3_u8r6l")
 theme_override_font_sizes/normal_font_size = 8
 bbcode_enabled = true
-text = "Strikes: X"
+text = "Distance: X"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Par" type="RichTextLabel" parent="Tooltip/Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("3_u8r6l")
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
+text = "Par: X"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Score" type="RichTextLabel" parent="Tooltip/Panel/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("3_u8r6l")
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
+text = "Score: X"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Value" type="RichTextLabel" parent="Tooltip/Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("3_u8r6l")
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
+text = "Value: X"
 fit_content = true
 horizontal_alignment = 1
 vertical_alignment = 1
