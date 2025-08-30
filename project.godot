@@ -13,7 +13,6 @@ config_version=5
 config/name="Golf Ninja"
 run/main_scene="uid://p4dtrhu4i74n"
 config/features=PackedStringArray("4.4", "GL Compatibility")
-run/max_fps=60
 config/icon="res://icon.svg"
 
 [autoload]

@@ -26,6 +26,7 @@ var money: int = 0
 @export var default_delta: Vector2 = Vector2(20, -20)
 @export var max_force: float = 50
 @export var strength: float = 8
+@export var max_preview_distance: float = 500.0 
 @export var preview_max_points: int = 64
 @export var trajectory_color: Color = Color(1, 1, 1)    # Base color
 @export var alpha_increment: float = 0.05
@@ -40,7 +41,7 @@ func _ready() -> void:
 	SignalBus.enters_bin.connect(_enters_bin)
 	SignalBus.exits_bin.connect(_exits_bin)
 	SignalBus.ball_in_range.connect(_display_tooltip)
-	tooltip.show()
+	tooltip.hide()
 	call_deferred("post_ready_setup")
 
 
@@ -84,6 +85,8 @@ func _physics_process(delta: float) -> void:
 			limited_shoot_vector = shoot_vector.limit_length(max_force)
 			final_vector = limited_shoot_vector * strength
 			points = preview_trajectory(final_vector, preview_max_points)
+			emit_last_position()
+
 			
 		if Global.shooting_action:
 			Global.shooting_action = false
@@ -113,7 +116,7 @@ func calculate_initial_par() -> void:
 
 func update_cost() -> void:
 	var score: int = max(0,(par_value - strike_count))
-	money = score * par_cost
+	money = max(score * par_cost, 1)
 	value.text = str("Money: ", money, "$")
 
 func _display_tooltip(body, nearby) -> void:
@@ -150,6 +153,8 @@ func preview_trajectory(impulse: Vector2, max_points: int, dt: float = -1.0) -> 
 
 	points.push_back(pos)
 
+	var traveled: float = 0.0
+
 	for i in range(max_points):
 		# Semi-implicit Euler
 		v += a * dt
@@ -157,7 +162,16 @@ func preview_trajectory(impulse: Vector2, max_points: int, dt: float = -1.0) -> 
 		var motion: Vector2 = v * dt
 		var new_pos: Vector2 = pos + motion
 
-		# Inside preview_trajectory loop...
+		traveled += motion.length()
+		if traveled >= max_preview_distance:
+			# clamp to max distance
+			var dir: Vector2 = motion.normalized()
+			var overshoot: float = traveled - max_preview_distance
+			new_pos -= dir * overshoot
+			points.push_back(new_pos)
+			break
+
+		# Ray collision check
 		var query: PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(pos, new_pos)
 		query.exclude = [self]
 		query.collision_mask = (1 << 1) | (1 << 2)   # check layer 2 and 3
@@ -184,3 +198,7 @@ func preview_trajectory(impulse: Vector2, max_points: int, dt: float = -1.0) -> 
 			points.push_back(new_pos)
 
 	return points
+
+func emit_last_position() -> void:
+	var last_position: Vector2 = points[points.size() - 1]
+	SignalBus.last_trajectory_point.emit(last_position)

@@ -143,12 +143,14 @@ sources/0 = SubResource("TileSetScenesCollectionSource_0fj1v")
 [node name="World" type="Node2D"]
 script = ExtResource("1_0fj1v")
 
-[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("target", "camera_shake_timer", "shake_frequency_timer")]
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("player", "camera_shake_timer", "shake_frequency_timer", "trajectory_lag")]
 position = Vector2(312, -39)
 script = ExtResource("8_k7acu")
-target = NodePath("../Main/Player")
+player = NodePath("../Main/Player")
 camera_shake_timer = NodePath("CameraShakeTimer")
+camera_shake_intensity = 2
 shake_frequency_timer = NodePath("ShakeFrequency")
+trajectory_lag = NodePath("TrajectoryLag")
 
 [node name="MainUI" parent="Camera2D" instance=ExtResource("9_7yui6")]
 z_index = 1
@@ -163,6 +165,8 @@ wait_time = 0.206
 
 [node name="ShakeFrequency" type="Timer" parent="Camera2D"]
 wait_time = 0.068
+
+[node name="TrajectoryLag" type="Timer" parent="Camera2D"]
 
 [node name="Main" type="Node2D" parent="."]
 
@@ -200,7 +204,9 @@ tile_set = ExtResource("5_0fj1v")
 metadata/_edit_lock_ = true
 
 [node name="Boxes" type="TileMapLayer" parent="Main/Tilemaps"]
+visible = false
 tile_map_data = PackedByteArray("AAD+/wcAAAAAAAAAAQD7/wIAAAAAAAAAAQACAAAAAAAAAAAAAQD7//n/AAAAAAAAAQD9/wQAAAAAAAAAAQAEAAcAAAAAAAAAAQA=")
+enabled = false
 tile_set = SubResource("TileSet_7yui6")
 
 [node name="Sentinel" parent="Main" instance=ExtResource("11_7yui6")]
@@ -243,3 +249,4 @@ position = Vector2(-74, 1520)
 
 [connection signal="timeout" from="Camera2D/CameraShakeTimer" to="Camera2D" method="_on_camera_shake_timer_timeout"]
 [connection signal="timeout" from="Camera2D/ShakeFrequency" to="Camera2D" method="_on_shake_frequency_timeout"]
+[connection signal="timeout" from="Camera2D/TrajectoryLag" to="Camera2D" method="_on_trajectory_lag_timeout"]
