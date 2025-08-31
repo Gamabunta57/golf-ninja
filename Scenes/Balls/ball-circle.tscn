@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://dvgf2y0bh4flh"]
+[gd_scene load_steps=9 format=3 uid="uid://dvgf2y0bh4flh"]
 
 [ext_resource type="Texture2D" uid="uid://cxrd7odlckoo0" path="res://Assets/ball.png" id="1_2r1ht"]
 [ext_resource type="Script" uid="uid://yxwpuynrmy1q" path="res://Scenes/Balls/ball_circle.gd" id="1_pfq2l"]
+[ext_resource type="Script" uid="uid://bjawxfct13ag4" path="res://Scenes/Balls/ground_check.gd" id="3_tlods"]
 [ext_resource type="FontFile" uid="uid://cdhh8d4afh4kr" path="res://Assets/Fonts/Tiny5-Regular.ttf" id="3_u8r6l"]
 [ext_resource type="Script" uid="uid://cr4tr1pwgi5gy" path="res://Scenes/Balls/tooltip.gd" id="3_v1uin"]
 
@@ -24,12 +25,13 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 anti_aliasing = false
 
-[node name="BallCircle" type="RigidBody2D"]
+[node name="BallCircle" type="RigidBody2D" node_paths=PackedStringArray("ground_check")]
 collision_layer = 16
-collision_mask = 16422
+collision_mask = 16486
 mass = 0.5
 physics_material_override = SubResource("PhysicsMaterial_pfq2l")
 script = ExtResource("1_pfq2l")
+ground_check = NodePath("GroundCheck")
 alpha_increment = 0.08
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -37,6 +39,12 @@ texture = ExtResource("1_2r1ht")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_pfq2l")
+
+[node name="GroundCheck" type="RayCast2D" parent="."]
+target_position = Vector2(0, 11)
+collision_mask = 6
+hit_from_inside = true
+script = ExtResource("3_tlods")
 
 [node name="Tooltip" type="Node2D" parent="."]
 unique_name_in_owner = true

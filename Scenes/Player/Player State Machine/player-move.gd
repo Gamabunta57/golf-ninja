@@ -11,7 +11,7 @@ func enter() -> void:
 	parent.velocity.y = 0
 
 func process_input(event: InputEvent) -> State:
-	if inputs.get_shooting_input() and parent.is_ball_nearby:
+	if inputs.get_shooting_input() and parent.is_ball_nearby and not parent.cancel_shooting:
 		return shooting_state
 	
 	return null

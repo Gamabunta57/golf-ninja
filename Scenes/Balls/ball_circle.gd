@@ -23,6 +23,7 @@ var strike_count: int = 0
 var par_value: int = 0
 var money: int = 0
 
+@export var ground_check: RayCast2D
 @export var max_force: float = 50
 @export var strength: float = 8
 @export var max_preview_distance: float = 500.0 
@@ -70,6 +71,12 @@ func _exits_bin(body: RigidBody2D) -> void:
 		SignalBus.update_UI_money_count.emit(-money)
 
 func _physics_process(delta: float) -> void:
+	# collides with enemies if airborn only
+	if ground_check.is_colliding():
+		set_collision_mask_value(7, false)
+	else:
+		set_collision_mask_value(7, true)
+	
 	if ball_body == self and outside_bin:
 		if Global.player_shooting:
 			update_cost()

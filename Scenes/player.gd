@@ -16,6 +16,7 @@ var enemy_position: Vector2
 var is_back: bool = false
 var is_ball_nearby: bool = false
 var ball_body: Node2D
+var cancel_shooting: bool = false
 
 func _ready() -> void:
 	get_tree().call_group('UI', 'set_health')
@@ -29,17 +30,19 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	state_machine.process_physics(delta)
-	rigid_body_collision()
+	if not inputs.get_shooting_input():
+		cancel_shooting = false
+	#rigid_body_collision()
 
 func _on_damage_received(origin_position) -> void:
 	enemy_position = origin_position
 	state_machine._on_damage_received()
 
-func rigid_body_collision() -> void:
-	for i in get_slide_collision_count():
-		var c = get_slide_collision(i)
-		if c.get_collider() is RigidBody2D:
-			c.get_collider().apply_central_impulse(-c.get_normal() * push_force)
+#func rigid_body_collision() -> void:
+	#for i in get_slide_collision_count():
+		#var c = get_slide_collision(i)
+		#if c.get_collider() is RigidBody2D:
+			#c.get_collider().apply_central_impulse(-c.get_normal() * push_force)
 
 func _on_door_collision_body_entered(body: Node2D) -> void:
 	if is_back and inputs.get_y_input() < 0.5:

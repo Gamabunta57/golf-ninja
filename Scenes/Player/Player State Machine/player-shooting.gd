@@ -5,11 +5,12 @@ extends State
 
 var ball_pos: Vector2
 var target_pos: Vector2
-var ball_vector: Vector2
+var ball_vector: Vector2 = Vector2.ZERO
 
 func enter() -> void:
 	super()
 	parent.velocity.x = 0
+	parent.cancel_shooting = false
 	Global.player_shooting = true
 	if parent.ball_body:
 		ball_pos = parent.ball_body.global_position
@@ -31,6 +32,7 @@ func process_input(event: InputEvent) -> State:
 	return null
 
 func process_physics(delta: float) -> State:
+	
 	var x_input = inputs.get_x_input()
 	var y_input = inputs.get_y_input()
 	
@@ -42,8 +44,17 @@ func process_physics(delta: float) -> State:
 		target_pos.x = min(ball_pos.x, target_pos.x)
 
 	ball_vector = target_pos - ball_pos
-	print(ball_vector)
+	
+	# cancel the shooting if press jump
+	if inputs.get_jump_input():
+		parent.cancel_shooting = true
+		Global.player_shooting = false
+		ball_vector = Vector2.ZERO
+		
 	SignalBus.shooting.emit(ball_vector, parent.ball_body, parent.global_position)
+	
+	if parent.cancel_shooting:
+		return idle_state
 	
 	return null
 	
