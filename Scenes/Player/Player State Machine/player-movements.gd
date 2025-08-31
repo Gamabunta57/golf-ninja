@@ -5,7 +5,7 @@ extends Node
 @export var move_speed: float = 800
 @export var max_speed: float = 400
 @export var deceleration: float = 1500
-@export var stairs_threshold: float = 0.5
+@export var stairs_threshold: float = 0.1
 
 
 func horizontal_deceleration(velocityX: float, delta: float) -> float:
@@ -38,3 +38,10 @@ func horizontal_movement(velocityX: float, delta: float, inputs, parent: Charact
 		parent.set_collision_mask_value(4, true)
 		
 	return velocityX
+
+func flip_direction(inputs, parent: CharacterBody2D) -> void:
+	var x_input = sign(inputs.get_x_input())
+	
+	if x_input != parent.direction and x_input != 0:
+		parent.direction = x_input
+		parent.scale.x =  -1

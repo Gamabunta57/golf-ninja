@@ -23,7 +23,6 @@ var strike_count: int = 0
 var par_value: int = 0
 var money: int = 0
 
-@export var default_delta: Vector2 = Vector2(20, -20)
 @export var max_force: float = 50
 @export var strength: float = 8
 @export var max_preview_distance: float = 500.0 
@@ -56,15 +55,9 @@ func _set_vector_and_body(vector: Vector2, body: RigidBody2D, player: Vector2) -
 	ball_body = body
 	player_position = player
 	if ball_body == self:
-		set_default_orientation()
-		shoot_vector = vector + default_delta
+		shoot_vector = vector
 		queue_redraw()
 
-func set_default_orientation() -> void:
-	if global_position.x > player_position.x:
-		default_delta.x = abs(default_delta.x)
-	else:
-		default_delta.x = -abs(default_delta.x)
 
 func _enters_bin(body: RigidBody2D) -> void:
 	if body == self:

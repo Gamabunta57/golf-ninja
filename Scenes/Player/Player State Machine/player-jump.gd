@@ -18,9 +18,8 @@ func process_physics(delta: float) -> State:
 	
 	parent.velocity.y += gravity * jump_gravity_multiplier * delta
 	parent.velocity.x = movements.horizontal_movement(parent.velocity.x, delta, inputs, parent)
-
-	var x_input = inputs.get_x_input()
-
+	
+	movements.flip_direction(inputs, parent)
 	
 	if parent.velocity.y > 0:
 		return fall_state

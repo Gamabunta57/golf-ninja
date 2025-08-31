@@ -9,6 +9,9 @@ extends CharacterBody2D
 @export var player_health: int = 5
 @export var push_force = 100
 
+var direction: int = 1
+var base_scale: Vector2 = Vector2.ONE
+
 var enemy_position: Vector2
 var is_back: bool = false
 var is_ball_nearby: bool = false
@@ -19,6 +22,7 @@ func _ready() -> void:
 	state_machine.init(self, inputs, movements)
 	SignalBus.damage.connect(_on_damage_received)
 	set_collision_mask_value(13, false)
+	base_scale = scale
 
 func _unhandled_input(event: InputEvent) -> void:
 	state_machine.process_input(event)
@@ -61,3 +65,4 @@ func _on_ball_detection_body_exited(body: Node2D) -> void:
 	is_ball_nearby = false
 	ball_body = null
 	SignalBus.ball_in_range.emit(body, false)
+	

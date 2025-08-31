@@ -34,6 +34,8 @@ func process_physics(delta: float) -> State:
 	
 	parent.move_and_slide()
 	
+	movements.flip_direction(inputs, parent)
+	
 	return null
 	
 func _on_damage_received() -> State:
