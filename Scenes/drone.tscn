@@ -57,10 +57,13 @@ collision_mask = 3
 script = ExtResource("3_y2b23")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 13.9
 target_desired_distance = 30.0
+path_max_distance = 55.0
 path_postprocessing = 1
 path_metadata_flags = 0
-simplify_path = true
+avoidance_layers = 0
+avoidance_mask = 0
 debug_enabled = true
 
 [node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
