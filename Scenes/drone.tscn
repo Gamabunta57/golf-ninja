@@ -14,10 +14,10 @@
 radius = 12.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_n202n"]
-radius = 324.014
+radius = 335.096
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_uuft2"]
-radius = 169.074
+radius = 124.004
 
 [node name="Drone" type="CharacterBody2D" node_paths=PackedStringArray("player_check", "attack_cooldown_timer")]
 collision_layer = 64
@@ -50,6 +50,7 @@ shape = SubResource("CircleShape2D_uuft2")
 debug_color = Color(0.97, 0, 0.485, 0.215686)
 
 [node name="AttackCooldown" type="Timer" parent="."]
+wait_time = 1.5
 
 [node name="PlayerCheck" type="RayCast2D" parent="."]
 target_position = Vector2(0, 250)

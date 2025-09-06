@@ -9,8 +9,10 @@ extends CharacterBody2D
 @export var player_health: int = 5
 @export var push_force = 100
 
+
 var direction: int = 1
-var base_scale: Vector2 = Vector2.ONE
+var last_direction: int = 1
+
 
 var enemy_position: Vector2
 var is_back: bool = false
@@ -23,7 +25,6 @@ func _ready() -> void:
 	state_machine.init(self, inputs, movements)
 	SignalBus.damage.connect(_on_damage_received)
 	set_collision_mask_value(13, false)
-	base_scale = scale
 
 func _unhandled_input(event: InputEvent) -> void:
 	state_machine.process_input(event)
@@ -32,7 +33,15 @@ func _physics_process(delta: float) -> void:
 	state_machine.process_physics(delta)
 	if not inputs.get_shooting_input():
 		cancel_shooting = false
+	
+	# Flip player
+	if last_direction != direction and direction != 0:
+		print("flip")
+		scale.x =  -1 * scale.x
+		last_direction = direction
+	
 	#rigid_body_collision()
+
 
 func _on_damage_received(origin_position) -> void:
 	enemy_position = origin_position

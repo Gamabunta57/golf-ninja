@@ -8,11 +8,19 @@ static var full_heart_texture = load("res://Assets/UI/full-heart.png")
 @onready var empty_hearts: HBoxContainer = %empty_hearts
 
 func _ready() -> void:
-	set_health(null)
-	SignalBus.damage.connect(set_health)
+	set_health()
+	SignalBus.damage.connect(_set_damage)
+	SignalBus.heal.connect(_set_heal)
 	SignalBus.update_UI_money_count.connect(_update_money)
 
-func set_health(origin_position):
+func _set_damage(pos) -> void:
+	set_health()
+
+func _set_heal() -> void:
+	set_health()
+	money_amount.text = str(Global.total_money, "$")
+	
+func set_health():
 	for child in hearts.get_children():
 		child.queue_free()
 	

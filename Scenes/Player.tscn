@@ -19,7 +19,7 @@ radius = 12.0
 height = 50.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_miouo"]
-size = Vector2(60, 16)
+size = Vector2(16, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_glx4g"]
 size = Vector2(14, 7)
@@ -120,9 +120,10 @@ hurt_timer = NodePath("../../HurtTimer")
 knockback_timer = NodePath("../../KnockbackTimer")
 game_over = ExtResource("2_glx4g")
 
-[node name="Shooting" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
+[node name="Shooting" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "move_state")]
 script = ExtResource("13_miouo")
 idle_state = NodePath("../Idle")
+move_state = NodePath("../Move")
 
 [connection signal="body_entered" from="BallDetection" to="." method="_on_ball_detection_body_entered"]
 [connection signal="body_exited" from="BallDetection" to="." method="_on_ball_detection_body_exited"]

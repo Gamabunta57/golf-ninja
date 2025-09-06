@@ -108,6 +108,7 @@ shooting={
 2d_physics/layer_13="Back collision"
 2d_physics/layer_14="Hidden"
 2d_physics/layer_15="Ball Detection"
+2d_physics/layer_16="Vending Machine"
 
 [navigation]
 

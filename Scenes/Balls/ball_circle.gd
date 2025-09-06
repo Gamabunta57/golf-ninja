@@ -120,7 +120,7 @@ func update_cost() -> void:
 	value.text = str("Money: ", money, "$")
 
 func _display_tooltip(body, nearby) -> void:
-	if nearby and body == self:
+	if nearby and body == self and not Global.player_hidden:
 		update_bin_distance()
 		tooltip.show()
 	else:

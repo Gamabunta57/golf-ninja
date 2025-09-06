@@ -40,8 +40,4 @@ func horizontal_movement(velocityX: float, delta: float, inputs, parent: Charact
 	return velocityX
 
 func flip_direction(inputs, parent: CharacterBody2D) -> void:
-	var x_input = sign(inputs.get_x_input())
-	
-	if x_input != parent.direction and x_input != 0:
-		parent.direction = x_input
-		parent.scale.x =  -1
+	parent.direction = sign(inputs.get_x_input())

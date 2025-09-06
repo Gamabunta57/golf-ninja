@@ -19,12 +19,13 @@ func process_physics(delta: float) -> State:
 	parent.velocity.y += gravity * jump_gravity_multiplier * delta
 	parent.velocity.x = movements.horizontal_movement(parent.velocity.x, delta, inputs, parent)
 	
-	movements.flip_direction(inputs, parent)
+	parent.direction = sign(inputs.get_x_input())
 	
-	if parent.velocity.y > 0:
+	parent.move_and_slide()
+	
+	if parent.velocity.y >= 0:
 		return fall_state
 		
-	parent.move_and_slide()
 	
 	if parent.is_on_floor():
 		if parent.velocity.x != 0:
