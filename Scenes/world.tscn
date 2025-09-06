@@ -143,14 +143,13 @@ sources/1 = SubResource("TileSetScenesCollectionSource_7yui6")
 [node name="World" type="Node2D"]
 script = ExtResource("1_0fj1v")
 
-[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("player", "camera_shake_timer", "shake_frequency_timer", "trajectory_lag")]
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("player", "camera_shake_timer", "shake_frequency_timer")]
 position = Vector2(312, -39)
 script = ExtResource("8_k7acu")
 player = NodePath("../Main/Player")
 camera_shake_timer = NodePath("CameraShakeTimer")
 camera_shake_intensity = 2
 shake_frequency_timer = NodePath("ShakeFrequency")
-trajectory_lag = NodePath("TrajectoryLag")
 
 [node name="MainUI" parent="Camera2D" instance=ExtResource("9_7yui6")]
 z_index = 1
@@ -165,8 +164,6 @@ wait_time = 0.206
 
 [node name="ShakeFrequency" type="Timer" parent="Camera2D"]
 wait_time = 0.068
-
-[node name="TrajectoryLag" type="Timer" parent="Camera2D"]
 
 [node name="Main" type="Node2D" parent="."]
 
@@ -340,4 +337,3 @@ position = Vector2(-74, 1520)
 
 [connection signal="timeout" from="Camera2D/CameraShakeTimer" to="Camera2D" method="_on_camera_shake_timer_timeout"]
 [connection signal="timeout" from="Camera2D/ShakeFrequency" to="Camera2D" method="_on_shake_frequency_timeout"]
-[connection signal="timeout" from="Camera2D/TrajectoryLag" to="Camera2D" method="_on_trajectory_lag_timeout"]

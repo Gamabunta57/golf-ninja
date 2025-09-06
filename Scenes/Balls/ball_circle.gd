@@ -85,7 +85,7 @@ func _physics_process(delta: float) -> void:
 			limited_shoot_vector = shoot_vector.limit_length(max_force)
 			final_vector = limited_shoot_vector * strength
 			points = preview_trajectory(final_vector, preview_max_points)
-			emit_last_position()
+			emit_last_position(ball_body)
 
 			
 		if Global.shooting_action:
@@ -199,6 +199,6 @@ func preview_trajectory(impulse: Vector2, max_points: int, dt: float = -1.0) -> 
 
 	return points
 
-func emit_last_position() -> void:
+func emit_last_position(body: RigidBody2D) -> void:
 	var last_position: Vector2 = points[points.size() - 1]
-	SignalBus.last_trajectory_point.emit(last_position)
+	SignalBus.last_trajectory_point.emit(last_position, body)

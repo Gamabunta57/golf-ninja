@@ -9,6 +9,7 @@ extends State
 func enter() -> void:
 	super()
 	parent.velocity.y = 0
+	Global.player_centric = true
 
 func process_input(event: InputEvent) -> State:
 	if inputs.get_shooting_input() and parent.is_ball_nearby and not parent.cancel_shooting and not Global.player_hidden:

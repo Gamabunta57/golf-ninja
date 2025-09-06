@@ -15,6 +15,7 @@ var sentinel: CharacterBody2D
 func enter() -> void:
 	super()
 	is_hurt = true
+	Global.player_centric = true
 	
 	var knockback_direction = sign(parent.global_position.x - parent.enemy_position.x)
 	parent.velocity.x = knockback_direction * knockback_strength
