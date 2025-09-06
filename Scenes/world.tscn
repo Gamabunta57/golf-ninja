@@ -245,7 +245,7 @@ tile_set = SubResource("TileSet_7yui6")
 
 [node name="Player" parent="Main" instance=ExtResource("11_c5t2i")]
 z_index = 1
-position = Vector2(148, 1507)
+position = Vector2(70, 578)
 
 [node name="Enemies" type="Node2D" parent="Main"]
 

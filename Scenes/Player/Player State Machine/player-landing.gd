@@ -11,7 +11,6 @@ extends State
 
 func process_physics(delta: float) -> State:
 	var x_input = inputs.get_x_input()
-	
 	parent.velocity.x = movements.horizontal_deceleration(parent.velocity.x, delta)
 	#move_toward(parent.velocity.x, 0, deceleration * delta)
 	
