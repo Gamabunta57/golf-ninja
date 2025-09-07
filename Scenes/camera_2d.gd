@@ -32,15 +32,15 @@ func _physics_process(delta: float) -> void:
 	if ball_body:
 		ball_body_pos = ball_body.global_position
 	#set_zoom(Vector2(zoomValue, zoomValue))
-
+	
 	if Global.player_centric:
 		target = player.global_position + camera_offset
 		ball_centric = false
 	else: 
 		var target_ball_diff: Vector2 = global_position - ball_body_pos
 
-		if not Global.player_shooting:
-			var threshold : float = 10.0
+		if not Global.player_shooting and not ball_centric:
+			var threshold : float = ball_body.linear_velocity.length() / 10
 			if target_ball_diff.x < threshold and target_ball_diff.x > -threshold and target_ball_diff.y < threshold and target_ball_diff.y > -threshold :
 				ball_centric = true
 		

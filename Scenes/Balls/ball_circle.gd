@@ -19,6 +19,8 @@ var outside_bin: bool = true
 var bin_distance: float = 0.0
 var show_tooltip: bool = false
 
+var last_velocity: float = 0.0
+
 var strike_count: int = 0
 var par_value: int = 0
 var money: int = 0
@@ -32,6 +34,7 @@ var money: int = 0
 @export var alpha_increment: float = 0.05
 @export var par_distance: float = 300
 @export var par_cost: float = 10
+@export var collison_velocity_threshold: float = 1000
 
 
 
@@ -78,6 +81,8 @@ func _physics_process(delta: float) -> void:
 		set_collision_mask_value(7, true)
 	
 	if ball_body == self and outside_bin:
+		last_velocity = linear_velocity.length()
+		
 		if Global.player_shooting:
 			update_cost()
 			linear_velocity = Vector2.ZERO
@@ -94,6 +99,8 @@ func _physics_process(delta: float) -> void:
 			apply_impulse(final_vector)
 			shoot_vector = Vector2.ZERO
 			queue_redraw()
+			SignalBus.ball_sound_emission.emit(global_position)
+			
 
 func _draw() -> void:
 	if Global.player_shooting and points.size() > 1:
@@ -202,3 +209,7 @@ func preview_trajectory(impulse: Vector2, max_points: int, dt: float = -1.0) -> 
 func emit_last_position(body: RigidBody2D) -> void:
 	var last_position: Vector2 = points[points.size() - 1]
 	SignalBus.last_trajectory_point.emit(last_position, body)
+
+func _on_body_entered(body: Node) -> void:
+	if last_velocity > collison_velocity_threshold:
+		SignalBus.ball_sound_emission.emit(global_position)

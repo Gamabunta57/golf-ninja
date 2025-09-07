@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://dvgf2y0bh4flh"]
+[gd_scene load_steps=10 format=3 uid="uid://dvgf2y0bh4flh"]
 
 [ext_resource type="Texture2D" uid="uid://cxrd7odlckoo0" path="res://Assets/ball.png" id="1_2r1ht"]
 [ext_resource type="Script" uid="uid://yxwpuynrmy1q" path="res://Scenes/Balls/ball_circle.gd" id="1_pfq2l"]
 [ext_resource type="Script" uid="uid://bjawxfct13ag4" path="res://Scenes/Balls/ground_check.gd" id="3_tlods"]
 [ext_resource type="FontFile" uid="uid://cdhh8d4afh4kr" path="res://Assets/Fonts/Tiny5-Regular.ttf" id="3_u8r6l"]
 [ext_resource type="Script" uid="uid://cr4tr1pwgi5gy" path="res://Scenes/Balls/tooltip.gd" id="3_v1uin"]
+[ext_resource type="Script" uid="uid://cpfblrr2almno" path="res://Scenes/Balls/sound.gd" id="6_ob887"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_pfq2l"]
 rough = true
@@ -30,9 +31,12 @@ collision_layer = 16
 collision_mask = 16486
 mass = 0.5
 physics_material_override = SubResource("PhysicsMaterial_pfq2l")
+contact_monitor = true
+max_contacts_reported = 1
 script = ExtResource("1_pfq2l")
 ground_check = NodePath("GroundCheck")
 alpha_increment = 0.08
+collison_velocity_threshold = 500.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_2r1ht")
@@ -122,3 +126,8 @@ text = "Value: X"
 fit_content = true
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Sound" type="Node2D" parent="."]
+script = ExtResource("6_ob887")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
