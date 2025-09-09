@@ -6,20 +6,20 @@ extends State
 
 func enter() -> void:
 	super()
-	parent.velocity = Vector2(0.0, 0.0)
+	parent.velocity = Vector2.ZERO
 
 func process_physics(delta: float) -> State:
-	if not parent.player_in_attack_zone or not parent.player_visible or not parent.ready_to_fire:
+	if not parent.player_in_attack_zone or parent.current_target == null or not parent.ready_to_fire:
 		return idle_state
 	
-	if parent.ready_to_fire:
+	if parent.ready_to_fire and parent.current_target:
 		parent.ready_to_fire = false
 		
 		var new_bullet = bullet.instantiate()
 		parent.bullets.add_child(new_bullet)
 		new_bullet.global_position = parent.global_position 
 		
-		var bullet_direction = (parent.last_player_position - parent.global_position).normalized()
+		var bullet_direction = (parent.current_target_position - parent.global_position).normalized()
 		new_bullet.set_bullet_direction(bullet_direction)
 		new_bullet.set_origin_position(parent.global_position)
 		

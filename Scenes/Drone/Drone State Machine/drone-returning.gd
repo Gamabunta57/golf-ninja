@@ -12,7 +12,7 @@ func enter() -> void:
 	#print("returning")
 	
 func process_physics(delta: float) -> State:
-	if parent.player_visible:
+	if parent.current_target or parent.has_last_known_position:
 			return chase_state
 	
 	var next_path_position = navigation_agent.get_next_path_position()

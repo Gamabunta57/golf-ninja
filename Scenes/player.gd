@@ -36,7 +36,6 @@ func _physics_process(delta: float) -> void:
 	
 	# Flip player
 	if last_direction != direction and direction != 0:
-		print("flip")
 		scale.x =  -1 * scale.x
 		last_direction = direction
 	

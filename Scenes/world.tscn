@@ -183,7 +183,7 @@ position = Vector2(429, 1243)
 position = Vector2(1507, 846)
 
 [node name="BallCircle5" parent="Main/Balls" instance=ExtResource("11_e0ngr")]
-position = Vector2(462, 465)
+position = Vector2(-170, 614)
 
 [node name="BallCircle6" parent="Main/Balls" instance=ExtResource("11_e0ngr")]
 position = Vector2(1810, -586)

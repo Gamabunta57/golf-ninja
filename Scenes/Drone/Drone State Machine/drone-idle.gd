@@ -5,25 +5,24 @@ extends State
 @export var returning_state: State
 @export var return_timer: Timer
 
-var should_return : bool = false
-var player: CharacterBody2D
-
+var should_return: bool = false
 
 func enter() -> void:
 	super()
-	parent.velocity = Vector2(0.0, 0.0)
+	parent.velocity = Vector2.ZERO
 	return_timer.start()
-	#print('idle')
-
 
 func process_physics(delta: float) -> State:
-	if parent.player_visible:
+	# If we have a current or last known target, chase
+	if parent.current_target or parent.has_last_known_position:
 		return chase_state
 	
+	# Return to origin if timer elapsed
 	if parent.distance_to_origin > 1 and should_return:
 		return returning_state
 	
-	if parent.player_in_attack_zone and parent.player_visible:
+	# Attack only if in zone and target is the player
+	if parent.player_in_attack_zone and parent.current_target and parent.current_target.is_in_group("Player"):
 		return attack_state
 	
 	return null

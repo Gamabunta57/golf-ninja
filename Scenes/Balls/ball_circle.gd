@@ -34,8 +34,7 @@ var money: int = 0
 @export var alpha_increment: float = 0.05
 @export var par_distance: float = 300
 @export var par_cost: float = 10
-@export var collison_velocity_threshold: float = 1000
-
+@export var collison_velocity_threshold: float = 100
 
 
 

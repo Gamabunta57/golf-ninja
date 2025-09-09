@@ -5,13 +5,14 @@ extends Node2D
 @export var color: Color = Color(1, 1, 1, 0.1)
 @export var line_thickness: float = 1.0  # outline width
 
+var pos: Vector2 = Vector2.ZERO
 var elapsed: float = 0.0
 var active: bool = false
 
 func _ready() -> void:
 	SignalBus.ball_sound_emission.connect(_on_ball_sound_emission)
 
-func _on_ball_sound_emission(pos: Vector2) -> void:
+func _on_ball_sound_emission(pos) -> void:
 	global_position = pos
 	elapsed = 0.0
 	active = true
