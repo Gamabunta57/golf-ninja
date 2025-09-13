@@ -25,6 +25,7 @@ func _ready() -> void:
 	state_machine.init(self, inputs, movements)
 	SignalBus.damage.connect(_on_damage_received)
 	set_collision_mask_value(13, false)
+	Global.player_body = self
 
 func _unhandled_input(event: InputEvent) -> void:
 	state_machine.process_input(event)

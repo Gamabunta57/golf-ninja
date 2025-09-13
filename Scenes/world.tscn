@@ -295,42 +295,10 @@ position = Vector2(-1260, -1958)
 
 [node name="Drone" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
 z_index = 1
-position = Vector2(-1245, 1069)
+position = Vector2(-541, 691)
 
 [node name="Bullets" type="Node2D" parent="Main/Enemies"]
 z_index = 1
-
-[node name="Drone2" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
-z_index = 1
-position = Vector2(724, 1069)
-
-[node name="Drone3" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
-z_index = 1
-position = Vector2(-550, 698)
-
-[node name="Drone4" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
-z_index = 1
-position = Vector2(-237, -56)
-
-[node name="Drone5" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
-z_index = 1
-position = Vector2(995, -1088)
-
-[node name="Drone9" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
-z_index = 1
-position = Vector2(1434, -2260)
-
-[node name="Drone6" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
-z_index = 1
-position = Vector2(-1024, -1351)
-
-[node name="Drone7" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
-z_index = 1
-position = Vector2(613, -1746)
-
-[node name="Drone8" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
-z_index = 1
-position = Vector2(-340, -2141)
 
 [node name="Bin" parent="." instance=ExtResource("11_ikia7")]
 position = Vector2(-74, 1520)

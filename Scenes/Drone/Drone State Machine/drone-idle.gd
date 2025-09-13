@@ -9,27 +9,28 @@ var should_return: bool = false
 
 func enter() -> void:
 	super()
+	should_return = false
 	parent.velocity = Vector2.ZERO
 	return_timer.start()
+	print("idle")
 
 func process_physics(delta: float) -> State:
-	# If we have a current or last known target, chase
-	if parent.current_target or parent.has_last_known_position:
+	#print(str("should return: ", should_return))
+	if parent.should_chase_player or parent.should_chase_ball:
 		return chase_state
 	
-	# Return to origin if timer elapsed
-	if parent.distance_to_origin > 1 and should_return:
-		return returning_state
-	
-	# Attack only if in zone and target is the player
-	if parent.player_in_attack_zone and parent.current_target and parent.current_target.is_in_group("Player"):
+	if parent.player_in_attack_zone and parent.player_visible:
 		return attack_state
+	
+	if should_return:
+		return returning_state 
 	
 	return null
 
-func _on_return_timer_timeout() -> void:
-	should_return = true
+func _on_return_timer_timeout() -> void: 
+	if parent.distance_to_origin > 10:
+		should_return = true
 
 func exit() -> void:
+	#should_return = false
 	return_timer.stop()
-	should_return = false

@@ -38,7 +38,7 @@ shape = SubResource("CircleShape2D_mmlcq")
 wait_time = 3.0
 
 [node name="DetectionZone" type="Area2D" parent="."]
-collision_mask = 17
+collision_layer = 0
 
 [node name="DetectionArea" type="CollisionShape2D" parent="DetectionZone"]
 shape = SubResource("CircleShape2D_n202n")
@@ -53,10 +53,12 @@ debug_color = Color(0.97, 0, 0.485, 0.215686)
 [node name="AttackCooldown" type="Timer" parent="."]
 wait_time = 1.5
 
-[node name="TargetCheck" type="RayCast2D" parent="."]
-target_position = Vector2(0, 250)
-collision_mask = 19
+[node name="TargetCheck" type="RayCast2D" parent="." node_paths=PackedStringArray("navigation_agent")]
+target_position = Vector2(0, 0)
+collision_mask = 3
+hit_from_inside = true
 script = ExtResource("3_y2b23")
+navigation_agent = NodePath("../NavigationAgent2D")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 path_desired_distance = 13.9

@@ -1,5 +1,6 @@
 extends Node
 
+var player_body: CharacterBody2D
 var player_health: int = 7
 var player_max_health: int = 7
 var player_hidden: bool = false

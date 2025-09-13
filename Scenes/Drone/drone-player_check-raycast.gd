@@ -1,35 +1,65 @@
 extends RayCast2D
 
-@onready var parent = get_parent() 
-var target: Vector2 = Vector2.ZERO
+@onready var parent = get_parent()
+@export var navigation_agent: NavigationAgent2D
+
+var player_body: CharacterBody2D
+var player_detected: bool
+var player_last_position: Vector2 = Vector2.ZERO
+
+var ball_position: Vector2 = Vector2.ZERO
+const ball_hearing_radius: float = 500.0  # tweak
+const target_offset: Vector2 = Vector2(0.0, 25.0)
 
 func _ready() -> void:
 	SignalBus.ball_sound_emission.connect(_on_ball_sound_emission)
 
-func _process(delta: float) -> void:
-	target_position = to_local(target - Vector2(0.0, 25.0))
-
-func _on_detection_zone_body_entered(body: Node2D) -> void:
-	if body.is_in_group("Player"):
-		parent.current_target = body
-		target = body.global_position
+func _physics_process(delta: float) -> void:
 	
-	elif body.is_in_group("Ball") and parent.current_target == null:
-		parent.current_target = body
-		target = body.global_position
+	if player_detected:
+		target_position = to_local(Global.player_body.global_position - target_offset)
+	else:
+		target_position = Vector2.ZERO
+		parent.player_visible = false
+		
+	force_raycast_update()
 
-func _on_detection_zone_body_exited(body: Node2D) -> void:
-	if parent.current_target == body:
-		# Save last known position before forgetting target
-		parent.last_known_position = body.global_position - Vector2(0.0, 25.0)
-		parent.has_last_known_position = true
-		parent.current_target = null
+	if is_colliding():
+		var collider = get_collider()
+		if collider and collider.is_in_group("Player") and not Global.player_hidden:
+			parent.should_chase_player = true
+			parent.player_visible = true
+			parent.should_chase_ball = false
+		else:
+			parent.player_visible = false
+	
+	print(str("should chase player: ",parent.should_chase_player,", should chase ball: ",parent.should_chase_ball,", player visible: ", parent.player_visible,", player detected: ", player_detected))
+
+	if parent.should_chase_player and parent.player_visible:
+		navigation_agent.target_position = Global.player_body.global_position - Vector2(0.0, 50.0)
+	
+	if parent.should_chase_ball:
+		navigation_agent.target_position = ball_position - Vector2(0.0, 50.0)
+
+func _on_detection_zone_body_entered(body: Node) -> void:
+	if body.is_in_group("Player"):
+		player_detected = true
+
+func _on_detection_zone_body_exited(body: Node) -> void:
+	if body.is_in_group("Player"):
+		player_detected = false
 
 func _on_ball_sound_emission(pos: Vector2) -> void:
-	var hearing_radius: float = 500.0  # tweak this
-	if parent.global_position.distance_to(pos) <= hearing_radius:
-		# Only react if close enough and not tracking the player
-		if not (parent.current_target and parent.current_target.is_in_group("Player")):
-			parent.last_known_position = pos - Vector2(0.0, 25.0)
-			parent.has_last_known_position = true
-			parent.current_target = null
+	# Only drones close enough should hear the sound.
+	if parent.global_position.distance_to(pos) > ball_hearing_radius:
+		return
+	
+	# If currently chasing a visible player ignore the sound.
+	if parent.player_visible:
+		return
+	
+	# set target.
+	print("ball emmited")
+	parent.should_chase_player = false
+	parent.should_chase_ball = true
+	ball_position = pos
