@@ -245,7 +245,7 @@ tile_set = SubResource("TileSet_7yui6")
 
 [node name="Player" parent="Main" instance=ExtResource("11_c5t2i")]
 z_index = 1
-position = Vector2(70, 578)
+position = Vector2(-259, 1510)
 
 [node name="Enemies" type="Node2D" parent="Main"]
 
@@ -296,6 +296,30 @@ position = Vector2(-1260, -1958)
 [node name="Drone" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
 z_index = 1
 position = Vector2(-541, 691)
+
+[node name="Drone2" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
+z_index = 1
+position = Vector2(-1115, 940)
+
+[node name="Drone3" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
+z_index = 1
+position = Vector2(586, 1063)
+
+[node name="Drone4" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
+z_index = 1
+position = Vector2(382, 425)
+
+[node name="Drone5" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
+z_index = 1
+position = Vector2(-84, -609)
+
+[node name="Drone6" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
+z_index = 1
+position = Vector2(-1108, -1118)
+
+[node name="Drone7" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
+z_index = 1
+position = Vector2(800, -1889)
 
 [node name="Bullets" type="Node2D" parent="Main/Enemies"]
 z_index = 1

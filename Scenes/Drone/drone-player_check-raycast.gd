@@ -33,7 +33,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			parent.player_visible = false
 	
-	print(str("should chase player: ",parent.should_chase_player,", should chase ball: ",parent.should_chase_ball,", player visible: ", parent.player_visible,", player detected: ", player_detected))
+	#print(str("should chase player: ",parent.should_chase_player,", should chase ball: ",parent.should_chase_ball,", player visible: ", parent.player_visible,", player detected: ", player_detected))
 
 	if parent.should_chase_player and parent.player_visible:
 		navigation_agent.target_position = Global.player_body.global_position - Vector2(0.0, 50.0)
