@@ -1,0 +1,52 @@
+[gd_scene load_steps=7 format=3 uid="uid://bafprk6ewl8x7"]
+
+[ext_resource type="Texture2D" uid="uid://btsyxn5hwru4" path="res://hex-background.png" id="1_wwf40"]
+[ext_resource type="Script" uid="uid://c564oq4dlkqp7" path="res://Scripts/mapRawData.gd" id="2_j6h4s"]
+[ext_resource type="Script" uid="uid://cypa22ua04kft" path="res://Scripts/generatorConfiguration.gd" id="3_j6h4s"]
+[ext_resource type="Script" uid="uid://c278imspykphw" path="res://Scripts/rawGridToHexSetter.gd" id="4_c185m"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2465o"]
+texture = ExtResource("1_wwf40")
+texture_region_size = Vector2i(724, 627)
+0:0/0 = 0
+2:0/0 = 0
+1:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_u6sxe"]
+tile_shape = 3
+tile_offset_axis = 1
+tile_size = Vector2i(712, 617)
+sources/1 = SubResource("TileSetAtlasSource_2465o")
+
+[node name="Tilemap" type="Node2D"]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_set = SubResource("TileSet_u6sxe")
+collision_enabled = false
+navigation_enabled = false
+
+[node name="MapRawData" type="Node" parent="." node_paths=PackedStringArray("config")]
+script = ExtResource("2_j6h4s")
+config = NodePath("../GeneratorConfiguration")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(18500, 10000)
+zoom = Vector2(0.025, 0.025)
+
+[node name="GeneratorConfiguration" type="Node" parent="."]
+script = ExtResource("3_j6h4s")
+mapSeed = 8
+useRandomSeed = true
+mapSize = Vector2i(16, 16)
+radius = 11.0
+metadata/_custom_type_script = "uid://cypa22ua04kft"
+
+[node name="RawGridToHexSetter" type="Node" parent="." node_paths=PackedStringArray("tileMap", "config")]
+script = ExtResource("4_c185m")
+tileMap = NodePath("../TileMapLayer")
+config = NodePath("../GeneratorConfiguration")
+metadata/_custom_type_script = "uid://c278imspykphw"
+
+[connection signal="mapGenerated" from="MapRawData" to="RawGridToHexSetter" method="_on_map_raw_data_map_generated"]
