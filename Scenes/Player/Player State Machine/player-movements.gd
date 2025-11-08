@@ -4,7 +4,7 @@ extends Node
 
 @export var move_speed: float = 800
 @export var max_speed: float = 400
-@export var deceleration: float = 1500
+@export var deceleration: float = 3000
 @export var stairs_threshold: float = 0.1
 
 

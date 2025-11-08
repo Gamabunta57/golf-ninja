@@ -6,8 +6,8 @@ extends State
 @export var landing_state: State
 @export var hurt_state: State
 
-@export var landing_threshold: float = 600
-@export var hurt_threshold: float = 1000
+@export var landing_threshold: float = 1500
+@export var hurt_threshold: float = 3000
 
 
 @export var fall_gravity_multiplier: float = 2
@@ -39,7 +39,10 @@ func process_physics(delta: float) -> State:
 		print(last_y_velocity)
 		
 		if last_y_velocity < landing_threshold:
-			return idle_state
+			if parent.velocity.x == 0:
+				return idle_state
+			else:
+				return move_state
 		else:
 			if last_y_velocity > hurt_threshold:
 				Global.player_health -= 1

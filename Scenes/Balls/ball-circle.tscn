@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://cpfblrr2almno" path="res://Scenes/Balls/sound.gd" id="6_ob887"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_pfq2l"]
+friction = 10.0
 rough = true
 bounce = 0.3
 
@@ -29,10 +30,11 @@ anti_aliasing = false
 [node name="BallCircle" type="RigidBody2D" node_paths=PackedStringArray("ground_check") groups=["Ball"]]
 collision_layer = 16
 collision_mask = 16486
-mass = 0.5
+mass = 0.4
 physics_material_override = SubResource("PhysicsMaterial_pfq2l")
 contact_monitor = true
 max_contacts_reported = 1
+angular_damp = 8.382
 script = ExtResource("1_pfq2l")
 ground_check = NodePath("GroundCheck")
 alpha_increment = 0.08

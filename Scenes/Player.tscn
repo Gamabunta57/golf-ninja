@@ -28,6 +28,7 @@ size = Vector2(14, 7)
 collision_mask = 5262
 floor_stop_on_slope = false
 floor_constant_speed = true
+floor_max_angle = 0.87266463
 floor_snap_length = 6.0
 script = ExtResource("1_kyqiw")
 push_force = 1000
@@ -95,6 +96,7 @@ fall_state = NodePath("../Fall")
 idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
 hurt_state = NodePath("../Hurt")
+jump_force = 500.0
 
 [node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "idle_state", "move_state", "landing_state", "hurt_state")]
 script = ExtResource("5_5ixxa")
