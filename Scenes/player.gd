@@ -9,7 +9,7 @@ extends CharacterBody2D
 @export var player_health: int = 5
 @export var push_force = 100
 
-
+var should_coyote: bool = false
 var direction: int = 1
 var last_direction: int = 1
 

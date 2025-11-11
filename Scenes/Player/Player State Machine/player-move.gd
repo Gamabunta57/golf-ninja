@@ -32,6 +32,7 @@ func process_physics(delta: float) -> State:
 		return idle_state
 	
 	if parent.velocity.y > 0 or !parent.is_on_floor():
+		parent.should_coyote = true
 		return fall_state
 	
 	if inputs.get_jump_input() and parent.is_on_floor():

@@ -56,6 +56,7 @@ hit_from_inside = true
 [node name="PlayerCheck" type="RayCast2D" parent="."]
 position = Vector2(0, -32)
 target_position = Vector2(500, 0)
+collision_mask = 3
 
 [node name="Hitbox" type="Area2D" parent="."]
 collision_layer = 128

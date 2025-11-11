@@ -33,11 +33,16 @@ func process_physics(delta: float) -> State:
 	
 	if should_idle:
 		return idle_state
-		
-	if player_check.is_colliding():
-		return chase_state
+	
 	
 	if parent.player_in_attack_zone:
 		return attack_state
 	
+	if player_check.is_colliding():
+		var collider = player_check.get_collider()
+		if collider and collider.is_in_group("Player"):
+			return chase_state
+		else:
+			return null
+			
 	return null

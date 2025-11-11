@@ -10,5 +10,8 @@ func get_y_input() -> float:
 func get_jump_input() -> bool:
 	return Input.is_action_just_pressed('jump')
 
+func get_jump_release() -> bool:
+	return Input.is_action_just_released('jump')
+
 func get_shooting_input() -> bool:
 	return Input.is_action_pressed("shooting")

@@ -67,6 +67,9 @@ wait_time = 0.2
 [node name="KnockbackTimer" type="Timer" parent="."]
 wait_time = 0.1
 
+[node name="CoyoteTime" type="Timer" parent="."]
+wait_time = 0.5
+
 [node name="Movements" type="Node" parent="."]
 script = ExtResource("4_yoq75")
 
@@ -96,15 +99,15 @@ fall_state = NodePath("../Fall")
 idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
 hurt_state = NodePath("../Hurt")
-jump_force = 500.0
 
-[node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "idle_state", "move_state", "landing_state", "hurt_state")]
+[node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "idle_state", "move_state", "landing_state", "hurt_state", "coyote_timer")]
 script = ExtResource("5_5ixxa")
 jump_state = NodePath("../Jump")
 idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
 landing_state = NodePath("../Landing")
 hurt_state = NodePath("../Hurt")
+coyote_timer = NodePath("../../CoyoteTime")
 landing_threshold = 500.0
 
 [node name="Landing" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "jump_state", "move_state", "fall_state", "hurt_state")]
@@ -132,3 +135,4 @@ move_state = NodePath("../Move")
 [connection signal="body_entered" from="DoorCollision" to="." method="_on_door_collision_body_entered"]
 [connection signal="timeout" from="HurtTimer" to="state_machine/Hurt" method="_on_hurt_timer_timeout"]
 [connection signal="timeout" from="KnockbackTimer" to="state_machine/Hurt" method="_on_knockback_timer_timeout"]
+[connection signal="timeout" from="CoyoteTime" to="state_machine/Fall" method="_on_coyote_time_timeout"]

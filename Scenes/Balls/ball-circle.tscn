@@ -34,7 +34,6 @@ mass = 0.4
 physics_material_override = SubResource("PhysicsMaterial_pfq2l")
 contact_monitor = true
 max_contacts_reported = 1
-angular_damp = 8.382
 script = ExtResource("1_pfq2l")
 ground_check = NodePath("GroundCheck")
 alpha_increment = 0.08
