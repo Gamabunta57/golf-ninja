@@ -35,7 +35,7 @@ func process_physics(delta: float) -> State:
 		parent.should_coyote = true
 		return fall_state
 	
-	if inputs.get_jump_input() and parent.is_on_floor():
+	if inputs.get_jump_input() and parent.is_on_floor() and parent.can_jump:
 		return jump_state
 	
 	return null

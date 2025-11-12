@@ -5,31 +5,34 @@ extends State
 @export var idle_state: State
 @export var move_state: State
 @export var hurt_state: State
+@export var jump_velocity_curve: Curve
 
-@export var initial_jump_force: float = 400
-@export var jump_gravity_multiplier: float = 0.9
+@export var max_jump_time: float = 0.2       
+@export var max_jump_speed: float = 510.0
+
+var time_elapsed: float = 0.0 
+var curve_ratio: float
 
 func enter() -> void:
 	super()
-	parent.velocity.y = -initial_jump_force
+	time_elapsed = 0.0
+	curve_ratio = 1/max_jump_time
 
 func process_physics(delta: float) -> State:
-		
-	parent.velocity.y -= 300 * delta
-
-	parent.velocity.y += gravity * jump_gravity_multiplier * delta
-	parent.velocity.x = movements.horizontal_movement(parent.velocity.x, delta, inputs, parent)
+	print(time_elapsed)
+	print(-jump_velocity_curve.sample(time_elapsed))
 	
-	parent.direction = sign(inputs.get_x_input())
+	if time_elapsed < max_jump_time:
+		time_elapsed += delta
+		parent.velocity.y = -jump_velocity_curve.sample(time_elapsed * curve_ratio) * max_jump_speed
+	else:
+		return fall_state
 	
 	parent.move_and_slide()
 	
-	if inputs.get_jump_release():
+	if inputs.get_jump_release() or time_elapsed == max_jump_time:
 		return fall_state
 	
-	if parent.velocity.y >= 0:
-		return fall_state
-		
 	
 	if parent.is_on_floor():
 		if parent.velocity.x != 0:

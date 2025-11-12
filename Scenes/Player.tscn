@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://djvi8dyyfdrkw"]
+[gd_scene load_steps=18 format=3 uid="uid://djvi8dyyfdrkw"]
 
 [ext_resource type="Script" uid="uid://eojnyblkkyhe" path="res://Scenes/player.gd" id="1_kyqiw"]
 [ext_resource type="Texture2D" uid="uid://dm443rurrb8q0" path="res://Assets/player.png" id="1_rpqav"]
@@ -23,6 +23,10 @@ size = Vector2(16, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_glx4g"]
 size = Vector2(14, 7)
+
+[sub_resource type="Curve" id="Curve_miouo"]
+_data = [Vector2(0.004310347, 0.1622855), 0.0, 1.7373412, 0, 0, Vector2(0.9935345, 1), 0.0075420924, 0.0, 0, 0]
+point_count = 2
 
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 collision_mask = 5262
@@ -61,13 +65,15 @@ shape = SubResource("RectangleShape2D_glx4g")
 [node name="Inputs" type="Node" parent="."]
 script = ExtResource("4_megsn")
 
-[node name="HurtTimer" type="Timer" parent="."]
+[node name="Timers" type="Node2D" parent="."]
+
+[node name="HurtTimer" type="Timer" parent="Timers"]
 wait_time = 0.2
 
-[node name="KnockbackTimer" type="Timer" parent="."]
+[node name="KnockbackTimer" type="Timer" parent="Timers"]
 wait_time = 0.1
 
-[node name="CoyoteTime" type="Timer" parent="."]
+[node name="CoyoteTime" type="Timer" parent="Timers"]
 wait_time = 0.5
 
 [node name="Movements" type="Node" parent="."]
@@ -99,6 +105,7 @@ fall_state = NodePath("../Fall")
 idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
 hurt_state = NodePath("../Hurt")
+jump_velocity_curve = SubResource("Curve_miouo")
 
 [node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "idle_state", "move_state", "landing_state", "hurt_state", "coyote_timer")]
 script = ExtResource("5_5ixxa")
@@ -107,7 +114,7 @@ idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
 landing_state = NodePath("../Landing")
 hurt_state = NodePath("../Hurt")
-coyote_timer = NodePath("../../CoyoteTime")
+coyote_timer = NodePath("../../Timers/CoyoteTime")
 landing_threshold = 500.0
 
 [node name="Landing" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "jump_state", "move_state", "fall_state", "hurt_state")]
@@ -121,8 +128,8 @@ hurt_state = NodePath("../Hurt")
 [node name="Hurt" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "hurt_timer", "knockback_timer")]
 script = ExtResource("11_ksbbd")
 idle_state = NodePath("../Idle")
-hurt_timer = NodePath("../../HurtTimer")
-knockback_timer = NodePath("../../KnockbackTimer")
+hurt_timer = NodePath("../../Timers/HurtTimer")
+knockback_timer = NodePath("../../Timers/KnockbackTimer")
 game_over = ExtResource("2_glx4g")
 
 [node name="Shooting" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "move_state")]
@@ -133,6 +140,6 @@ move_state = NodePath("../Move")
 [connection signal="body_entered" from="BallDetection" to="." method="_on_ball_detection_body_entered"]
 [connection signal="body_exited" from="BallDetection" to="." method="_on_ball_detection_body_exited"]
 [connection signal="body_entered" from="DoorCollision" to="." method="_on_door_collision_body_entered"]
-[connection signal="timeout" from="HurtTimer" to="state_machine/Hurt" method="_on_hurt_timer_timeout"]
-[connection signal="timeout" from="KnockbackTimer" to="state_machine/Hurt" method="_on_knockback_timer_timeout"]
-[connection signal="timeout" from="CoyoteTime" to="state_machine/Fall" method="_on_coyote_time_timeout"]
+[connection signal="timeout" from="Timers/HurtTimer" to="state_machine/Hurt" method="_on_hurt_timer_timeout"]
+[connection signal="timeout" from="Timers/KnockbackTimer" to="state_machine/Hurt" method="_on_knockback_timer_timeout"]
+[connection signal="timeout" from="Timers/CoyoteTime" to="state_machine/Fall" method="_on_coyote_time_timeout"]

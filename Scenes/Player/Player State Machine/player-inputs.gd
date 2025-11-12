@@ -8,7 +8,7 @@ func get_y_input() -> float:
 	return Input.get_axis("down", "up")
 
 func get_jump_input() -> bool:
-	return Input.is_action_just_pressed('jump')
+	return Input.is_action_pressed('jump')
 
 func get_jump_release() -> bool:
 	return Input.is_action_just_released('jump')

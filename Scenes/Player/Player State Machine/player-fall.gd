@@ -30,12 +30,11 @@ func process_physics(delta: float) -> State:
 	movements.flip_direction(inputs, parent)
 
 	parent.move_and_slide()
-	print(parent.should_coyote)
-	if inputs.get_jump_input() and parent.should_coyote:
+	
+	if inputs.get_jump_input() and parent.should_coyote and parent.can_jump:
 		return jump_state
 		
 	if parent.is_on_floor():
-		#print(last_y_velocity)
 		
 		if last_y_velocity < landing_threshold:
 			if parent.velocity.x == 0:

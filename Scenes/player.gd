@@ -10,6 +10,7 @@ extends CharacterBody2D
 @export var push_force = 100
 
 var should_coyote: bool = false
+var can_jump: bool = true
 var direction: int = 1
 var last_direction: int = 1
 
@@ -32,6 +33,13 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	state_machine.process_physics(delta)
+	
+	if inputs.get_jump_input():
+		can_jump = false
+	
+	if inputs.get_jump_release():
+		can_jump = true
+	
 	if not inputs.get_shooting_input():
 		cancel_shooting = false
 	
