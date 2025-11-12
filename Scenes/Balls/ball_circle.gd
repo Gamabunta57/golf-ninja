@@ -117,7 +117,7 @@ func update_bin_distance() -> void:
 	distance.text = str("Distance: ", int(bin_distance))
 
 func calculate_initial_par() -> void:
-	par_value = int(ceil(bin_distance/par_distance))
+	par_value = int(ceil(bin_distance/par_distance)) + 2
 	par.text = str("Par: ", par_value)
 
 func update_cost() -> void:
