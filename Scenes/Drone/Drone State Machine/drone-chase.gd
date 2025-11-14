@@ -12,7 +12,7 @@ extends State
 func enter() -> void:
 	super()
 	#time_since_last_path_recalc = 0.0
-	print("chase")
+	#print("chase")
 
 func process_physics(delta: float) -> State:
 	var next_path_position = navigation_agent.get_next_path_position()

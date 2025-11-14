@@ -22,14 +22,14 @@ height = 50.0
 size = Vector2(16, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_glx4g"]
-size = Vector2(14, 7)
+size = Vector2(16, 16.5)
 
 [sub_resource type="Curve" id="Curve_miouo"]
 _data = [Vector2(0.004310347, 0.1622855), 0.0, 1.7373412, 0, 0, Vector2(0.9935345, 1), 0.0075420924, 0.0, 0, 0]
 point_count = 2
 
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
-collision_mask = 5262
+collision_mask = 130
 floor_stop_on_slope = false
 floor_constant_speed = true
 floor_max_angle = 0.87266463
@@ -54,12 +54,12 @@ position = Vector2(0, -8)
 shape = SubResource("RectangleShape2D_miouo")
 debug_color = Color(0.867958, 0.353193, 0, 0.42)
 
-[node name="DoorCollision" type="Area2D" parent="."]
-collision_layer = 256
-collision_mask = 2048
+[node name="HiddenRoom" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 8192
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorCollision"]
-position = Vector2(0, 4)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HiddenRoom"]
+position = Vector2(0, -24.75)
 shape = SubResource("RectangleShape2D_glx4g")
 
 [node name="Inputs" type="Node" parent="."]
@@ -139,7 +139,8 @@ move_state = NodePath("../Move")
 
 [connection signal="body_entered" from="BallDetection" to="." method="_on_ball_detection_body_entered"]
 [connection signal="body_exited" from="BallDetection" to="." method="_on_ball_detection_body_exited"]
-[connection signal="body_entered" from="DoorCollision" to="." method="_on_door_collision_body_entered"]
+[connection signal="body_entered" from="HiddenRoom" to="." method="_on_hidden_room_body_entered"]
+[connection signal="body_exited" from="HiddenRoom" to="." method="_on_hidden_room_body_exited"]
 [connection signal="timeout" from="Timers/HurtTimer" to="state_machine/Hurt" method="_on_hurt_timer_timeout"]
 [connection signal="timeout" from="Timers/KnockbackTimer" to="state_machine/Hurt" method="_on_knockback_timer_timeout"]
 [connection signal="timeout" from="Timers/CoyoteTime" to="state_machine/Fall" method="_on_coyote_time_timeout"]

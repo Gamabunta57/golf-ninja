@@ -16,7 +16,7 @@ var last_direction: int = 1
 
 
 var enemy_position: Vector2
-var is_back: bool = false
+var is_hidden: bool = false
 var is_ball_nearby: bool = false
 var ball_body: Node2D
 var cancel_shooting: bool = false
@@ -33,7 +33,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	state_machine.process_physics(delta)
-	
 	if inputs.get_jump_input():
 		can_jump = false
 	
@@ -61,18 +60,6 @@ func _on_damage_received(origin_position) -> void:
 		#if c.get_collider() is RigidBody2D:
 			#c.get_collider().apply_central_impulse(-c.get_normal() * push_force)
 
-func _on_door_collision_body_entered(body: Node2D) -> void:
-	if is_back and inputs.get_y_input() < 0.5:
-		is_back = false
-		set_collision_mask_value(13, false)
-		z_index = 1
-		Global.player_hidden = false
-		
-	if not is_back and inputs.get_y_input() >= 0.5:
-		is_back = true
-		set_collision_mask_value(13, true)
-		z_index = 0
-		Global.player_hidden = true
 
 
 func _on_ball_detection_body_entered(body: Node2D) -> void:
@@ -86,3 +73,13 @@ func _on_ball_detection_body_exited(body: Node2D) -> void:
 	ball_body = null
 	SignalBus.ball_in_range.emit(body, false)
 	
+
+
+
+func _on_hidden_room_body_entered(body: Node2D) -> void:
+	is_hidden = true
+	Global.player_hidden = true
+
+func _on_hidden_room_body_exited(body: Node2D) -> void:
+	is_hidden = false
+	Global.player_hidden = false

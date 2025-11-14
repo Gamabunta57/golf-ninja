@@ -59,7 +59,7 @@ func _on_ball_sound_emission(pos: Vector2) -> void:
 		return
 	
 	# set target.
-	print("ball emmited")
+	#print("ball emmited")
 	parent.should_chase_player = false
 	parent.should_chase_ball = true
 	ball_position = pos

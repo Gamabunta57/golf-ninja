@@ -19,8 +19,6 @@ func enter() -> void:
 	curve_ratio = 1/max_jump_time
 
 func process_physics(delta: float) -> State:
-	print(time_elapsed)
-	print(-jump_velocity_curve.sample(time_elapsed))
 	
 	if time_elapsed < max_jump_time:
 		time_elapsed += delta

@@ -12,7 +12,7 @@ func enter() -> void:
 	should_return = false
 	parent.velocity = Vector2.ZERO
 	return_timer.start()
-	print("idle")
+	#print("idle")
 
 func process_physics(delta: float) -> State:
 	#print(str("should return: ", should_return))
