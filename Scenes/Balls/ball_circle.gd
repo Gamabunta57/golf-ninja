@@ -117,7 +117,7 @@ func update_bin_distance() -> void:
 	distance.text = str("Distance: ", int(bin_distance))
 
 func calculate_initial_par() -> void:
-	par_value = int(ceil(bin_distance/par_distance)) + 2
+	par_value = int(ceil(bin_distance/par_distance))
 	par.text = str("Par: ", par_value)
 
 func update_cost() -> void:
@@ -126,7 +126,7 @@ func update_cost() -> void:
 	value.text = str("Money: ", money, "$")
 
 func _display_tooltip(body, nearby) -> void:
-	if nearby and body == self and not Global.player_hidden:
+	if nearby and body == self:
 		update_bin_distance()
 		tooltip.show()
 	else:

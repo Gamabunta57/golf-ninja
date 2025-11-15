@@ -29,7 +29,7 @@ _data = [Vector2(0.004310347, 0.1622855), 0.0, 1.7373412, 0, 0, Vector2(0.993534
 point_count = 2
 
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
-collision_mask = 130
+collision_mask = 5314
 floor_stop_on_slope = false
 floor_constant_speed = true
 floor_max_angle = 0.87266463
