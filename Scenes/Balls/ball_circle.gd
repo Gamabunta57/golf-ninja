@@ -10,6 +10,7 @@ extends RigidBody2D
 var shoot_vector: Vector2 = Vector2.ZERO
 var limited_shoot_vector: Vector2 = Vector2.ZERO
 var final_vector: Vector2 = Vector2.ZERO
+var current_line_width: float = 1.0
 
 var points: PackedVector2Array
 
@@ -35,6 +36,8 @@ var money: int = 0
 @export var par_distance: float = 300
 @export var par_cost: float = 10
 @export var collison_velocity_threshold: float = 100
+@export var min_line_width: float = 1.0
+@export var max_line_width: float = 5.0
 
 
 
@@ -88,6 +91,8 @@ func _physics_process(delta: float) -> void:
 			angular_velocity = 0.0
 			limited_shoot_vector = shoot_vector.limit_length(max_force)
 			final_vector = limited_shoot_vector * strength
+			var strength_weight = max(limited_shoot_vector.length() - 20, 0) / max_force
+			current_line_width = lerp(min_line_width, max_line_width, strength_weight)
 			points = preview_trajectory(final_vector, preview_max_points)
 			emit_last_position(ball_body)
 
@@ -109,7 +114,7 @@ func _draw() -> void:
 			var alpha: float = clamp((count - i) * alpha_increment, 0.0, 1.0)
 			var color_with_alpha: Color = trajectory_color
 			color_with_alpha.a = alpha
-			draw_line(to_local(points[i]), to_local(points[i + 1]), color_with_alpha, 1)
+			draw_line(to_local(points[i]), to_local(points[i + 1]), color_with_alpha, current_line_width)
 
 
 func update_bin_distance() -> void:
