@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://cocj0moh400bm"]
+[gd_scene load_steps=18 format=3 uid="uid://djvi8dyyfdrkw"]
 
-[ext_resource type="Script" uid="uid://dufqnituw4hnj" path="res://Scenes/Player/player.gd" id="1_kyqiw"]
-[ext_resource type="Texture2D" uid="uid://bwexbr086g5sj" path="res://Assets/player.png" id="1_rpqav"]
+[ext_resource type="Script" uid="uid://eojnyblkkyhe" path="res://Scenes/Player/player.gd" id="1_kyqiw"]
+[ext_resource type="Texture2D" uid="uid://dm443rurrb8q0" path="res://Assets/player.png" id="1_rpqav"]
+[ext_resource type="PackedScene" uid="uid://yoqrhnc4doia" path="res://Scenes/UI/game_over.tscn" id="2_glx4g"]
 [ext_resource type="Script" uid="uid://bgmb176xk2uel" path="res://Scenes/state_machine.gd" id="3_gntrk"]
 [ext_resource type="Script" uid="uid://dxn3k220l1ad" path="res://Scenes/Player/Player State Machine/player-idle.gd" id="4_dewec"]
 [ext_resource type="Script" uid="uid://citxnxh7togl4" path="res://Scenes/Player/Player State Machine/player-inputs.gd" id="4_megsn"]
@@ -10,28 +11,70 @@
 [ext_resource type="Script" uid="uid://cvifrmoiqkhmr" path="res://Scenes/Player/Player State Machine/player-move.gd" id="5_52ee3"]
 [ext_resource type="Script" uid="uid://b3p30u3docj7x" path="res://Scenes/Player/Player State Machine/player-jump.gd" id="5_nn08x"]
 [ext_resource type="Script" uid="uid://cqym3jl820dxf" path="res://Scenes/Player/Player State Machine/player-landing.gd" id="8_bhhdu"]
+[ext_resource type="Script" uid="uid://1tiwoc1g5a47" path="res://Scenes/Player/Player State Machine/player-hurt.gd" id="11_ksbbd"]
+[ext_resource type="Script" uid="uid://ge0e831jnq7n" path="res://Scenes/Player/Player State Machine/player-shooting.gd" id="13_miouo"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kyqiw"]
 radius = 12.0
-height = 36.0
+height = 50.0
 
-[node name="Player" type="CharacterBody2D"]
-collision_mask = 14
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_miouo"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_glx4g"]
+size = Vector2(16, 16.5)
+
+[sub_resource type="Curve" id="Curve_miouo"]
+_data = [Vector2(0.004310347, 0.1622855), 0.0, 1.7373412, 0, 0, Vector2(0.9935345, 1), 0.0075420924, 0.0, 0, 0]
+point_count = 2
+
+[node name="Player" type="CharacterBody2D" groups=["Player"]]
+collision_mask = 5250
 floor_stop_on_slope = false
 floor_constant_speed = true
+floor_max_angle = 0.87266463
 floor_snap_length = 6.0
 script = ExtResource("1_kyqiw")
+push_force = 1000
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -25)
 texture = ExtResource("1_rpqav")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -18)
+position = Vector2(0, -25)
 shape = SubResource("CapsuleShape2D_kyqiw")
+
+[node name="BallDetection" type="Area2D" parent="."]
+collision_layer = 16384
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BallDetection"]
+position = Vector2(0, -8)
+shape = SubResource("RectangleShape2D_miouo")
+debug_color = Color(0.867958, 0.353193, 0, 0.42)
+
+[node name="HiddenRoom" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 8192
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HiddenRoom"]
+position = Vector2(0, -24.75)
+shape = SubResource("RectangleShape2D_glx4g")
 
 [node name="Inputs" type="Node" parent="."]
 script = ExtResource("4_megsn")
+
+[node name="Timers" type="Node2D" parent="."]
+
+[node name="HurtTimer" type="Timer" parent="Timers"]
+wait_time = 0.2
+
+[node name="KnockbackTimer" type="Timer" parent="Timers"]
+wait_time = 0.1
+
+[node name="CoyoteTime" type="Timer" parent="Timers"]
+wait_time = 0.5
 
 [node name="Movements" type="Node" parent="."]
 script = ExtResource("4_yoq75")
@@ -40,35 +83,64 @@ script = ExtResource("4_yoq75")
 script = ExtResource("3_gntrk")
 starting_state = NodePath("Idle")
 
-[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "jump_state", "move_state")]
+[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "jump_state", "move_state", "hurt_state", "shooting_state")]
 script = ExtResource("4_dewec")
 fall_state = NodePath("../Fall")
 jump_state = NodePath("../Jump")
 move_state = NodePath("../Move")
+hurt_state = NodePath("../Hurt")
+shooting_state = NodePath("../Shooting")
 
-[node name="Move" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "jump_state")]
+[node name="Move" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "jump_state", "hurt_state", "shooting_state")]
 script = ExtResource("5_52ee3")
 fall_state = NodePath("../Fall")
 idle_state = NodePath("../Idle")
 jump_state = NodePath("../Jump")
+hurt_state = NodePath("../Hurt")
+shooting_state = NodePath("../Shooting")
 
-[node name="Jump" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "move_state")]
+[node name="Jump" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "move_state", "hurt_state")]
 script = ExtResource("5_nn08x")
 fall_state = NodePath("../Fall")
 idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
+hurt_state = NodePath("../Hurt")
+jump_velocity_curve = SubResource("Curve_miouo")
 
-[node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "idle_state", "move_state", "landing_state")]
+[node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "idle_state", "move_state", "landing_state", "hurt_state", "coyote_timer")]
 script = ExtResource("5_5ixxa")
 jump_state = NodePath("../Jump")
 idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
 landing_state = NodePath("../Landing")
+hurt_state = NodePath("../Hurt")
+coyote_timer = NodePath("../../Timers/CoyoteTime")
 landing_threshold = 500.0
 
-[node name="Landing" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "jump_state", "move_state", "fall_state")]
+[node name="Landing" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "jump_state", "move_state", "fall_state", "hurt_state")]
 script = ExtResource("8_bhhdu")
 idle_state = NodePath("../Idle")
 jump_state = NodePath("../Jump")
 move_state = NodePath("../Move")
 fall_state = NodePath("../Fall")
+hurt_state = NodePath("../Hurt")
+
+[node name="Hurt" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "hurt_timer", "knockback_timer")]
+script = ExtResource("11_ksbbd")
+idle_state = NodePath("../Idle")
+hurt_timer = NodePath("../../Timers/HurtTimer")
+knockback_timer = NodePath("../../Timers/KnockbackTimer")
+game_over = ExtResource("2_glx4g")
+
+[node name="Shooting" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "move_state")]
+script = ExtResource("13_miouo")
+idle_state = NodePath("../Idle")
+move_state = NodePath("../Move")
+
+[connection signal="body_entered" from="BallDetection" to="." method="_on_ball_detection_body_entered"]
+[connection signal="body_exited" from="BallDetection" to="." method="_on_ball_detection_body_exited"]
+[connection signal="body_entered" from="HiddenRoom" to="." method="_on_hidden_room_body_entered"]
+[connection signal="body_exited" from="HiddenRoom" to="." method="_on_hidden_room_body_exited"]
+[connection signal="timeout" from="Timers/HurtTimer" to="state_machine/Hurt" method="_on_hurt_timer_timeout"]
+[connection signal="timeout" from="Timers/KnockbackTimer" to="state_machine/Hurt" method="_on_knockback_timer_timeout"]
+[connection signal="timeout" from="Timers/CoyoteTime" to="state_machine/Fall" method="_on_coyote_time_timeout"]

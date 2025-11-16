@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dp3fllj1bs7nh"
-path="res://.godot/imported/sub hex.png-1c5498aa37a7d48cd553f8412b657b93.ctex"
+uid="uid://6eieiw6ux6lj"
+path="res://.godot/imported/hex-background.png-6ceb073797799aa8285b5e5b1c25c58f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Hex tilemap/sub hex.png"
-dest_files=["res://.godot/imported/sub hex.png-1c5498aa37a7d48cd553f8412b657b93.ctex"]
+source_file="res://Assets/Hex tilemap/hex-background.png"
+dest_files=["res://.godot/imported/hex-background.png-6ceb073797799aa8285b5e5b1c25c58f.ctex"]
 
 [params]
 

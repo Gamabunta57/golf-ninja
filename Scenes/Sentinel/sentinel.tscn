@@ -1,12 +1,29 @@
-[gd_scene load_steps=4 format=3 uid="uid://d2egjrgf8hnpc"]
+[gd_scene load_steps=12 format=3 uid="uid://cwfkdmyy53qiv"]
 
 [ext_resource type="Texture2D" uid="uid://o5qgwor5qhaq" path="res://Assets/sentinel/sentinel.png" id="1_cuxs6"]
-[ext_resource type="Script" uid="uid://bgmb176xk2uel" path="res://Scenes/State Machine/state_machine.gd" id="2_51je0"]
+[ext_resource type="Script" uid="uid://cciq2qkl606er" path="res://Scenes/Sentinel/sentinel.gd" id="1_u3sj5"]
+[ext_resource type="Script" uid="uid://bgmb176xk2uel" path="res://Scenes/state_machine.gd" id="2_51je0"]
+[ext_resource type="Script" uid="uid://kppqgyoriqpr" path="res://Scenes/Sentinel/Sentinel State Machine/sentinel-idle.gd" id="3_4wiga"]
+[ext_resource type="Script" uid="uid://b133q8oyn8jv0" path="res://Scenes/Sentinel/Sentinel State Machine/sentinel-fall.gd" id="4_omg0t"]
+[ext_resource type="Script" uid="uid://cj7gb6cg4sjk4" path="res://Scenes/Sentinel/Sentinel State Machine/sentinel-attack.gd" id="5_mvde5"]
+[ext_resource type="Script" uid="uid://bss8ujiwobpsd" path="res://Scenes/Sentinel/Sentinel State Machine/sentinel-patrol.gd" id="5_wv7bl"]
+[ext_resource type="Script" uid="uid://ck21gc5448rjd" path="res://Scenes/Sentinel/Sentinel State Machine/sentinel-chase.gd" id="6_jaqww"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_51je0"]
 size = Vector2(64, 64)
 
-[node name="Sentinel" type="CharacterBody2D"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wv7bl"]
+radius = 32.0
+height = 86.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wv7bl"]
+size = Vector2(19, 65)
+
+[node name="Sentinel" type="CharacterBody2D" node_paths=PackedStringArray("cooldown_timer") groups=["Sentinel"]]
+collision_layer = 64
+collision_mask = 6
+script = ExtResource("1_u3sj5")
+cooldown_timer = NodePath("AttackCooldown")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -32)
@@ -16,22 +33,88 @@ texture = ExtResource("1_cuxs6")
 position = Vector2(0, -32)
 shape = SubResource("RectangleShape2D_51je0")
 
+[node name="AttackZone" type="Area2D" parent="."]
+collision_layer = 64
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackZone"]
+position = Vector2(0, -32)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_wv7bl")
+debug_color = Color(0.702837, 0.272691, 1, 0.42)
+
+[node name="IdleTimer" type="Timer" parent="."]
+
+[node name="AttackCooldown" type="Timer" parent="."]
+wait_time = 2.0
+
 [node name="GroundCheck" type="RayCast2D" parent="."]
 position = Vector2(33, 1)
-target_position = Vector2(0, 16)
+target_position = Vector2(0, 8)
 collision_mask = 6
+hit_from_inside = true
 
 [node name="PlayerCheck" type="RayCast2D" parent="."]
 position = Vector2(0, -32)
-target_position = Vector2(128, 0)
+target_position = Vector2(500, 0)
+collision_mask = 3
 
-[node name="state_machine" type="Node" parent="."]
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 128
+collision_mask = 256
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(41.5, -31.5)
+shape = SubResource("RectangleShape2D_wv7bl")
+debug_color = Color(1, 0, 0.0166664, 0.576471)
+
+[node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
 script = ExtResource("2_51je0")
+starting_state = NodePath("Idle")
 
-[node name="Idle" type="Node" parent="state_machine"]
+[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "attack_state", "patrol_state", "chase_state", "idle_timer", "cooldown", "player_check")]
+script = ExtResource("3_4wiga")
+fall_state = NodePath("../Fall")
+attack_state = NodePath("../Attack")
+patrol_state = NodePath("../Patrol")
+chase_state = NodePath("../Chase")
+idle_timer = NodePath("../../IdleTimer")
+cooldown = NodePath("../../AttackCooldown")
+player_check = NodePath("../../PlayerCheck")
+detection_range = 1000.0
 
-[node name="Scout" type="Node" parent="state_machine"]
+[node name="Patrol" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "chase_state", "attack_state", "idle_state", "ground_check", "player_check")]
+script = ExtResource("5_wv7bl")
+fall_state = NodePath("../Fall")
+chase_state = NodePath("../Chase")
+attack_state = NodePath("../Attack")
+idle_state = NodePath("../Idle")
+ground_check = NodePath("../../GroundCheck")
+player_check = NodePath("../../PlayerCheck")
 
-[node name="Chase" type="Node" parent="state_machine"]
+[node name="Chase" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "attack_state", "idle_state", "patrol_state", "ground_check", "player_check")]
+script = ExtResource("6_jaqww")
+fall_state = NodePath("../Fall")
+attack_state = NodePath("../Attack")
+idle_state = NodePath("../Idle")
+patrol_state = NodePath("../Patrol")
+ground_check = NodePath("../../GroundCheck")
+player_check = NodePath("../../PlayerCheck")
 
-[node name="Attack" type="Node" parent="state_machine"]
+[node name="Attack" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "cooldown")]
+script = ExtResource("5_mvde5")
+idle_state = NodePath("../Idle")
+cooldown = NodePath("../../AttackCooldown")
+
+[node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
+script = ExtResource("4_omg0t")
+idle_state = NodePath("../Idle")
+
+[connection signal="body_entered" from="AttackZone" to="." method="_on_attack_zone_body_entered"]
+[connection signal="body_entered" from="AttackZone" to="state_machine/Attack" method="_on_attack_zone_body_entered"]
+[connection signal="body_exited" from="AttackZone" to="." method="_on_attack_zone_body_exited"]
+[connection signal="body_exited" from="AttackZone" to="state_machine/Idle" method="_on_attack_zone_body_exited"]
+[connection signal="timeout" from="IdleTimer" to="." method="_on_idle_timer_timeout"]
+[connection signal="timeout" from="IdleTimer" to="state_machine/Idle" method="_on_idle_timer_timeout"]
+[connection signal="timeout" from="AttackCooldown" to="." method="_on_attack_cooldown_timeout"]
+[connection signal="body_entered" from="Hitbox" to="state_machine/Attack" method="_on_hitbox_body_entered"]
+[connection signal="body_exited" from="Hitbox" to="state_machine/Attack" method="_on_hitbox_body_exited"]

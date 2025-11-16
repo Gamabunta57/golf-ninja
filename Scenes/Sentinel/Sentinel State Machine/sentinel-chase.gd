@@ -12,10 +12,14 @@ func enter() -> void:
 	super()
 
 func process_physics(delta: float) -> State:
-		# Flip on wall or no ground	
-	if parent.is_on_wall() or not ground_check.is_colliding():
-		parent.velocity.x = 0
 	
+	if player_check.is_colliding():
+		var collider = player_check.get_collider()
+		if collider and collider.is_in_group("Player") and not ground_check.is_colliding():
+			parent.velocity.x = 0
+			return null
+		elif collider and not collider.is_in_group("Player") and not ground_check.is_colliding():
+			return patrol_state
 	# Move forward
 	parent.velocity.x = speed * parent.direction
 	
@@ -30,11 +34,11 @@ func process_physics(delta: float) -> State:
 	if not player_check.is_colliding():
 		return patrol_state
 	
-	if player_check.is_colliding():
-		var collider = player_check.get_collider()
-		if collider and not collider.is_in_group("Player"):
-			return patrol_state
-		else:
-			return null
+	#if player_check.is_colliding():
+		#var collider = player_check.get_collider()
+		#if collider and not collider.is_in_group("Player"):
+			#return patrol_state
+		#else:
+			#return null
 	
 	return null
