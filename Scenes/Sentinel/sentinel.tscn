@@ -53,6 +53,12 @@ target_position = Vector2(0, 8)
 collision_mask = 6
 hit_from_inside = true
 
+[node name="WallCheck" type="RayCast2D" parent="."]
+position = Vector2(33, -8.55)
+target_position = Vector2(16, 0)
+collision_mask = 2
+hit_from_inside = true
+
 [node name="PlayerCheck" type="RayCast2D" parent="."]
 position = Vector2(0, -32)
 target_position = Vector2(500, 0)
@@ -82,13 +88,14 @@ cooldown = NodePath("../../AttackCooldown")
 player_check = NodePath("../../PlayerCheck")
 detection_range = 1000.0
 
-[node name="Patrol" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "chase_state", "attack_state", "idle_state", "ground_check", "player_check")]
+[node name="Patrol" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "chase_state", "attack_state", "idle_state", "ground_check", "wall_check", "player_check")]
 script = ExtResource("5_wv7bl")
 fall_state = NodePath("../Fall")
 chase_state = NodePath("../Chase")
 attack_state = NodePath("../Attack")
 idle_state = NodePath("../Idle")
 ground_check = NodePath("../../GroundCheck")
+wall_check = NodePath("../../WallCheck")
 player_check = NodePath("../../PlayerCheck")
 
 [node name="Chase" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "attack_state", "idle_state", "patrol_state", "ground_check", "player_check")]

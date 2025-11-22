@@ -40,7 +40,9 @@ func process_physics(delta: float) -> State:
 	
 	
 	if player_check.is_colliding() and not parent.attack_cooldown:
-		return chase_state
+		var collider = player_check.get_collider()
+		if collider and collider.is_in_group("Player"):
+			return chase_state
 	
 	if parent.attack_cooldown and not player_check.is_colliding() :
 		var delta_x = parent.player_position.x - parent.global_position.x
