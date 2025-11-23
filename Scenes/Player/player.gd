@@ -28,6 +28,7 @@ var cancel_shooting: bool = false
 var grappling_time_elapsed: float = 0.0
 var can_draw_grappling: bool = false
 var is_jumping: bool = false
+var is_on_slope: bool = false
 
 func _ready() -> void:
 	get_tree().call_group('UI', 'set_health')
@@ -40,7 +41,14 @@ func _unhandled_input(event: InputEvent) -> void:
 	state_machine.process_input(event)
 
 func _physics_process(delta: float) -> void:
-	
+	if self.is_on_floor():
+		if self.get_floor_normal().y > -0.6:
+			is_on_slope = true
+		else:
+			is_on_slope = false
+	else:
+		is_on_slope = false
+
 	if not inputs.get_shooting_input():
 		cancel_shooting = false
 	

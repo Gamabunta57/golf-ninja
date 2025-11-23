@@ -6,6 +6,7 @@ extends State
 @export var move_state: State
 @export var landing_state: State
 @export var hurt_state: State
+@export var slide_state: State
 @export var coyote_timer: Timer
 
 @export var landing_threshold: float = 1500
@@ -19,6 +20,7 @@ var last_y_velocity: float = 0
 func enter() -> void:
 	super()
 	coyote_timer.start()
+	print("fall state")
 
 func process_physics(delta: float) -> State:
 	
@@ -37,7 +39,10 @@ func process_physics(delta: float) -> State:
 	
 	#if inputs.get_jump_input() and parent.should_coyote and parent.can_jump:
 		#return jump_state
-		
+	
+	if parent.is_on_slope and parent.is_on_floor():
+		return slide_state
+	
 	if parent.is_on_floor():
 		
 		if last_y_velocity < landing_threshold:

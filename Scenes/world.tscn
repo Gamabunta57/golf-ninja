@@ -401,12 +401,12 @@ z_index = 1
 position = Vector2(1881, 471)
 
 [node name="Drone" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
-z_index = 1
-position = Vector2(1720, 896)
+z_index = 2
+position = Vector2(1685, 829)
 
 [node name="Drone7" parent="Main/Enemies" instance=ExtResource("7_o06y3")]
-z_index = 1
-position = Vector2(1015, 1471)
+z_index = 2
+position = Vector2(979, 1418)
 
 [node name="Bullets" type="Node2D" parent="Main/Enemies"]
 visible = false
@@ -414,7 +414,7 @@ z_index = 1
 position = Vector2(170, 594)
 
 [node name="Bin" parent="." instance=ExtResource("11_ikia7")]
-position = Vector2(1664, 2622)
+position = Vector2(1012, 1744)
 
 [node name="vending-machine" parent="." instance=ExtResource("7_ikia7")]
 position = Vector2(2753, 928)

@@ -5,6 +5,7 @@ extends State
 @export var move_state: State
 @export var fall_state: State
 @export var hurt_state: State
+@export var slide_state: State
 
 @export var deceleration: float = 400
 @export var moving_threshold: float = 100
@@ -19,9 +20,12 @@ func process_physics(delta: float) -> State:
 	if parent.velocity.x == 0 and parent.is_on_floor():
 		return idle_state
 	
+	if parent.is_on_slope:
+		return slide_state
+	
 	if !parent.is_on_floor():
 		return fall_state
-
+	
 	if x_input != 0 and abs(parent.velocity.x) <= moving_threshold and parent.is_on_floor():
 		return move_state
 	
