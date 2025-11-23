@@ -4,9 +4,10 @@ extends State
 @export var attack_state: State
 @export var idle_state: State
 @export var patrol_state: State
-@export var speed: float = 300.0
+@export var speed: float = 250.0
 @export var ground_check: RayCast2D
 @export var player_check: RayCast2D
+@export var wall_check: RayCast2D
 
 func enter() -> void:
 	super()
@@ -24,7 +25,9 @@ func process_physics(delta: float) -> State:
 	parent.velocity.x = speed * parent.direction
 	
 	parent.move_and_slide()
-	
+	if wall_check.is_colliding():
+		return patrol_state
+		
 	if !parent.is_on_floor():
 		return fall_state
 	

@@ -3,6 +3,7 @@ extends State
 @export var fall_state: State
 @export var idle_state: State
 @export var jump_state: State
+@export var grappling_state: State
 @export var hurt_state: State
 @export var shooting_state: State
 
@@ -35,9 +36,12 @@ func process_physics(delta: float) -> State:
 		parent.should_coyote = true
 		return fall_state
 	
-	if inputs.get_jump_input() and parent.is_on_floor() and parent.can_jump:
-		return jump_state
+	if parent.can_grapple:
+		return grappling_state
 	
+	#if inputs.get_jump_input() and parent.is_on_floor() and parent.can_jump and not parent.can_draw_grappling:
+		#return jump_state
+		
 	return null
 	
 func _on_damage_received() -> State:

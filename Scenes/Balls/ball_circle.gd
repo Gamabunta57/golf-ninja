@@ -27,7 +27,8 @@ var par_value: int = 0
 var money: int = 0
 
 @export var ground_check: RayCast2D
-@export var max_force: float = 50
+@export var max_ball_speed := 900.0
+@export var max_force: float = 100
 @export var strength: float = 8
 @export var max_preview_distance: float = 500.0 
 @export var preview_max_points: int = 64
@@ -76,6 +77,10 @@ func _exits_bin(body: RigidBody2D) -> void:
 		SignalBus.update_UI_money_count.emit(-money)
 
 func _physics_process(delta: float) -> void:
+	if linear_velocity.length() > max_ball_speed:
+		linear_velocity = linear_velocity.normalized() * max_ball_speed
+	
+	#print(int(linear_velocity.length()))
 	# collides with enemies if airborn only
 	if ground_check.is_colliding():
 		set_collision_mask_value(7, false)

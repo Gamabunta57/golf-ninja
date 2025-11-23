@@ -24,7 +24,6 @@ SignalBus="*res://Singletons/signal_bus.gd"
 
 window/size/viewport_width=960
 window/size/viewport_height=520
-window/size/mode=3
 window/size/initial_position_type=3
 window/size/window_width_override=1920
 window/size/window_height_override=1080
@@ -115,9 +114,12 @@ shooting={
 
 2d/default_edge_connection_margin=10.0
 
+[physics]
+
+2d/default_linear_damp=0.10000000000000009
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
-environment/defaults/default_clear_color=Color(0.4281581, 0.23603758, 0.27626225, 1)

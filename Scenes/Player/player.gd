@@ -8,18 +8,26 @@ extends CharacterBody2D
 
 @export var player_health: int = 5
 @export var push_force = 100
+@export var grappling_collider : RayCast2D
+@export var grappling_color : Color = Color(1, 1, 1)
+@export var max_grappling_time : float = 0.1
 
 var should_coyote: bool = false
 var can_jump: bool = true
 var direction: int = 1
 var last_direction: int = 1
-
+var can_grapple: bool = false
+var anchor: Vector2 = Vector2.ZERO
 
 var enemy_position: Vector2
 var is_hidden: bool = false
 var is_ball_nearby: bool = false
 var ball_body: Node2D
 var cancel_shooting: bool = false
+
+var grappling_time_elapsed: float = 0.0
+var can_draw_grappling: bool = false
+var is_jumping: bool = false
 
 func _ready() -> void:
 	get_tree().call_group('UI', 'set_health')
@@ -32,12 +40,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	state_machine.process_input(event)
 
 func _physics_process(delta: float) -> void:
-	state_machine.process_physics(delta)
-	if inputs.get_jump_input():
-		can_jump = false
-	
-	if inputs.get_jump_release():
-		can_jump = true
 	
 	if not inputs.get_shooting_input():
 		cancel_shooting = false
@@ -47,8 +49,39 @@ func _physics_process(delta: float) -> void:
 		scale.x =  -1 * scale.x
 		last_direction = direction
 	
-	#rigid_body_collision()
-
+	# Grippling
+	if inputs.get_jump_input() and grappling_collider.is_colliding():
+		var anchor_normal : Vector2 = grappling_collider.get_collision_normal()
+		
+		if anchor_normal.x < 1 and anchor_normal.y > 0:
+			can_draw_grappling = true
+			grappling_time_elapsed += delta
+			if grappling_time_elapsed < max_grappling_time:
+				anchor = grappling_collider.get_collision_point()
+			else:
+				can_grapple = true
+		queue_redraw()
+			
+	else:
+		grappling_time_elapsed = 0.0
+		can_draw_grappling = false
+		can_grapple = false
+		anchor = Vector2.ZERO
+		queue_redraw()
+	
+	if inputs.get_jump_input():
+		can_jump = false
+	
+	if inputs.get_jump_release():
+		can_jump = true
+	
+	if can_jump and can_draw_grappling:
+		can_jump = false
+	
+	if not can_jump and not can_draw_grappling:
+		can_jump = true
+	
+	state_machine.process_physics(delta)
 
 func _on_damage_received(origin_position) -> void:
 	enemy_position = origin_position
@@ -84,3 +117,9 @@ func _on_hidden_room_body_entered(body: Node2D) -> void:
 func _on_hidden_room_body_exited(body: Node2D) -> void:
 	is_hidden = false
 	Global.player_hidden = false
+
+func _draw() -> void:
+	if inputs.get_jump_input() and grappling_collider.is_colliding() and can_draw_grappling and not is_jumping:
+		draw_circle(to_local(anchor),3,grappling_color,true)
+		#draw_circle(Vector2.ZERO,100,Color(1,1,0),true)
+		draw_line(Vector2.ZERO+Vector2(0,-25), to_local(anchor), grappling_color, 1)

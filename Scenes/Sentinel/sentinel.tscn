@@ -98,7 +98,7 @@ ground_check = NodePath("../../GroundCheck")
 wall_check = NodePath("../../WallCheck")
 player_check = NodePath("../../PlayerCheck")
 
-[node name="Chase" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "attack_state", "idle_state", "patrol_state", "ground_check", "player_check")]
+[node name="Chase" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "attack_state", "idle_state", "patrol_state", "ground_check", "player_check", "wall_check")]
 script = ExtResource("6_jaqww")
 fall_state = NodePath("../Fall")
 attack_state = NodePath("../Attack")
@@ -106,6 +106,7 @@ idle_state = NodePath("../Idle")
 patrol_state = NodePath("../Patrol")
 ground_check = NodePath("../../GroundCheck")
 player_check = NodePath("../../PlayerCheck")
+wall_check = NodePath("../../WallCheck")
 
 [node name="Attack" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "cooldown")]
 script = ExtResource("5_mvde5")

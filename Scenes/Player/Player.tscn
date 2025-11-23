@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://djvi8dyyfdrkw"]
+[gd_scene load_steps=19 format=3 uid="uid://djvi8dyyfdrkw"]
 
 [ext_resource type="Script" uid="uid://eojnyblkkyhe" path="res://Scenes/Player/player.gd" id="1_kyqiw"]
 [ext_resource type="Texture2D" uid="uid://dm443rurrb8q0" path="res://Assets/player.png" id="1_rpqav"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://caxuxbrjh180f" path="res://Scenes/Player/Player State Machine/player-fall.gd" id="5_5ixxa"]
 [ext_resource type="Script" uid="uid://cvifrmoiqkhmr" path="res://Scenes/Player/Player State Machine/player-move.gd" id="5_52ee3"]
 [ext_resource type="Script" uid="uid://b3p30u3docj7x" path="res://Scenes/Player/Player State Machine/player-jump.gd" id="5_nn08x"]
+[ext_resource type="Script" uid="uid://bhjsifxk5x7me" path="res://Scenes/Player/Player State Machine/player-grappling.gd" id="8_0u84n"]
 [ext_resource type="Script" uid="uid://cqym3jl820dxf" path="res://Scenes/Player/Player State Machine/player-landing.gd" id="8_bhhdu"]
 [ext_resource type="Script" uid="uid://1tiwoc1g5a47" path="res://Scenes/Player/Player State Machine/player-hurt.gd" id="11_ksbbd"]
 [ext_resource type="Script" uid="uid://ge0e831jnq7n" path="res://Scenes/Player/Player State Machine/player-shooting.gd" id="13_miouo"]
@@ -28,14 +29,14 @@ size = Vector2(16, 16.5)
 _data = [Vector2(0.004310347, 0.1622855), 0.0, 1.7373412, 0, 0, Vector2(0.9935345, 1), 0.0075420924, 0.0, 0, 0]
 point_count = 2
 
-[node name="Player" type="CharacterBody2D" groups=["Player"]]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("grappling_collider") groups=["Player"]]
 collision_mask = 5250
 floor_stop_on_slope = false
 floor_constant_speed = true
 floor_max_angle = 0.87266463
 floor_snap_length = 6.0
 script = ExtResource("1_kyqiw")
-push_force = 1000
+grappling_collider = NodePath("GrapplingCollision")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -25)
@@ -44,6 +45,13 @@ texture = ExtResource("1_rpqav")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -25)
 shape = SubResource("CapsuleShape2D_kyqiw")
+
+[node name="GrapplingCollision" type="RayCast2D" parent="."]
+position = Vector2(0, -25)
+rotation = -2.6179938
+target_position = Vector2(0, 600)
+collision_mask = 2
+hit_from_inside = true
 
 [node name="BallDetection" type="Area2D" parent="."]
 collision_layer = 16384
@@ -83,21 +91,29 @@ script = ExtResource("4_yoq75")
 script = ExtResource("3_gntrk")
 starting_state = NodePath("Idle")
 
-[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "jump_state", "move_state", "hurt_state", "shooting_state")]
+[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "jump_state", "grappling_state", "move_state", "hurt_state", "shooting_state")]
 script = ExtResource("4_dewec")
 fall_state = NodePath("../Fall")
 jump_state = NodePath("../Jump")
+grappling_state = NodePath("../Grappling")
 move_state = NodePath("../Move")
 hurt_state = NodePath("../Hurt")
 shooting_state = NodePath("../Shooting")
 
-[node name="Move" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "jump_state", "hurt_state", "shooting_state")]
+[node name="Move" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "jump_state", "grappling_state", "hurt_state", "shooting_state")]
 script = ExtResource("5_52ee3")
 fall_state = NodePath("../Fall")
 idle_state = NodePath("../Idle")
 jump_state = NodePath("../Jump")
+grappling_state = NodePath("../Grappling")
 hurt_state = NodePath("../Hurt")
 shooting_state = NodePath("../Shooting")
+
+[node name="Grappling" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "hurt_state", "idle_state")]
+script = ExtResource("8_0u84n")
+fall_state = NodePath("../Fall")
+hurt_state = NodePath("../Hurt")
+idle_state = NodePath("../Idle")
 
 [node name="Jump" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "move_state", "hurt_state")]
 script = ExtResource("5_nn08x")
@@ -107,9 +123,10 @@ move_state = NodePath("../Move")
 hurt_state = NodePath("../Hurt")
 jump_velocity_curve = SubResource("Curve_miouo")
 
-[node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "idle_state", "move_state", "landing_state", "hurt_state", "coyote_timer")]
+[node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "grappling_state", "idle_state", "move_state", "landing_state", "hurt_state", "coyote_timer")]
 script = ExtResource("5_5ixxa")
 jump_state = NodePath("../Jump")
+grappling_state = NodePath("../Grappling")
 idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
 landing_state = NodePath("../Landing")

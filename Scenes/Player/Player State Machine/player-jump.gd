@@ -8,15 +8,17 @@ extends State
 @export var jump_velocity_curve: Curve
 
 @export var max_jump_time: float = 0.2       
-@export var max_jump_speed: float = 510.0
+@export var max_jump_speed: float = 300.0
 
 var time_elapsed: float = 0.0 
 var curve_ratio: float
 
 func enter() -> void:
 	super()
+	Global.player_centric = true
 	time_elapsed = 0.0
 	curve_ratio = 1/max_jump_time
+	parent.is_jumping = true
 
 func process_physics(delta: float) -> State:
 	
@@ -38,6 +40,9 @@ func process_physics(delta: float) -> State:
 		return idle_state
 	
 	return null
+
+func exit() -> void:
+	parent.is_jumping = false
 
 func _on_damage_received() -> State:
 	return hurt_state
