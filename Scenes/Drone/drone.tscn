@@ -61,6 +61,7 @@ script = ExtResource("3_y2b23")
 navigation_agent = NodePath("../NavigationAgent2D")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+target_desired_distance = 100.0
 path_metadata_flags = 0
 avoidance_mask = 0
 debug_enabled = true

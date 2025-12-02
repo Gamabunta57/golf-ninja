@@ -7,9 +7,11 @@ extends State
 @export var hurt_state: State
 @export var shooting_state: State
 @export var slide_state: State
+@export var wall_collider : RayCast2D
 
 func enter() -> void:
 	super()
+	#print("idle_state")
 	parent.velocity.x = 0
 
 
@@ -23,13 +25,14 @@ func process_physics(delta: float) -> State:
 	if !parent.is_on_floor():
 		return fall_state
 	
-	if parent.can_grapple:
-		return grappling_state
-	
-	if inputs.get_jump_input() and parent.is_on_floor() and parent.can_jump and not parent.can_draw_grappling:
+	if parent.can_jump:
 		return jump_state
 	
-	if parent.is_on_slope and parent.is_on_floor():
+	if Global.can_grapple:
+		return grappling_state
+	
+	
+	if parent.is_on_floor() and parent.get_floor_angle() > 1:
 		return slide_state
 		
 	return null

@@ -1,0 +1,56 @@
+[gd_scene load_steps=11 format=3 uid="uid://cv0bf3lulvn2h"]
+
+[ext_resource type="Script" uid="uid://bulo6ij8dujit" path="res://Scenes/Grapple/grapple.gd" id="1_b5xee"]
+[ext_resource type="Script" uid="uid://bj5v5m40sjk23" path="res://Scenes/Player/Player State Machine/player-movements.gd" id="2_jwmjc"]
+[ext_resource type="Texture2D" uid="uid://bhqghjy5oxvpd" path="res://Assets/grapple.png" id="2_lmqad"]
+[ext_resource type="Script" uid="uid://bgmb176xk2uel" path="res://Scenes/state_machine.gd" id="2_qb1c3"]
+[ext_resource type="Script" uid="uid://bp38smv351q1g" path="res://Scenes/Grapple/Grapple State Machine/grapple-idle.gd" id="3_jwmjc"]
+[ext_resource type="Script" uid="uid://citxnxh7togl4" path="res://Scenes/Player/Player State Machine/player-inputs.gd" id="4_kie4t"]
+[ext_resource type="Script" uid="uid://cnyb7xhmwv3a0" path="res://Scenes/Grapple/Grapple State Machine/grapple-throw.gd" id="7_cqkb4"]
+[ext_resource type="Script" uid="uid://bc2ugr0s6m2ku" path="res://Scenes/Grapple/Grapple State Machine/grapple-anchor.gd" id="8_t2q5d"]
+[ext_resource type="Script" uid="uid://gyc6l2nj31ot" path="res://Scenes/Grapple/Grapple State Machine/grapple-rewind.gd" id="9_isubl"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sdp0w"]
+radius = 3.0
+
+[node name="Grapple" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_b5xee")
+
+[node name="Grapple" type="Sprite2D" parent="."]
+scale = Vector2(0.28, 0.28)
+texture = ExtResource("2_lmqad")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_sdp0w")
+
+[node name="Movements" type="Node" parent="."]
+script = ExtResource("2_jwmjc")
+
+[node name="Inputs" type="Node" parent="."]
+script = ExtResource("4_kie4t")
+
+[node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
+unique_name_in_owner = true
+script = ExtResource("2_qb1c3")
+starting_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("throw_state")]
+script = ExtResource("3_jwmjc")
+throw_state = NodePath("../Throw")
+
+[node name="Throw" type="Node" parent="state_machine" node_paths=PackedStringArray("anchor_state", "idle_state", "rewind_state")]
+script = ExtResource("7_cqkb4")
+anchor_state = NodePath("../Anchor")
+idle_state = NodePath("../Idle")
+rewind_state = NodePath("../Rewind")
+speed = 1000.0
+
+[node name="Anchor" type="Node" parent="state_machine" node_paths=PackedStringArray("rewind_state")]
+script = ExtResource("8_t2q5d")
+rewind_state = NodePath("../Rewind")
+
+[node name="Rewind" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
+script = ExtResource("9_isubl")
+idle_state = NodePath("../Idle")

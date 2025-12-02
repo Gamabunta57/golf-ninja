@@ -24,6 +24,7 @@ SignalBus="*res://Singletons/signal_bus.gd"
 
 window/size/viewport_width=960
 window/size/viewport_height=520
+window/size/mode=4
 window/size/initial_position_type=3
 window/size/window_width_override=1920
 window/size/window_height_override=1080
@@ -37,6 +38,7 @@ folder_colors={
 "res://Assets/": "orange",
 "res://Scenes/Balls/": "orange",
 "res://Scenes/Drone/": "red",
+"res://Scenes/Grapple/": "purple",
 "res://Scenes/Player/": "yellow",
 "res://Scenes/Sentinel/": "red",
 "res://Scenes/State Machine/": "purple",
@@ -95,7 +97,7 @@ shooting={
 2d_physics/layer_1="Player"
 2d_navigation/layer_1="Drone"
 2d_physics/layer_2="World"
-2d_physics/layer_3="One way"
+2d_physics/layer_3="Grapple"
 2d_physics/layer_4="Stairs"
 2d_physics/layer_5="Ball"
 2d_physics/layer_6="Bin"
@@ -116,7 +118,7 @@ shooting={
 
 [physics]
 
-2d/default_linear_damp=0.10000000000000009
+2d/default_linear_damp=0.10000000000000007
 
 [rendering]
 

@@ -20,7 +20,7 @@ func process_physics(delta: float) -> State:
 	if parent.velocity.x == 0 and parent.is_on_floor():
 		return idle_state
 	
-	if parent.is_on_slope:
+	if parent.get_floor_angle() > 1:
 		return slide_state
 	
 	if !parent.is_on_floor():

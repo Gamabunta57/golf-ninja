@@ -40,7 +40,7 @@ func process_physics(delta: float) -> State:
 	target_pos.y -= y_input
 
 	ball_vector = target_pos - ball_pos
-	parent.direction = sign(ball_vector.x)
+	Global.direction = sign(ball_vector.x)
 		
 	# cancel the shooting if press jump
 	if inputs.get_jump_input():
