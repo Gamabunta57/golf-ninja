@@ -142,6 +142,7 @@ move_state = NodePath("../Move")
 rewind_state = NodePath("../Rewind")
 rope_collision = NodePath("../../Raycasts/RopeCollision")
 wall_collider = NodePath("../../Raycasts/WallCollision")
+fall_gravity_multiplier = 0.0
 
 [node name="Rewind" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "hurt_state", "idle_state", "move_state")]
 script = ExtResource("10_spxdj")

@@ -8,7 +8,7 @@ extends State
 @export var rope_collision: RayCast2D
 @export var wall_collider : RayCast2D
 @export var rope_max_distance: float = 500
-@export var fall_gravity_multiplier: float = 1
+@export var fall_gravity_multiplier: float = 0.5
 @export var grappling_max_speed := 600.0 # Standardize speed
 
 func enter() -> void:
@@ -29,7 +29,8 @@ func process_physics(delta: float) -> State:
 	else:
 		parent.velocity.x = move_toward(parent.velocity.x, 0, 3000 * delta)
 	
-	parent.velocity.y += gravity * fall_gravity_multiplier * delta
+	#print(parent.velocity.y)
+	parent.velocity.y = move_toward(parent.velocity.x, 0, delta)
 	
 	movements.flip_direction(inputs, parent)
 	parent.move_and_slide()
