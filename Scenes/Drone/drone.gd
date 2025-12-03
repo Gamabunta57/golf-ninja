@@ -31,7 +31,6 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	distance_to_origin = global_position.distance_to(origin_position)
 	state_machine.process_physics(delta)
-	flip_direction()
 
 func flip_direction():
 	direction *= -1

@@ -6,7 +6,8 @@ extends State
 @export var idle_state: State
 @export var speed: float = 100.0
 @export var ground_check: RayCast2D
-@export var wall_check: RayCast2D
+@export var wall_check_down: RayCast2D
+@export var wall_check_up: RayCast2D
 @export var player_check: RayCast2D
 
 var should_idle: bool = false
@@ -20,7 +21,7 @@ func exit() -> void:
 
 func process_physics(delta: float) -> State:
 		# Flip on wall or no ground	
-	if wall_check.is_colliding() or not ground_check.is_colliding():
+	if wall_check_down.is_colliding() or wall_check_up.is_colliding() or not ground_check.is_colliding():
 		parent.flip_direction()
 		should_idle = true
 	

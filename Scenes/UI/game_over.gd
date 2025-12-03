@@ -1,6 +1,6 @@
 extends Control
 
-var world: PackedScene = load("res://Scenes/world.tscn")
+@onready var world: PackedScene = load("res://Scenes/world.tscn")
 
 func _ready() -> void:
 	Global.player_health = Global.player_max_health

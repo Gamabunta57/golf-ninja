@@ -20,7 +20,7 @@ func process_physics(delta: float) -> State:
 		parent.bullets.add_child(new_bullet)
 		new_bullet.global_position = parent.global_position 
 		
-		var bullet_direction = (Global.player_body.global_position - parent.global_position).normalized()
+		var bullet_direction = (Global.player_body.global_position - Vector2(0,25) - parent.global_position).normalized()
 		new_bullet.set_bullet_direction(bullet_direction)
 		new_bullet.set_origin_position(parent.global_position)
 		

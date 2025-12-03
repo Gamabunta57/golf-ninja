@@ -10,12 +10,15 @@ radius = 4.0
 radius = 7.0
 
 [node name="Bullet" type="RigidBody2D" node_paths=PackedStringArray("bullet_lifetime")]
+z_index = 2
+z_as_relative = false
 collision_layer = 512
 collision_mask = 771
 script = ExtResource("1_m0sdb")
 bullet_lifetime = NodePath("BulletLifetime")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+show_behind_parent = true
 texture = ExtResource("1_fjsid")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

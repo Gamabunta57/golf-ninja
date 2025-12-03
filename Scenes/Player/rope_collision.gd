@@ -22,5 +22,5 @@ func _physics_process(delta: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
-
-	draw_line(Vector2.ZERO, to_local(Global.grapple_body.global_position), Color(1,1,1), 1.0)
+	if Global.grapple_body:
+		draw_line(Vector2.ZERO, to_local(Global.grapple_body.global_position), Color(1,1,1), 1.0)

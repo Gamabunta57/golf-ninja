@@ -20,6 +20,8 @@ radius = 335.096
 radius = 124.004
 
 [node name="Drone" type="CharacterBody2D" node_paths=PackedStringArray("target_check", "attack_cooldown_timer")]
+z_index = 2
+z_as_relative = false
 collision_layer = 64
 collision_mask = 2
 motion_mode = 1
@@ -61,10 +63,8 @@ script = ExtResource("3_y2b23")
 navigation_agent = NodePath("../NavigationAgent2D")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
-target_desired_distance = 100.0
 path_metadata_flags = 0
 avoidance_mask = 0
-debug_enabled = true
 
 [node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
 script = ExtResource("3_x74uf")
