@@ -7,7 +7,6 @@ extends State
 @export var rewind_state: State
 @export var rope_collision: RayCast2D
 @export var wall_collider : RayCast2D
-@export var rope_max_distance: float = 500
 @export var fall_gravity_multiplier: float = 0.5
 @export var grappling_max_speed := 600.0 # Standardize speed
 
@@ -39,9 +38,7 @@ func process_physics(delta: float) -> State:
 	var rope_distance = parent.global_position.distance_to(parent.grapple_body.global_position)
 	
 	# 4. Exit Conditions
-	# If rope_collision.gd hit a wall, it set Global.can_grapple to false.
-	# We catch that change here and exit the state.
-	if not Global.can_grapple or rope_distance >= rope_max_distance:
+	if not Global.can_grapple or rope_distance >= (Global.grapple_distance + 30):
 		Global.grapple_is_anchored = false
 		
 		if parent.is_on_floor():
@@ -57,6 +54,9 @@ func process_physics(delta: float) -> State:
 		return rewind_state
 	
 	return null
+
+func exit() -> void:
+	Global.grapple_cooldown_ongoing = true
 
 func _on_damage_received() -> State:
 	return hurt_state

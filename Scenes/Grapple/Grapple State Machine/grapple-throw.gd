@@ -5,8 +5,6 @@ extends State
 @export var rewind_state: State
 @export var speed: float = 500
 
-
-
 func enter() -> void:
 	print("Grapple Throw State")
 	super()
@@ -21,7 +19,7 @@ func process_physics(delta: float) -> State:
 	
 	var collision = parent.move_and_collide(movement_vector)
 	
-	if collision:
+	if collision: 
 		parent.anchor_position = parent.global_position
 		parent.velocity = Vector2.ZERO
 		Global.grapple_is_anchored = true

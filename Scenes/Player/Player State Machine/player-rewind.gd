@@ -18,7 +18,7 @@ func process_physics(delta: float) -> State:
 	var distance_to_target = parent.global_position.distance_to(target_pos)
 	
 	# 2. Check if reached the Harpoon
-	if distance_to_target < 50:
+	if distance_to_target < 10:
 		parent.velocity = Vector2.ZERO
 		#Global.can_grapple = false # Force exit
 	else:

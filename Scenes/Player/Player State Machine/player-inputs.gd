@@ -13,7 +13,7 @@ func get_jump_input() -> bool:
 func get_jump_input_just_pressed() -> bool:
 	return Input.is_action_just_pressed('jump')
 
-func get_jump_release() -> bool:
+func get_jump_just_release() -> bool:
 	return Input.is_action_just_released('jump')
 
 func get_shooting_input() -> bool:

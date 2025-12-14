@@ -1,8 +1,9 @@
-[gd_scene load_steps=22 format=3 uid="uid://djvi8dyyfdrkw"]
+[gd_scene load_steps=23 format=3 uid="uid://djvi8dyyfdrkw"]
 
 [ext_resource type="Script" uid="uid://eojnyblkkyhe" path="res://Scenes/Player/player.gd" id="1_kyqiw"]
 [ext_resource type="Texture2D" uid="uid://dm443rurrb8q0" path="res://Assets/player.png" id="1_rpqav"]
 [ext_resource type="PackedScene" uid="uid://yoqrhnc4doia" path="res://Scenes/UI/game_over.tscn" id="2_glx4g"]
+[ext_resource type="Script" uid="uid://bghxk7wsutsj4" path="res://Scenes/Player/grapple_collision.gd" id="3_0objx"]
 [ext_resource type="Script" uid="uid://hpin4t1afvi8" path="res://Scenes/Player/rope_collision.gd" id="3_6tu5v"]
 [ext_resource type="Script" uid="uid://bgmb176xk2uel" path="res://Scenes/state_machine.gd" id="3_gntrk"]
 [ext_resource type="Script" uid="uid://dxn3k220l1ad" path="res://Scenes/Player/Player State Machine/player-idle.gd" id="4_dewec"]
@@ -32,8 +33,9 @@ size = Vector2(16, 16.5)
 _data = [Vector2(0, 0.17173976), 0.0, 2.0040689, 0, 0, Vector2(1, 1), -0.014637927, 0.0, 0, 0]
 point_count = 2
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("grappling_collider", "wall_collider", "rope_collider") groups=["Player"]]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("grappling_collider", "wall_collider", "rope_collider", "grapple_cooldown_timer") groups=["Player"]]
 collision_mask = 5250
+slide_on_ceiling = false
 floor_stop_on_slope = false
 floor_constant_speed = true
 floor_max_angle = 1.0646509
@@ -42,6 +44,7 @@ script = ExtResource("1_kyqiw")
 grappling_collider = NodePath("Raycasts/GrappleCollision")
 wall_collider = NodePath("Raycasts/WallCollision")
 rope_collider = NodePath("Raycasts/RopeCollision")
+grapple_cooldown_timer = NodePath("Timers/GrappleCoolDown")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -25)
@@ -56,9 +59,10 @@ shape = SubResource("CapsuleShape2D_kyqiw")
 [node name="GrappleCollision" type="RayCast2D" parent="Raycasts"]
 position = Vector2(0, -25)
 rotation = -2.6179938
-target_position = Vector2(0, 450)
+target_position = Vector2(0, 0)
 collision_mask = 2
 hit_from_inside = true
+script = ExtResource("3_0objx")
 
 [node name="WallCollision" type="RayCast2D" parent="Raycasts"]
 position = Vector2(0, -7.64)
@@ -104,6 +108,9 @@ wait_time = 0.1
 
 [node name="CoyoteTime" type="Timer" parent="Timers"]
 wait_time = 0.5
+
+[node name="GrappleCoolDown" type="Timer" parent="Timers"]
+wait_time = 0.7
 
 [node name="Movements" type="Node" parent="."]
 script = ExtResource("4_yoq75")
@@ -211,3 +218,4 @@ wall_collider = NodePath("../../Raycasts/WallCollision")
 [connection signal="timeout" from="Timers/HurtTimer" to="state_machine/Hurt" method="_on_hurt_timer_timeout"]
 [connection signal="timeout" from="Timers/KnockbackTimer" to="state_machine/Hurt" method="_on_knockback_timer_timeout"]
 [connection signal="timeout" from="Timers/CoyoteTime" to="state_machine/Fall" method="_on_coyote_time_timeout"]
+[connection signal="timeout" from="Timers/GrappleCoolDown" to="." method="_on_grapple_cool_down_timeout"]

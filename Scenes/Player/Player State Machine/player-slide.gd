@@ -21,25 +21,18 @@ func enter() -> void:
 	parent.velocity = Vector2.ZERO
 	time_ellapsed = 0.0
 
-func process_input(event: InputEvent) -> State:
-	if sign(Global.direction) == sign(parent.get_floor_normal().x):
-		facing_slope = false
-	else:
-		facing_slope = true
-	
-	if inputs.get_jump_input():
-		if not facing_slope:
-			return grappling_state
-		else:
-			return jump_state
-	
-	return null
 
 func process_physics(delta: float) -> State:
 		
 	if wall_collider.is_colliding() and parent.get_floor_angle() == 0:
 		return idle_state
 	
+	if parent.can_jump:
+		return jump_state
+		
+	if Global.can_grapple and not Global.grapple_cooldown_ongoing:
+		return grappling_state
+		
 	movements.flip_direction(inputs, parent)
 	
 	var floor_normal := parent.get_floor_normal()

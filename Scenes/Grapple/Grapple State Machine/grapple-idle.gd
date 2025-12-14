@@ -17,7 +17,8 @@ func process_physics(delta: float) -> State:
 	
 	parent.move_and_slide()
 	
-	if Global.can_grapple:
+	if Global.can_grapple and not Global.grapple_cooldown_ongoing:
+		Global.grapple_cooldown_ongoing = false
 		return throw_state
 	
 	return null

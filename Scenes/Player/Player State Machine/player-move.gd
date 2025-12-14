@@ -13,7 +13,7 @@ func enter() -> void:
 	super()
 	parent.velocity.y = 0
 	Global.player_centric = true
-	#print("move state")
+	print("move state")
 
 func process_input(event: InputEvent) -> State:
 	if inputs.get_shooting_input() and parent.is_ball_nearby and not parent.cancel_shooting:
@@ -55,7 +55,7 @@ func process_physics(delta: float) -> State:
 	if parent.can_jump:
 		return jump_state
 		
-	if Global.can_grapple:
+	if Global.can_grapple and not Global.grapple_cooldown_ongoing:
 		return grappling_state
 	
 	if parent.is_on_floor() and parent.get_floor_angle() > 1:

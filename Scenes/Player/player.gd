@@ -12,6 +12,7 @@ extends CharacterBody2D
 @export var wall_collider : RayCast2D
 @export var rope_collider : RayCast2D
 @export var grapple_body : CharacterBody2D
+@export var grapple_cooldown_timer : Timer
 
 
 var should_coyote: bool = false
@@ -34,6 +35,12 @@ var grappling_time_elapsed: float = 0.0
 var can_draw_grappling: bool = false
 var is_jumping: bool = false
 var target_position: Vector2 = Vector2.ZERO
+
+var jump_count: int = 0
+@export var max_jump_count: int = 1
+var grapple_count: int = 0
+@export var max_grapple_count: int = 3
+var grapple_cooldown_ongoing : bool = false
 
 func _ready() -> void:
 	get_tree().call_group('UI', 'set_health')
@@ -58,51 +65,43 @@ func _physics_process(delta: float) -> void:
 		last_direction = Global.direction
 		
 	# Grappling or jump
-	
+	#print("can jump: ", can_jump,", can grapple: ", Global.can_grapple, ", jump count: ", jump_count, ", grapple count: ", grapple_count, ", is on floor: ", is_on_floor())
+	print("jump count: ", jump_count, ", grapple count: ", grapple_count, ", is on floor: ", is_on_floor())
+
 	# 1. Reset logic (Button release or Grounded)
-	if inputs.get_jump_release():
+	if inputs.get_jump_just_release():
 		Global.can_grapple = false
 		can_jump = false
 		is_jumping = false
 	
+	if not inputs.get_jump_input():
+		if is_on_floor():
+			jump_count = 0
+			grapple_count = 0
+			
+	if grapple_cooldown_timer.time_left == 0.0:
+		Global.grapple_cooldown_ongoing = false
 	# 2. Main Logic
 	if inputs.get_jump_input():
-		var is_grounded = is_on_floor()
-		
-		# Check for Grapple Target
-		var has_target = grappling_collider.is_colliding()
-		var normal = grappling_collider.get_collision_normal()
-		# Check if target is a ceiling/overhang (y > 0) and not a vertical wall
-		var is_valid_target = has_target and (normal.y > 0 and normal.x < 1)
-		
-		# Check for Obstacles (Walls or Steep Slopes)
-		var wall_blocked = is_grounded and wall_collider.is_colliding()
-		var steep_slope = is_grounded and get_floor_angle() > 1
-		var facing_slope = steep_slope and sign(Global.direction) == sign(get_floor_normal().x)
-		
-		# --- C. DECISION TREE ---
-		
-		# 1. Forced Jump: Wall in front or facing steep slope -> Jump
-		if wall_blocked or facing_slope:
-			Global.can_grapple = false
-			can_jump = true
-			
-		# 2. Grapple Opportunity: Valid target found -> Grapple
-		elif is_valid_target and not is_jumping:
-			Global.can_grapple = true
-			can_jump = false
-			
-		# 3. Standard Jump: Grounded but no valid target -> Jump
-		elif is_grounded:
-			is_jumping = false
-			Global.can_grapple = false
-			can_jump = true
-			
-		# 4. Fallback: Air/Invalid -> Do nothing
+		if grappling_collider.is_colliding():
+			if grapple_count < max_grapple_count:
+				Global.can_grapple = true
+				
 		else:
-			Global.can_grapple = false
-			can_jump = false
+			if jump_count < max_jump_count and is_on_floor():
+				can_jump = true
 	
+	if inputs.get_jump_input_just_pressed():
+		if grappling_collider.is_colliding():
+			if grapple_count < max_grapple_count and not Global.grapple_cooldown_ongoing:
+				Global.can_grapple = true
+				grapple_count += 1
+				grapple_cooldown_timer.start()
+		else:
+			if jump_count < max_jump_count and is_on_floor():
+				jump_count += 1
+		
+	#print("grapple_cooldown_ongoing: ", Global.grapple_cooldown_ongoing, ", timer: ", grapple_cooldown_timer.time_left)
 	state_machine.process_physics(delta)
 
 func _on_damage_received(origin_position) -> void:
@@ -130,3 +129,7 @@ func _on_hidden_room_body_entered(body: Node2D) -> void:
 func _on_hidden_room_body_exited(body: Node2D) -> void:
 	is_hidden = false
 	Global.player_hidden = false
+
+func _on_grapple_cool_down_timeout() -> void:
+	Global.grapple_cooldown_ongoing = false
+	grapple_cooldown_timer.stop()

@@ -11,7 +11,7 @@ extends State
 
 func enter() -> void:
 	super()
-	#print("idle_state")
+	print("idle_state")
 	parent.velocity.x = 0
 
 
@@ -27,10 +27,9 @@ func process_physics(delta: float) -> State:
 	
 	if parent.can_jump:
 		return jump_state
-	
-	if Global.can_grapple:
+
+	if Global.can_grapple and not Global.grapple_cooldown_ongoing:
 		return grappling_state
-	
 	
 	if parent.is_on_floor() and parent.get_floor_angle() > 1:
 		return slide_state

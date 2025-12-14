@@ -21,7 +21,7 @@ size = Vector2(19, 65)
 
 [node name="Sentinel" type="CharacterBody2D" node_paths=PackedStringArray("cooldown_timer") groups=["Sentinel"]]
 collision_layer = 64
-collision_mask = 6
+collision_mask = 2
 script = ExtResource("1_u3sj5")
 cooldown_timer = NodePath("AttackCooldown")
 

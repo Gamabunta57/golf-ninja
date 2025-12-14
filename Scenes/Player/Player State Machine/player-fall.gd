@@ -32,13 +32,17 @@ func process_physics(delta: float) -> State:
 	
 	movements.flip_direction(inputs, parent)
 	
-	if Global.can_grapple and parent.velocity.y > 1:
+	if Global.can_grapple and parent.velocity.y > 1 and not Global.grapple_cooldown_ongoing:
 		return grappling_state
 
 	parent.move_and_slide()
 	
-	#if inputs.get_jump_input() and parent.should_coyote and parent.can_jump:
-		#return jump_state
+	if inputs.get_jump_input() and parent.should_coyote and parent.can_jump:
+		return jump_state
+	
+	if not parent.should_coyote:
+		parent.can_jump = false
+	
 	if parent.is_on_floor() and parent.get_floor_angle() > 1:
 			return slide_state
 	

@@ -22,7 +22,6 @@ func process_physics(delta: float) -> State:
 	parent.velocity = dir * rewind_speed
 	
 	parent.move_and_slide()
-	
 	if remaining_distance < 25:
 		return idle_state
 	

@@ -38,7 +38,7 @@ func process_physics(delta: float) -> State:
 	
 	# 3. Handle Jump Release (Variable Jump Height)
 	# Using >= is safer for floats than ==
-	if inputs.get_jump_release() or time_elapsed >= max_jump_time:
+	if inputs.get_jump_just_release() or time_elapsed >= max_jump_time:
 		return fall_state
 
 	# 4. Ceiling Check
