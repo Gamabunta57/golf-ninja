@@ -33,7 +33,8 @@ func process_physics(delta: float) -> State:
 	
 	if parent.is_on_floor() and parent.get_floor_angle() > 1:
 		return slide_state
-		
+	
+	parent.move_and_slide()
 	return null
 
 func on_area_entered(body: Node2D) -> State:

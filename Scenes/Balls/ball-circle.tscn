@@ -29,7 +29,7 @@ anti_aliasing = false
 
 [node name="BallCircle" type="RigidBody2D" node_paths=PackedStringArray("ground_check") groups=["Ball"]]
 collision_layer = 16
-collision_mask = 16486
+collision_mask = 16482
 mass = 0.4
 physics_material_override = SubResource("PhysicsMaterial_pfq2l")
 gravity_scale = 0.5

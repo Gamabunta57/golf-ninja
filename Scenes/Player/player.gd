@@ -38,8 +38,8 @@ var target_position: Vector2 = Vector2.ZERO
 
 var jump_count: int = 0
 @export var max_jump_count: int = 1
-var grapple_count: int = 0
-@export var max_grapple_count: int = 3
+var grapple_count: int = 20
+@export var max_grapple_count: int = 20
 var grapple_cooldown_ongoing : bool = false
 
 func _ready() -> void:
@@ -66,7 +66,7 @@ func _physics_process(delta: float) -> void:
 		
 	# Grappling or jump
 	#print("can jump: ", can_jump,", can grapple: ", Global.can_grapple, ", jump count: ", jump_count, ", grapple count: ", grapple_count, ", is on floor: ", is_on_floor())
-	print("jump count: ", jump_count, ", grapple count: ", grapple_count, ", is on floor: ", is_on_floor())
+	#print("jump count: ", jump_count, ", grapple count: ", grapple_count, ", is on floor: ", is_on_floor())
 
 	# 1. Reset logic (Button release or Grounded)
 	if inputs.get_jump_just_release():

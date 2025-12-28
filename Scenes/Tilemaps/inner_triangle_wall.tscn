@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://sm8r31tgwux8"]
+
+[ext_resource type="Script" uid="uid://bysek2i573xtr" path="res://Scenes/Tilemaps/inner_triangle_wall.gd" id="1_1mho8"]
+[ext_resource type="Texture2D" uid="uid://c8pwo7lx5iedm" path="res://Assets/Moving tilemap/inter-wall.png" id="1_xxk8n"]
+
+[sub_resource type="Curve" id="Curve_1mho8"]
+_data = [Vector2(0, 0), 0.0, 0.14477539, 0, 0, Vector2(0.40989405, 0.13294536), 0.9125255, 0.9125255, 0, 0, Vector2(1, 1), -1.23177, 0.0, 0, 0]
+point_count = 3
+
+[node name="Inner-triangle-wall" type="StaticBody2D"]
+collision_layer = 2
+collision_mask = 597
+script = ExtResource("1_1mho8")
+rotation_curve = SubResource("Curve_1mho8")
+
+[node name="InterWall" type="Sprite2D" parent="."]
+texture = ExtResource("1_xxk8n")
+
+[node name="ground" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(199, 73, 217, 104, 199, 136, -199, 136, -217, 105, -199, 73)
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+position = Vector2(-1, 0)
+polygon = PackedVector2Array(2, -150, -129, 76, -127, 136, -1, 350, 129, 135, 128, 77)
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
