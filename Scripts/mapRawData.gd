@@ -38,7 +38,7 @@ func generateMap() -> void:
 
 	var startFixTime = Time.get_ticks_usec()
 	var correctedMap = HexMapHealer.healMap(rawGrid, config.mapSize)
-	print_debug("heal time (in usec): ", (Time.get_ticks_usec() - startFixTime))
+	print_debug("fix time (in usec): ", (Time.get_ticks_usec() - startFixTime))
 	mapGenerated.emit(correctedMap)
 
 func getTileIdFromValue(value: float) -> int:

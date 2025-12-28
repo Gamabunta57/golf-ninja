@@ -1,9 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://bafprk6ewl8x7"]
+[gd_scene load_steps=13 format=3 uid="uid://dcc1mvq5p3e15"]
 
-[ext_resource type="Texture2D" uid="uid://btsyxn5hwru4" path="res://hex-background.png" id="1_wwf40"]
+[ext_resource type="Texture2D" uid="uid://saa1uc0ppodt" path="res://Assets/Wall tilemap.png" id="1_4qq7b"]
+[ext_resource type="Texture2D" uid="uid://btsyxn5hwru4" path="res://Assets/hex-background.png" id="1_wwf40"]
+[ext_resource type="Texture2D" uid="uid://bse2xu0644kpw" path="res://Assets/Hex-background tilemap.png" id="2_2465o"]
 [ext_resource type="Script" uid="uid://c564oq4dlkqp7" path="res://Scripts/mapRawData.gd" id="2_j6h4s"]
 [ext_resource type="Script" uid="uid://cypa22ua04kft" path="res://Scripts/generatorConfiguration.gd" id="3_j6h4s"]
 [ext_resource type="Script" uid="uid://c278imspykphw" path="res://Scripts/rawGridToHexSetter.gd" id="4_c185m"]
+[ext_resource type="Script" uid="uid://buxprndhh4vqr" path="res://Scripts/foregroundGridSetter.gd" id="7_75hpu"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2465o"]
 texture = ExtResource("1_wwf40")
@@ -14,39 +17,82 @@ texture_region_size = Vector2i(724, 627)
 3:0/0 = 0
 4:0/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4qq7b"]
+texture = ExtResource("2_2465o")
+texture_region_size = Vector2i(724, 627)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+
 [sub_resource type="TileSet" id="TileSet_u6sxe"]
 tile_shape = 3
 tile_offset_axis = 1
-tile_size = Vector2i(712, 617)
-sources/1 = SubResource("TileSetAtlasSource_2465o")
+tile_size = Vector2i(724, 626)
+sources/1 = SubResource("TileSetAtlasSource_4qq7b")
+sources/0 = SubResource("TileSetAtlasSource_2465o")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_75hpu"]
+texture = ExtResource("1_4qq7b")
+texture_region_size = Vector2i(450, 450)
+0:0/0 = 0
+1:0/0 = 0
+3:0/0 = 0
+2:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_bi1hd"]
+tile_shape = 3
+tile_size = Vector2i(181, 209)
+sources/0 = SubResource("TileSetAtlasSource_75hpu")
 
 [node name="Tilemap" type="Node2D"]
 
-[node name="TileMapLayer" type="TileMapLayer" parent="."]
+[node name="Background tilemap" type="TileMapLayer" parent="."]
+position = Vector2(-1, 4)
 tile_set = SubResource("TileSet_u6sxe")
 collision_enabled = false
 navigation_enabled = false
+
+[node name="Foreground tilemap" type="TileMapLayer" parent="."]
+position = Vector2(0, 44)
+tile_set = SubResource("TileSet_bi1hd")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(4600, 5180)
+zoom = Vector2(0.05, 0.05)
+limit_enabled = false
 
 [node name="MapRawData" type="Node" parent="." node_paths=PackedStringArray("config")]
 script = ExtResource("2_j6h4s")
 config = NodePath("../GeneratorConfiguration")
 
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(18500, 10000)
-zoom = Vector2(0.025, 0.025)
-
 [node name="GeneratorConfiguration" type="Node" parent="."]
 script = ExtResource("3_j6h4s")
-mapSeed = 8
+mapSeed = 4147817337
 useRandomSeed = true
 mapSize = Vector2i(16, 16)
 radius = 11.0
 metadata/_custom_type_script = "uid://cypa22ua04kft"
 
-[node name="RawGridToHexSetter" type="Node" parent="." node_paths=PackedStringArray("tileMap", "config")]
+[node name="Scripts" type="Node" parent="."]
+
+[node name="RawGridToHexSetter" type="Node" parent="Scripts" node_paths=PackedStringArray("tileMap", "config")]
 script = ExtResource("4_c185m")
-tileMap = NodePath("../TileMapLayer")
-config = NodePath("../GeneratorConfiguration")
+tileMap = NodePath("../../Background tilemap")
+config = NodePath("../../GeneratorConfiguration")
 metadata/_custom_type_script = "uid://c278imspykphw"
 
-[connection signal="mapGenerated" from="MapRawData" to="RawGridToHexSetter" method="_on_map_raw_data_map_generated"]
+[node name="ForegroundGridSetter" type="Node" parent="Scripts" node_paths=PackedStringArray("tileMap", "config")]
+script = ExtResource("7_75hpu")
+tileMap = NodePath("../../Foreground tilemap")
+config = NodePath("../../GeneratorConfiguration")
+tilemapOffset = Vector2i(1, 1)
+hexOffset = Vector2i(0, 2)
+metadata/_custom_type_script = "uid://buxprndhh4vqr"
+
+[connection signal="mapGenerated" from="MapRawData" to="Scripts/RawGridToHexSetter" method="_on_map_raw_data_map_generated"]
+[connection signal="mapGenerated" from="MapRawData" to="Scripts/ForegroundGridSetter" method="_on_map_raw_data_map_generated"]

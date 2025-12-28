@@ -104,7 +104,9 @@ static func healMap(map: Array[int], mapSize: Vector2i) -> Array[int]:
 			map[i] = value
 	
 	var floodStartPoint = indexToCoord(browsedCells[0].x, mapSize.x) 
-	return removeUnlinkedCells(map, floodStartPoint, mapSize)
+	var fixedMap = removeUnlinkedCells(map, floodStartPoint, mapSize)
+	setEntryAndExitTiles(fixedMap, mapSize)
+	return fixedMap
 
 """
 Browse the given map and returns the 2D coordinates of the first non empty cell
@@ -125,6 +127,76 @@ static func getYHexOffset(isXEven: bool, directionToCheck: HexDirection) -> Vect
 	if (!isXEven || directionToCheck == HexDirection.TOP || directionToCheck == HexDirection.BOTTOM):
 		return Vector2i.ZERO
 	return Vector2i.UP
+
+static func setEntryAndExitTiles(map: Array[int], mapSize: Vector2i) -> void:
+	var centerRowCoord = int((mapSize.y - 1) * .5)
+	var entryCoord = Vector2i(0, centerRowCoord)
+	var exitCoord = Vector2i(mapSize.x - 1 , centerRowCoord)
+
+	for y in range(mapSize.y / 2):
+		entryCoord = Vector2i(0, centerRowCoord + y)
+		var mapIndex = coordToIndex(entryCoord, mapSize.x)
+		if (map[mapIndex] == 0): 
+			map[mapIndex] = 5
+			break
+
+		entryCoord = Vector2i(0, centerRowCoord - y)
+		mapIndex = coordToIndex(entryCoord, mapSize.x)
+		if (map[mapIndex] == 0):
+			map[mapIndex] = 5
+			break
+
+	var tileNextToEntryCoord = entryCoord + getYHexOffset(true, HexDirection.TOP_RIGHT) + hexDirVector[HexDirection.TOP_RIGHT]
+	var tileNextToEntryIndex = coordToIndex(tileNextToEntryCoord, mapSize.x)
+	var tileNextToEntryValue = map[tileNextToEntryIndex]
+	while tileNextToEntryValue == 0:
+		var isXEven = tileNextToEntryCoord.x & 1 == 0
+		var mapValue = 6
+		if isXEven:
+			mapValue = 7
+		map[tileNextToEntryIndex] = mapValue
+		var direction = HexDirection.BOTTOM_RIGHT
+		if isXEven:
+			direction = HexDirection.TOP_RIGHT
+	
+		tileNextToEntryCoord = tileNextToEntryCoord + getYHexOffset(isXEven, direction) + hexDirVector[direction]
+		tileNextToEntryIndex = coordToIndex(tileNextToEntryCoord, mapSize.x)
+		tileNextToEntryValue = map[tileNextToEntryIndex]
+
+	for y in range(mapSize.y / 2):
+		exitCoord = Vector2i(mapSize.x - 1, centerRowCoord + y)
+		var mapIndex = coordToIndex(exitCoord, mapSize.x)
+		if (map[mapIndex] == 0): 
+			map[mapIndex] = 8
+			break
+
+		entryCoord = Vector2i(mapSize.x - 1, centerRowCoord - y)
+		mapIndex = coordToIndex(exitCoord, mapSize.x)
+		if (map[mapIndex] == 0):
+			map[mapIndex] = 8
+			break
+
+	var isXEven = exitCoord.x & 1 == 0
+	var direction = HexDirection.TOP_LEFT
+	if isXEven:
+		direction = HexDirection.BOTTOM_LEFT
+	var tileNextToExitCoord = exitCoord + getYHexOffset(exitCoord.x & 1 == 0, direction) + hexDirVector[direction]
+	var tileNextToExitIndex = coordToIndex(tileNextToExitCoord, mapSize.x)
+	var tileNextToExitValue = map[tileNextToExitIndex]
+	while tileNextToExitValue == 0:
+		isXEven = tileNextToExitCoord.x & 1 == 0
+		var mapValue = 9
+		if isXEven:
+			mapValue = 10
+		map[tileNextToExitIndex] = mapValue
+		direction = HexDirection.TOP_LEFT
+		if isXEven:
+			direction = HexDirection.BOTTOM_LEFT
+	
+		tileNextToExitCoord = tileNextToExitCoord + getYHexOffset(isXEven, direction) + hexDirVector[direction]
+		tileNextToExitIndex = coordToIndex(tileNextToExitCoord, mapSize.x)
+		tileNextToExitValue = map[tileNextToExitIndex]
+
 
 """
 Performs a flood algorithm on the map using a Hex coordinate system in order to remove all non
