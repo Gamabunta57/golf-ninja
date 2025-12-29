@@ -7,6 +7,8 @@ extends RigidBody2D
 
 @onready var tooltip: Node2D = %Tooltip
 
+var rng = RandomNumberGenerator.new()
+
 var shoot_vector: Vector2 = Vector2.ZERO
 var limited_shoot_vector: Vector2 = Vector2.ZERO
 var final_vector: Vector2 = Vector2.ZERO
@@ -26,6 +28,10 @@ var strike_count: int = 0
 var par_value: int = 0
 var money: int = 0
 
+var ball_radius: float = 1.0
+
+@export var ball_color: Color = Color(0, 0, 0)
+@export var collision_shape: CollisionShape2D
 @export var ground_check: RayCast2D
 @export var max_ball_speed := 900.0
 @export var max_force: float = 100
@@ -49,14 +55,24 @@ func _ready() -> void:
 	SignalBus.ball_in_range.connect(_display_tooltip)
 	tooltip.hide()
 	call_deferred("post_ready_setup")
-
+	rng.randomize()
+	ball_radius = rng.randf_range(8.0, 20.0)
+	mass = ball_radius * 0.1
+	update_ball_size()
 
 func post_ready_setup() -> void:
 	update_bin_distance()
 	calculate_initial_par()
 	update_cost()
 	
+func update_ball_size() -> void:
+	collision_shape.shape = collision_shape.shape.duplicate()
+	collision_shape.shape.radius = ball_radius
 
+	if ground_check:
+		ground_check.target_position = Vector2(0, ball_radius + 5.0)
+	
+	queue_redraw()
 
 func _set_vector_and_body(vector: Vector2, body: RigidBody2D, player: Vector2) -> void:
 	ball_body = body
@@ -112,10 +128,13 @@ func _physics_process(delta: float) -> void:
 			
 
 func _draw() -> void:
+	# Draw the ball body
+	draw_circle(Vector2.ZERO, ball_radius, ball_color)
+	
+	# --- Existing Trajectory Drawing ---
 	if Global.player_shooting and points.size() > 1:
 		var count: int = points.size() - 1
 		for i in range(count):
-			# Calculate alpha from end to start
 			var alpha: float = clamp((count - i) * alpha_increment, 0.0, 1.0)
 			var color_with_alpha: Color = trajectory_color
 			color_with_alpha.a = alpha

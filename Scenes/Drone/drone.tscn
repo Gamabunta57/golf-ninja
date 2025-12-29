@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://bertqo1cv7dix" path="res://Scenes/Drone/bullet.tscn" id="9_uuft2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_mmlcq"]
-radius = 12.0
+radius = 25.019993
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_n202n"]
 radius = 335.096
@@ -31,6 +31,7 @@ target_check = NodePath("TargetCheck")
 attack_cooldown_timer = NodePath("AttackCooldown")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
 texture = ExtResource("2_i3b1v")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

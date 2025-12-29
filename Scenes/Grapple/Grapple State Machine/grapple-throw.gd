@@ -3,7 +3,7 @@ extends State
 @export var anchor_state: State
 @export var idle_state: State
 @export var rewind_state: State
-@export var speed: float = 500
+@export var speed: float = 4000
 
 func enter() -> void:
 	print("Grapple Throw State")

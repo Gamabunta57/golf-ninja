@@ -20,11 +20,11 @@
 [ext_resource type="Script" uid="uid://ogfr5i1gg671" path="res://Scenes/Player/Player State Machine/player-slide.gd" id="15_esmjy"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kyqiw"]
-radius = 12.0
-height = 50.0
+radius = 24.0
+height = 100.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_miouo"]
-size = Vector2(16, 16)
+size = Vector2(48, 34)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_glx4g"]
 size = Vector2(16, 16.5)
@@ -50,17 +50,18 @@ rope_collider = NodePath("Raycasts/RopeCollision")
 grapple_cooldown_timer = NodePath("Timers/GrappleCoolDown")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -25)
+position = Vector2(0, -50)
+scale = Vector2(2, 2)
 texture = ExtResource("1_rpqav")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -25)
+position = Vector2(0, -50)
 shape = SubResource("CapsuleShape2D_kyqiw")
 
 [node name="Raycasts" type="Node2D" parent="."]
 
 [node name="GrappleCollision" type="RayCast2D" parent="Raycasts"]
-position = Vector2(0, -25)
+position = Vector2(0, -50)
 rotation = -2.6179938
 target_position = Vector2(0, 0)
 collision_mask = 2
@@ -68,15 +69,15 @@ hit_from_inside = true
 script = ExtResource("3_0objx")
 
 [node name="WallCollision" type="RayCast2D" parent="Raycasts"]
-position = Vector2(0, -7.64)
-target_position = Vector2(18.06, 0)
+position = Vector2(0, -16)
+target_position = Vector2(36, 0)
 collision_mask = 2
 
 [node name="RopeCollision" type="RayCast2D" parent="Raycasts"]
 modulate = Color(2.188876, 2.188876, 2.188876, 1)
 z_index = 1
 z_as_relative = false
-position = Vector2(0, -25)
+position = Vector2(0, -50)
 target_position = Vector2(100, 0)
 collision_mask = 2
 script = ExtResource("3_6tu5v")
@@ -86,15 +87,17 @@ collision_layer = 16384
 collision_mask = 16
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BallDetection"]
-position = Vector2(0, -8)
+position = Vector2(0, -16)
 shape = SubResource("RectangleShape2D_miouo")
 debug_color = Color(0.867958, 0.353193, 0, 0.42)
 
 [node name="HiddenRoom" type="Area2D" parent="."]
+visible = false
 collision_layer = 0
 collision_mask = 8192
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HiddenRoom"]
+visible = false
 position = Vector2(0, -24.75)
 shape = SubResource("RectangleShape2D_glx4g")
 

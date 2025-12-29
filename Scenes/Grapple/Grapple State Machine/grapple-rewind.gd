@@ -1,7 +1,7 @@
 extends State
 
 @export var idle_state: State
-@export var rewind_speed: float = 800
+@export var rewind_speed: float = 1200
 
 var should_return: bool = false
 

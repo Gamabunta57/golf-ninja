@@ -45,7 +45,6 @@ script = ExtResource("7_cqkb4")
 anchor_state = NodePath("../Anchor")
 idle_state = NodePath("../Idle")
 rewind_state = NodePath("../Rewind")
-speed = 1000.0
 
 [node name="Anchor" type="Node" parent="state_machine" node_paths=PackedStringArray("rewind_state")]
 script = ExtResource("8_t2q5d")

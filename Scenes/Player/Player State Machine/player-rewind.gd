@@ -4,7 +4,7 @@ extends State
 @export var hurt_state: State
 @export var idle_state: State
 @export var move_state: State
-@export var grappling_max_speed := 600.0
+@export var grappling_max_speed := 900
 
 func enter() -> void:
 	super()

@@ -2,9 +2,9 @@
 class_name PlayerMovement
 extends Node
 
-@export var move_speed: float = 800
-@export var max_speed: float = 400
-@export var deceleration: float = 3000
+@export var move_speed: float = 1200
+@export var max_speed: float = 800
+@export var deceleration: float = 6000
 @export var stairs_threshold: float = 0.1
 
 

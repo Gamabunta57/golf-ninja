@@ -4,7 +4,7 @@ extends State
 @export var attack_state: State
 @export var idle_state: State
 @export var patrol_state: State
-@export var speed: float = 250.0
+@export var speed: float = 350.0
 @export var ground_check: RayCast2D
 @export var player_check: RayCast2D
 @export var wall_check_down: RayCast2D
