@@ -13,7 +13,7 @@ func updateTileMap(grid: Array[int]) -> void:
 		for x: int in width:
 			position.x = x
 			var tileRotation = 0
-			var tileId = grid[coordToIndex(x, y)]
+			var tileId = grid[coordToIndex(x, y)] & 0x0F
 			if tileId == 5 || tileId == 7 || tileId == 9 || tileId == 8:
 				tileId = 3
 			elif tileId == 6 || tileId == 10:

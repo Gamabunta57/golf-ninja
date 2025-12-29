@@ -16,6 +16,12 @@ enum HexDirection {
 	TOP_LEFT, 
 }
 
+const TILE_IS_CONNECTED = 0x10
+const TILE_IS_CONNECTED_TOP_RIGHT = 0x20
+const TILE_IS_CONNECTED_BOTTOM_RIGHT = 0x40
+const TILE_IS_CONNECTED_BOTTOM = 0x80
+
+
 """
 List of all relative vectors to find adjacent tile base on [0, 0] tile coords
 This array works like a Key/Value Map from int to Vector2i
@@ -105,6 +111,7 @@ static func healMap(map: Array[int], mapSize: Vector2i) -> Array[int]:
 	
 	var floodStartPoint = indexToCoord(browsedCells[0].x, mapSize.x) 
 	var fixedMap = removeUnlinkedCells(map, floodStartPoint, mapSize)
+	runWillsonAlgo(fixedMap, mapSize)
 	setEntryAndExitTiles(fixedMap, mapSize)
 	return fixedMap
 
@@ -116,6 +123,142 @@ static func findFirstNonEmptyCell(map: Array[int], mapWidth: int) -> Vector2i:
 		if (map[i] != 0):
 			return indexToCoord(i, mapWidth)
 	return -Vector2i.ONE
+
+static func runWillsonAlgo(map: Array[int], mapSize: Vector2i) -> void:
+	var cellToConnectIndices = getAllConnectableCells(map)
+	var browseStack: Array[int]
+	var currentStackSize = 0
+	browseStack.resize(cellToConnectIndices.size())
+
+	var browsedCellsCount = 1
+	while browsedCellsCount < cellToConnectIndices.size():
+		var currentPointIndex = -1
+		for c in cellToConnectIndices:
+			if map[c] & TILE_IS_CONNECTED == 0:
+				currentPointIndex = c 
+				break
+
+		if currentPointIndex == -1:
+			print_debug("No more tile to browse")
+			break
+
+		browseStack[currentStackSize] = currentPointIndex
+		currentStackSize += 1
+		while currentStackSize > 0:
+			map[currentPointIndex] = map[currentPointIndex] | TILE_IS_CONNECTED
+			var surroundingTilesIndices = getAvailableSurroundingTiles(map, currentPointIndex, mapSize)
+	
+			if (surroundingTilesIndices.size() == 0):
+				currentStackSize -= 1
+				currentPointIndex = browseStack[currentStackSize]
+				continue
+		
+			var directionIndex = getRandomDirectionToTake(surroundingTilesIndices)
+			var nextTileIndex = surroundingTilesIndices[directionIndex]
+			if (nextTileIndex == -1):
+				currentStackSize -= 1
+				browseStack[currentStackSize] = nextTileIndex
+				currentPointIndex = nextTileIndex
+				continue
+			digWall(map, currentPointIndex, nextTileIndex, directionIndex)
+			browseStack[currentStackSize] = nextTileIndex
+			currentStackSize += 1
+			currentPointIndex = nextTileIndex
+			browsedCellsCount += 1
+
+static func getAllConnectableCells(map: Array[int]) -> Array[int]:	
+	var connectableCells: Array[int]
+	for i in range(map.size()):
+		if map[i] == 2:
+			connectableCells.push_back(i)
+	return connectableCells
+
+static func getRandomDirectionToTake(directionIndices: Array[int]) -> int:
+	for i in range(directionIndices.size()):
+		if directionIndices[i] != -1:
+			return i
+	return -1
+
+static func digWall(map: Array[int], currentCellIndex: int, destinationCellIndex: int, direction: HexDirection) -> void:
+	if direction == HexDirection.TOP_RIGHT:
+		map[currentCellIndex] = map[currentCellIndex] | TILE_IS_CONNECTED_TOP_RIGHT
+	elif direction == HexDirection.BOTTOM_RIGHT:
+		map[currentCellIndex] = map[currentCellIndex] | TILE_IS_CONNECTED_BOTTOM_RIGHT
+	elif direction == HexDirection.BOTTOM:
+		map[currentCellIndex] = map[currentCellIndex] | TILE_IS_CONNECTED_BOTTOM
+	elif direction == HexDirection.BOTTOM_LEFT:
+		map[destinationCellIndex] = map[destinationCellIndex] | TILE_IS_CONNECTED_TOP_RIGHT
+	elif direction == HexDirection.TOP_LEFT:
+		map[destinationCellIndex] = map[destinationCellIndex] | TILE_IS_CONNECTED_BOTTOM_RIGHT
+	elif direction == HexDirection.TOP:
+		map[destinationCellIndex] = map[destinationCellIndex] | TILE_IS_CONNECTED_BOTTOM
+
+	
+static func getAvailableSurroundingTiles(map: Array[int], currentCellIndex: int, mapSize: Vector2i) -> Array[int]:
+	var surroundingCells: Array[int]
+	surroundingCells.resize(6)
+	surroundingCells.fill(-1)
+
+	var coord = indexToCoord(currentCellIndex, mapSize.x)
+	var isXEven = coord.x & 1 == 0
+	var offset = getYHexOffset(isXEven, HexDirection.TOP_LEFT)
+
+	var topCellCoord = coord + hexDirVector[HexDirection.TOP]
+	var topLeftCellCoord = coord + hexDirVector[HexDirection.TOP_LEFT] + offset
+	var bottomLeftCellCoord = coord + hexDirVector[HexDirection.BOTTOM_LEFT] + offset
+	var bottomCellCoord = coord + hexDirVector[HexDirection.BOTTOM]
+	var bottomRightCellCoord = coord + hexDirVector[HexDirection.BOTTOM_RIGHT] + offset
+	var topRightCellCoord = coord + hexDirVector[HexDirection.TOP_RIGHT] + offset
+
+	if topCellCoord.y > -1:
+		var topCellIndex = coordToIndex(topCellCoord, mapSize.x)
+		var topCell = map[topCellIndex]
+		var isCellVisited = topCell & TILE_IS_CONNECTED == TILE_IS_CONNECTED
+		var isCellVisitable = topCell == 2
+		if !isCellVisited && isCellVisitable:
+			surroundingCells[HexDirection.TOP] = topCellIndex
+
+	if topLeftCellCoord.y > -1 && topLeftCellCoord.x > -1:
+		var topLeftCellIndex = coordToIndex(topLeftCellCoord, mapSize.x)
+		var topLeftCell = map[topLeftCellIndex]
+		var isCellVisited = topLeftCell & TILE_IS_CONNECTED == TILE_IS_CONNECTED
+		var isCellVisitable = topLeftCell == 2
+		if !isCellVisited && isCellVisitable:
+			surroundingCells[HexDirection.TOP_LEFT] = topLeftCellIndex
+	
+	if bottomLeftCellCoord.y < mapSize.y && bottomLeftCellCoord.x > -1:
+		var bottomLeftCellIndex = coordToIndex(bottomLeftCellCoord, mapSize.x)
+		var bottomLeftCell = map[bottomLeftCellIndex]
+		var isCellVisited = bottomLeftCell & TILE_IS_CONNECTED == TILE_IS_CONNECTED
+		var isCellVisitable = bottomLeftCell == 2
+		if !isCellVisited && isCellVisitable:
+			surroundingCells[HexDirection.BOTTOM_LEFT] = bottomLeftCellIndex
+		
+	if bottomCellCoord.y < mapSize.y:
+		var bottomCellIndex = coordToIndex(bottomCellCoord, mapSize.x)
+		var bottomCell = map[bottomCellIndex]
+		var isCellVisited = bottomCell & TILE_IS_CONNECTED == TILE_IS_CONNECTED
+		var isCellVisitable = bottomCell == 2
+		if !isCellVisited && isCellVisitable:
+			surroundingCells[HexDirection.BOTTOM] = bottomCellIndex
+		
+	if bottomRightCellCoord.y < mapSize.y && bottomRightCellCoord.x < mapSize.x:
+		var bottomRightCellIndex = coordToIndex(bottomRightCellCoord, mapSize.x)
+		var bottomRightCell = map[bottomRightCellIndex]
+		var isCellVisited = bottomRightCell & TILE_IS_CONNECTED == TILE_IS_CONNECTED
+		var isCellVisitable = bottomRightCell == 2
+		if !isCellVisited && isCellVisitable:
+			surroundingCells[HexDirection.BOTTOM_RIGHT] = bottomRightCellIndex
+	
+	if topRightCellCoord.y > -1 && topRightCellCoord.x < mapSize.x:
+		var topRightCellIndex = coordToIndex(topRightCellCoord, mapSize.x)
+		var topRightCell = map[topRightCellIndex]
+		var isCellVisited = topRightCell & TILE_IS_CONNECTED == TILE_IS_CONNECTED
+		var isCellVisitable = topRightCell == 2
+		if !isCellVisited && isCellVisitable:
+			surroundingCells[HexDirection.TOP_RIGHT] = topRightCellIndex
+			
+	return surroundingCells
 
 """
 Returns a 2D Vector for hex coordinates adjustments.

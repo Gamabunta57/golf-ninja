@@ -13,6 +13,10 @@ class_name ForegroundGridSetter extends Node
 @export var tilemapOffset = Vector2i(0, 1)
 @export var hexOffset = Vector2i(1, 1)
 
+const TOP_RIGHT_CONNECTED = HexMapHealer.TILE_IS_CONNECTED_TOP_RIGHT
+const BOTTOM_RIGHT_CONNECTED = HexMapHealer.TILE_IS_CONNECTED_BOTTOM_RIGHT
+const BOTTOM_CONNECTED = HexMapHealer.TILE_IS_CONNECTED_BOTTOM
+
 func updateTileMap(map: Array[int]) -> void:
 	var width = config.mapSize.x
 	var height = config.mapSize.y
@@ -91,105 +95,49 @@ func updateTileMap(map: Array[int]) -> void:
 					coord = centerCoord + Vector2i(-1, 2)
 					tileMap.set_cell(coord, atlasId, Vector2i(navigationCell, 0))
 				continue
-			elif cellValue == 5:
-				#tileMap.set_cell(allInnerCells[0], atlasId, Vector2i(groundCell, 0))
-				tileMap.set_cell(allInnerCells[1], atlasId, Vector2i(backslashCell, 0))
-				#tileMap.set_cell(allInnerCells[2], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[3], atlasId, Vector2i(slashCell, 0))
-				#tileMap.set_cell(allInnerCells[4], atlasId, Vector2i(backslashCell, 0))
-				tileMap.set_cell(allInnerCells[5], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[6], atlasId, Vector2i(slashCell, 0))
-				tileMap.set_cell(allInnerCells[7], atlasId, Vector2i(groundCell, 0))
-				continue
-			elif cellValue == 6:
-				#tileMap.set_cell(allInnerCells[0], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[1], atlasId, Vector2i(backslashCell, 0))
-				tileMap.set_cell(allInnerCells[2], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[3], atlasId, Vector2i(slashCell, 0))
-				#tileMap.set_cell(allInnerCells[4], atlasId, Vector2i(backslashCell, 0))
-				tileMap.set_cell(allInnerCells[5], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[6], atlasId, Vector2i(slashCell, 0))
-				#tileMap.set_cell(allInnerCells[7], atlasId, Vector2i(groundCell, 0))
-				var coord = centerCoord + Vector2i(0, 2)
-				tileMap.set_cell(coord, atlasId, Vector2i(groundCell, 0))
-				continue
-			elif cellValue == 7:
-				#tileMap.set_cell(allInnerCells[0], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[1], atlasId, Vector2i(backslashCell, 0))
-				tileMap.set_cell(allInnerCells[2], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[3], atlasId, Vector2i(slashCell, 0))
-				#tileMap.set_cell(allInnerCells[4], atlasId, Vector2i(backslashCell, 0))
-				tileMap.set_cell(allInnerCells[5], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[6], atlasId, Vector2i(slashCell, 0))
-				tileMap.set_cell(allInnerCells[7], atlasId, Vector2i(groundCell, 0))
-				continue
-			elif cellValue == 8:
-				#_cellBuffer[1] = centerCoord + Vector2i(0, -1) # top left
-				#_cellBuffer[2] = centerCoord + Vector2i(-1, 0) # left
-				#_cellBuffer[3] = centerCoord + Vector2i(0, 1) # bottom left
-				#_cellBuffer[4] = centerCoord + Vector2i(1, 1) # bottom right
-				#_cellBuffer[5] = centerCoord + Vector2i(1, 0) # right
-				#_cellBuffer[6] = centerCoord + Vector2i(1, -1) # top right
-				#tileMap.set_cell(allInnerCells[0], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[1], atlasId, Vector2i(backslashCell, 0))
-				tileMap.set_cell(allInnerCells[2], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[3], atlasId, Vector2i(slashCell, 0))
-				#tileMap.set_cell(allInnerCells[4], atlasId, Vector2i(backslashCell, 0))
-				#tileMap.set_cell(allInnerCells[5], atlasId, Vector2i(groundCell, 0))
-				tileMap.set_cell(allInnerCells[6], atlasId, Vector2i(slashCell, 0))
-				tileMap.set_cell(allInnerCells[7], atlasId, Vector2i(groundCell, 0))
-				continue
-			elif cellValue == 9:
-				#tileMap.set_cell(allInnerCells[0], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[1], atlasId, Vector2i(backslashCell, 0))
-				tileMap.set_cell(allInnerCells[2], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[3], atlasId, Vector2i(slashCell, 0))
-				#tileMap.set_cell(allInnerCells[4], atlasId, Vector2i(backslashCell, 0))
-				tileMap.set_cell(allInnerCells[5], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[6], atlasId, Vector2i(slashCell, 0))
-				tileMap.set_cell(allInnerCells[7], atlasId, Vector2i(groundCell, 0))
-				#var coord = centerCoord + Vector2i(0, 2)
-				#tileMap.set_cell(coord, atlasId, Vector2i(groundCell, 0))
-				continue
-			elif cellValue == 10:
-				#tileMap.set_cell(allInnerCells[0], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[1], atlasId, Vector2i(backslashCell, 0))
-				tileMap.set_cell(allInnerCells[2], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[3], atlasId, Vector2i(slashCell, 0))
-				#tileMap.set_cell(allInnerCells[4], atlasId, Vector2i(backslashCell, 0))
-				tileMap.set_cell(allInnerCells[5], atlasId, Vector2i(groundCell, 0))
-				#tileMap.set_cell(allInnerCells[6], atlasId, Vector2i(slashCell, 0))
-				#tileMap.set_cell(allInnerCells[7], atlasId, Vector2i(groundCell, 0))
-				var coord = centerCoord + Vector2i(0, 2)
-				tileMap.set_cell(coord, atlasId, Vector2i(groundCell, 0))
-				continue
+
 
 			#tileMap.set_cell(allInnerCells[0], atlasId, Vector2i(groundCell, 0))
-			tileMap.set_cell(allInnerCells[1], atlasId, Vector2i(backslashCell, 0))
-			tileMap.set_cell(allInnerCells[2], atlasId, Vector2i(groundCell, 0))
-			tileMap.set_cell(allInnerCells[3], atlasId, Vector2i(slashCell, 0))
-			tileMap.set_cell(allInnerCells[4], atlasId, Vector2i(backslashCell, 0))
-			tileMap.set_cell(allInnerCells[5], atlasId, Vector2i(groundCell, 0))
-			tileMap.set_cell(allInnerCells[6], atlasId, Vector2i(slashCell, 0))
+			#tileMap.set_cell(allInnerCells[1], atlasId, Vector2i(backslashCell, 0))
+			#tileMap.set_cell(allInnerCells[2], atlasId, Vector2i(groundCell, 0))
+			#tileMap.set_cell(allInnerCells[3], atlasId, Vector2i(slashCell, 0))
+			#tileMap.set_cell(allInnerCells[4], atlasId, Vector2i(backslashCell, 0))
+			#tileMap.set_cell(allInnerCells[5], atlasId, Vector2i(groundCell, 0))
+			#tileMap.set_cell(allInnerCells[6], atlasId, Vector2i(slashCell, 0))
 
-			tileMap.set_cell(allInnerCells[7], atlasId, Vector2i(groundCell, 0))
 			#tileMap.set_cell(allInnerCells[8], atlasId, Vector2i(groundCell, 1))
-			tileMap.set_cell(allInnerCells[9], atlasId, Vector2i(backslashCell, 0))
 			#tileMap.set_cell(allInnerCells[10], atlasId, Vector2i(groundCell, 0))
-			tileMap.set_cell(allInnerCells[11], atlasId, Vector2i(slashCell, 0))
 			#tileMap.set_cell(allInnerCells[12], atlasId, Vector2i(groundCell, 0))
 
-			if topLeftCellValue != 2:
+			if topLeftCellValue & 0x0f != 2:
 				var coord = centerCoord + Vector2i(-1, -1)
 				tileMap.set_cell(coord, atlasId, Vector2i(slashCell, 0))
 
-			if bottomLeftCellValue != 2:
+			if bottomLeftCellValue & 0x0f != 2:
 				var coord = centerCoord + Vector2i(-1, 1)
 				tileMap.set_cell(coord, atlasId, Vector2i(backslashCell, 0))
 
-			if bottomCellValue != 2:
+			if bottomCellValue & 0x0f != 2:
 				var coord = centerCoord + Vector2i(0, 2)
 				tileMap.set_cell(coord, atlasId, Vector2i(groundCell, 0))
+
+			if cellValue & TOP_RIGHT_CONNECTED == TOP_RIGHT_CONNECTED:
+				tileMap.set_cell(allInnerCells[9], atlasId, Vector2i(navigationCell, 0))
+			else:
+				tileMap.set_cell(allInnerCells[9], atlasId, Vector2i(backslashCell, 0))
+			
+
+			if cellValue & BOTTOM_RIGHT_CONNECTED == BOTTOM_RIGHT_CONNECTED:
+				tileMap.set_cell(allInnerCells[11], atlasId, Vector2i(navigationCell, 0))
+			else:
+				tileMap.set_cell(allInnerCells[11], atlasId, Vector2i(slashCell, 0))
+
+			if cellValue & BOTTOM_CONNECTED == BOTTOM_CONNECTED:
+				tileMap.set_cell(allInnerCells[13], atlasId, Vector2i(navigationCell, 0))
+			else:
+				tileMap.set_cell(allInnerCells[7], atlasId, Vector2i(groundCell, 0))
+
+
 
 func backgroundCoordToMapIndex(x: int, y: int) -> int:
 	return y * config.mapSize.x + x
@@ -247,7 +195,7 @@ func getAllInnerCellFromBackgroundCoord(x: int, y: int) -> Array[Vector2i]:
 	var centerCoord = backgroundCoordToForegroundCoord(x, y)
 
 	var _cellBuffer: Array[Vector2i]
-	_cellBuffer.resize(13)
+	_cellBuffer.resize(14)
 
 	_cellBuffer[0] = centerCoord # center
 	# inner cells
@@ -265,13 +213,29 @@ func getAllInnerCellFromBackgroundCoord(x: int, y: int) -> Array[Vector2i]:
 	_cellBuffer[10] = centerCoord + Vector2i(2, 0) # right (3:00)
 	_cellBuffer[11] = centerCoord + Vector2i(2, 1) # bottom right (4:00)
 	_cellBuffer[12] = centerCoord + Vector2i(1, 2) # bottom right (5:00)
+	_cellBuffer[13] = centerCoord + Vector2i(0, 2) # bottom (6:00)
 
 	return _cellBuffer
 
 func digPath(map: Array[int]) -> void:
 	var mapData = tileMap.tile_map_data	
+	var currentCell = HexMapHealer.findFirstNonEmptyCell(map, config.mapSize.x)
+	var centerCoord = backgroundCoordToForegroundCoord(currentCell.x, currentCell.y)
+
+	var _cellBuffer: Array[Vector2i]
+	_cellBuffer.resize(7)
+
+	_cellBuffer[0] = centerCoord # center
+	# inner cells
+	_cellBuffer[1] = centerCoord + Vector2i(0, -1) # top left
+	_cellBuffer[2] = centerCoord + Vector2i(-1, 0) # left
+	_cellBuffer[3] = centerCoord + Vector2i(0, 1) # bottom left
+	_cellBuffer[4] = centerCoord + Vector2i(1, 1) # bottom right
+	_cellBuffer[5] = centerCoord + Vector2i(1, 0) # right
+	_cellBuffer[6] = centerCoord + Vector2i(1, -1) # top right
 
 
+	
 
 func _on_map_raw_data_map_generated(map: Array[int]) -> void:
 	updateTileMap(map)
