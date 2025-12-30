@@ -39,6 +39,7 @@ folder_colors={
 "res://Scenes/Balls/": "orange",
 "res://Scenes/Drone/": "red",
 "res://Scenes/Grapple/": "purple",
+"res://Scenes/Kunai/": "teal",
 "res://Scenes/Player/": "yellow",
 "res://Scenes/Sentinel/": "red",
 "res://Scenes/State Machine/": "purple",

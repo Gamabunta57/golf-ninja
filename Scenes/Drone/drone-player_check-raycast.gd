@@ -26,7 +26,7 @@ func _physics_process(delta: float) -> void:
 
 	if is_colliding():
 		var collider = get_collider()
-		if collider and collider.is_in_group("Player") and not Global.player_hidden:
+		if collider and collider.is_in_group("Player"):
 			parent.should_chase_player = true
 			parent.player_visible = true
 			parent.should_chase_ball = false

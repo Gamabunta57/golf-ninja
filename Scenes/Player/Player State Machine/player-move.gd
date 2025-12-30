@@ -3,7 +3,6 @@ extends State
 @export var fall_state: State
 @export var idle_state: State
 @export var jump_state: State
-@export var grappling_state: State
 @export var hurt_state: State
 @export var shooting_state: State
 @export var slide_state: State
@@ -17,11 +16,12 @@ func enter() -> void:
 	super()
 	parent.state = "player move state"
 	parent.velocity.y = 0
-	Global.player_centric = true
 	parent.jump_count = 0
-	parent.grapple_count = 0
-	Global.can_grapple = false
-
+	#parent.grapple_count = 0
+	#Global.can_grapple = false
+	parent.kunai_count = 0
+	Global.can_kunai = false
+	Global.camera_mode = Global.CameraMode.PLAYER
 
 func process_input(event: InputEvent) -> State:
 	if inputs.get_shooting_input() and parent.is_ball_nearby and not parent.cancel_shooting:

@@ -16,7 +16,7 @@ func enter() -> void:
 	super()
 	parent.state = "player hurt state"
 	is_hurt = true
-	Global.player_centric = true
+	Global.camera_mode = Global.CameraMode.HURT
 	
 	var knockback_direction = sign(parent.global_position.x - parent.enemy_position.x)
 	parent.velocity.x = knockback_direction * knockback_strength
@@ -24,6 +24,9 @@ func enter() -> void:
 	hurt_timer.start()
 	knockback_timer.start()
 
+func exit() -> void:
+	Global.camera_mode = Global.CameraMode.PLAYER
+	
 func _on_knockback_timer_timeout():
 	parent.velocity = Vector2.ZERO
 	knockback_timer.stop()

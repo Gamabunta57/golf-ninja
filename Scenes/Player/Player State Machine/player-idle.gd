@@ -2,7 +2,6 @@ extends State
 
 @export var fall_state: State
 @export var jump_state: State
-@export var grappling_state: State
 @export var move_state: State
 @export var hurt_state: State
 @export var shooting_state: State
@@ -14,8 +13,10 @@ func enter() -> void:
 	parent.state = "player idle state"
 	parent.velocity.x = 0
 	parent.jump_count = 0
-	parent.grapple_count = 0
-	Global.can_grapple = false
+	#parent.grapple_count = 0
+	#Global.can_grapple = false
+	parent.kunai_count = 0
+	Global.can_kunai = false
 
 func process_physics(delta: float) -> State:
 	if inputs.get_x_input() != 0:

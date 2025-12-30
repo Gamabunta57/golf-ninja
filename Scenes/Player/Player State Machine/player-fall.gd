@@ -2,6 +2,7 @@ extends State
 
 @export var jump_state: State
 @export var grappling_state: State
+@export var kunai_state: State
 @export var idle_state: State
 @export var move_state: State
 @export var landing_state: State
@@ -23,8 +24,9 @@ var last_y_velocity: float = 0
 
 func enter() -> void:
 	super()
-	coyote_timer.start()
 	parent.state = "player fall state"
+	coyote_timer.start()
+	Global.can_kunai = false
 
 func process_physics(delta: float) -> State:
 	
@@ -37,12 +39,8 @@ func process_physics(delta: float) -> State:
 	movements.flip_direction(inputs)
 	
 	if inputs.get_jump_input_just_pressed():
-		if grappling_collider.is_colliding():
-			if parent.grapple_count < parent.max_grapple_count and not Global.grapple_cooldown_ongoing:
-				Global.can_grapple = true
-				parent.grapple_count += 1
-				parent.grapple_cooldown_timer.start()
-				return grappling_state
+			if parent.kunai_count < parent.max_kunai_count and not Global.kunai_cooldown_ongoing:
+				return kunai_state
 	
 	if inputs.get_jump_input() and parent.should_coyote and parent.can_jump:
 		return jump_state

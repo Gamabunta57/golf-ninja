@@ -21,7 +21,7 @@ collision_layer = 0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
 position = Vector2(-1, 0)
-polygon = PackedVector2Array(-198, 73, -198, 136, 200, 136, 200, 73)
+polygon = PackedVector2Array(-125, 75, -125, 136, -3, 367, 116, 138, 117, 77, 3, -150)
 
 [node name="Inner" type="Sprite2D" parent="."]
 texture = ExtResource("2_1mho8")

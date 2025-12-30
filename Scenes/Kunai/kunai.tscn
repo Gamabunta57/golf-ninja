@@ -1,0 +1,60 @@
+[gd_scene load_steps=11 format=3 uid="uid://dqccr4yr37v3b"]
+
+[ext_resource type="Script" uid="uid://baf7ebt1ve7xl" path="res://Scenes/Kunai/kunai.gd" id="1_1iiph"]
+[ext_resource type="Script" uid="uid://bj5v5m40sjk23" path="res://Scenes/Player/Player State Machine/player-movements.gd" id="2_2nws0"]
+[ext_resource type="Script" uid="uid://d0pfi24gba6k" path="res://Scenes/Kunai/clearance.gd" id="2_hmrol"]
+[ext_resource type="Texture2D" uid="uid://dk4f8eh7mtlv1" path="res://Assets/kunai.png" id="2_r0t48"]
+[ext_resource type="Script" uid="uid://citxnxh7togl4" path="res://Scenes/Player/Player State Machine/player-inputs.gd" id="3_r0t48"]
+[ext_resource type="Script" uid="uid://bgmb176xk2uel" path="res://Scenes/state_machine.gd" id="4_hmrol"]
+[ext_resource type="Script" uid="uid://dlkoidqyqxglp" path="res://Scenes/Kunai/Kunai State Machine/kunai_idle.gd" id="5_xokmu"]
+[ext_resource type="Script" uid="uid://x6j3bhguoxhl" path="res://Scenes/Kunai/Kunai State Machine/kunai_throw.gd" id="6_rdqbq"]
+[ext_resource type="Script" uid="uid://g8r0yuq02t5x" path="res://Scenes/Kunai/Kunai State Machine/kunai_anchor.gd" id="7_jgyrp"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2nws0"]
+radius = 7.0
+
+[node name="Kunai" type="CharacterBody2D" node_paths=PackedStringArray("clearance")]
+collision_layer = 4
+collision_mask = 2
+slide_on_ceiling = false
+floor_max_angle = 0.0
+script = ExtResource("1_1iiph")
+clearance = NodePath("Clearance")
+
+[node name="Clearance" type="RayCast2D" parent="."]
+scale = Vector2(0.99999994, 0.99999994)
+target_position = Vector2(0, -50)
+collision_mask = 2
+script = ExtResource("2_hmrol")
+
+[node name="Kunai" type="Sprite2D" parent="."]
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_r0t48")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(0.99999994, 0.99999994)
+shape = SubResource("CircleShape2D_2nws0")
+
+[node name="Movements" type="Node" parent="."]
+script = ExtResource("2_2nws0")
+
+[node name="Inputs" type="Node" parent="."]
+script = ExtResource("3_r0t48")
+
+[node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
+unique_name_in_owner = true
+script = ExtResource("4_hmrol")
+starting_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="state_machine" node_paths=PackedStringArray("throw_state")]
+script = ExtResource("5_xokmu")
+throw_state = NodePath("../Throw")
+
+[node name="Throw" type="Node" parent="state_machine" node_paths=PackedStringArray("anchor_state", "idle_state")]
+script = ExtResource("6_rdqbq")
+anchor_state = NodePath("../Anchor")
+idle_state = NodePath("../Idle")
+
+[node name="Anchor" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
+script = ExtResource("7_jgyrp")
+idle_state = NodePath("../Idle")

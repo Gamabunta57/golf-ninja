@@ -25,7 +25,7 @@ func _process(delta: float) -> void:
 	state_machine.process_frame(delta)
 
 func _on_attack_zone_body_entered(body: Node2D) -> void:
-	if body.is_in_group("Player") and not Global.player_hidden:
+	if body.is_in_group("Player"):
 		player_in_attack_zone = true
 		player_position = body.global_position
 	else:

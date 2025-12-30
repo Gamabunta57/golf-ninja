@@ -44,7 +44,6 @@ func process_physics(delta: float) -> State:
 	if player_check.is_colliding():
 		var collider = player_check.get_collider()
 		if collider and collider.is_in_group("Player"):
-			print("chase")
 			return chase_state
 		else:
 			return null

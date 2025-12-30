@@ -20,7 +20,6 @@ func enter() -> void:
 	super()
 	parent.state = "player jump state"
 	parent.jump_count += 1
-	Global.player_centric = true
 	time_elapsed = 0.0
 	parent.is_jumping = true
 

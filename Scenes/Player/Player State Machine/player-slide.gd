@@ -25,8 +25,10 @@ func enter() -> void:
 	parent.velocity = Vector2.ZERO
 	time_ellapsed = 0.0
 	parent.jump_count = 0
-	parent.grapple_count = 0
-	Global.can_grapple = false
+	#parent.grapple_count = 0
+	#Global.can_grapple = false
+	parent.kunai_count = 0
+	Global.can_kunai = false
 
 func process_physics(delta: float) -> State:
 		

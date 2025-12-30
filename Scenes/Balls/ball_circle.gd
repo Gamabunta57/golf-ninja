@@ -46,7 +46,7 @@ var ball_radius: float = 1.0
 @export var min_line_width: float = 1.0
 @export var max_line_width: float = 5.0
 
-
+var last_position: Vector2
 
 func _ready() -> void:
 	SignalBus.shooting.connect(_set_vector_and_body)
@@ -105,7 +105,10 @@ func _physics_process(delta: float) -> void:
 	
 	if ball_body == self and outside_bin:
 		last_velocity = linear_velocity.length()
+		#Camera
+		Global.current_ball_position = self.global_position
 		
+		#Else
 		if Global.player_shooting:
 			update_cost()
 			linear_velocity = Vector2.ZERO
@@ -115,9 +118,19 @@ func _physics_process(delta: float) -> void:
 			var strength_weight = max(limited_shoot_vector.length() - 20, 0) / max_force
 			current_line_width = lerp(min_line_width, max_line_width, strength_weight)
 			points = preview_trajectory(final_vector, preview_max_points)
-			emit_last_position(ball_body)
-
 			
+			last_position = points[points.size() - 1]
+			Global.current_preview_position = last_position
+			Global.camera_mode = Global.CameraMode.PREVIEW
+		
+		if last_position:
+			var target_ball_diff_x = abs(self.global_position.x - last_position.x)
+			var target_ball_diff_y = abs(self.global_position.y - last_position.y)
+			var threshold : float = self.linear_velocity.length() / 50
+			
+			if target_ball_diff_x + target_ball_diff_y < threshold:
+				Global.camera_mode = Global.CameraMode.BALL
+		
 		if Global.shooting_action:
 			Global.shooting_action = false
 			strike_count += 1
@@ -233,10 +246,6 @@ func preview_trajectory(impulse: Vector2, max_points: int, dt: float = -1.0) -> 
 			points.push_back(new_pos)
 
 	return points
-
-func emit_last_position(body: RigidBody2D) -> void:
-	var last_position: Vector2 = points[points.size() - 1]
-	SignalBus.last_trajectory_point.emit(last_position, body)
 
 func _on_body_entered(body: Node) -> void:
 	if last_velocity > collison_velocity_threshold:
