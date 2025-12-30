@@ -14,6 +14,7 @@ var should_idle: bool = false
 
 func enter() -> void:
 	super()
+	parent.state = "sentinel patrol state"
 	parent.velocity.x = 0
 
 func exit() -> void:

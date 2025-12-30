@@ -39,9 +39,6 @@ max_contacts_reported = 1
 script = ExtResource("1_pfq2l")
 collision_shape = NodePath("CollisionShape2D")
 ground_check = NodePath("GroundCheck")
-max_ball_speed = 1000.0
-max_force = 70.0
-strength = 10.0
 alpha_increment = 0.08
 collison_velocity_threshold = 500.0
 

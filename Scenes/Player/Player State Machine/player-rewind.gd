@@ -8,7 +8,7 @@ extends State
 
 func enter() -> void:
 	super()
-	print("rewind state")
+	parent.state = "player rewind state"
 	Global.player_centric = true
 
 func process_physics(delta: float) -> State:
@@ -28,9 +28,10 @@ func process_physics(delta: float) -> State:
 	
 	parent.move_and_slide()
 	
-	# 3. Exit Conditions
+	# 3. Exit Conditionsget_jump_just_release()
 	# If the rope_collision detected a wall mid-rewind, Global.can_grapple becomes false
-	if not Global.can_grapple:
+	if inputs.get_jump_just_release():
+		Global.can_grapple = false
 		if parent.is_on_floor():
 			if parent.velocity.x != 0:
 				return move_state

@@ -9,11 +9,19 @@ extends State
 @export var slide_state: State
 @export var wall_collider : RayCast2D
 
+@export var move_speed: float = 1200
+@export var max_speed: float = 800
+@export var deceleration: float = 12000
+
 func enter() -> void:
 	super()
+	parent.state = "player move state"
 	parent.velocity.y = 0
 	Global.player_centric = true
-	print("move state")
+	parent.jump_count = 0
+	parent.grapple_count = 0
+	Global.can_grapple = false
+
 
 func process_input(event: InputEvent) -> State:
 	if inputs.get_shooting_input() and parent.is_ball_nearby and not parent.cancel_shooting:
@@ -26,37 +34,41 @@ func process_physics(delta: float) -> State:
 		parent.velocity= Vector2.ZERO
 	
 	if inputs.get_x_input() != 0 and not wall_collider.is_colliding():
-		parent.velocity.x = movements.horizontal_movement(parent.velocity.x, delta, inputs, parent)
+		parent.velocity.x = movements.horizontal_movement(parent.velocity.x, deceleration, move_speed, max_speed, delta, inputs)
 	else:
-		parent.velocity.x = movements.horizontal_deceleration(parent.velocity.x, delta)
+		parent.velocity.x = move_toward(parent.velocity.x, 0, deceleration * delta)
 	
-	movements.flip_direction(inputs, parent)
+	movements.flip_direction(inputs)
 	
 	parent.move_and_slide()
 	
 	if parent.is_on_floor() and is_zero_approx(parent.velocity.x) and inputs.get_x_input() == 0:
 		return idle_state
 	
-	if wall_collider.is_colliding():
-		if parent.can_jump:
+	if parent.is_on_floor() and inputs.get_jump_input_just_pressed():
+		if parent.jump_count < parent.max_jump_count:
 			return jump_state
+	
+	#if wall_collider.is_colliding():
+		#if parent.can_jump:
+			#return jump_state
 		
 		#elif parent.can_grapple:
 			#return grappling_state
 		
-		else:
-			return idle_state
+		#else:
+			#return idle_state
 	
 	
 	if parent.velocity.y > 0 or !parent.is_on_floor():
 		parent.should_coyote = true
 		return fall_state
 	
-	if parent.can_jump:
-		return jump_state
+	#if parent.can_jump:
+		#return jump_state
 		
-	if Global.can_grapple and not Global.grapple_cooldown_ongoing:
-		return grappling_state
+	#if Global.can_grapple and not Global.grapple_cooldown_ongoing:
+		#return grappling_state
 	
 	if parent.is_on_floor() and parent.get_floor_angle() > 1:
 		return slide_state

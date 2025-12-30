@@ -6,6 +6,7 @@ var should_return: bool = false
 
 func enter() -> void:
 	super()
+	parent.state = "grapple idle state"
 	parent.velocity = Vector2.ZERO
 
 #func process_input(event: InputEvent) -> State:

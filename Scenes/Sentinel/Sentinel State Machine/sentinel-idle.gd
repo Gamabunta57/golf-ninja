@@ -15,6 +15,8 @@ var player: CharacterBody2D
 
 func enter() -> void:
 	super()
+	parent.state = "sentinel idle state"
+
 	parent.velocity.x = 0
 	player = get_tree().get_first_node_in_group("Player")
 

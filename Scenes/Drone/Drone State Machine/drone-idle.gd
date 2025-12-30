@@ -9,6 +9,7 @@ var should_return: bool = false
 
 func enter() -> void:
 	super()
+	parent.state = "drone idle state"
 	should_return = false
 	parent.velocity = Vector2.ZERO
 	return_timer.start()

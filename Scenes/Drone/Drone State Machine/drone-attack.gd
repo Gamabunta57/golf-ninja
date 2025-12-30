@@ -6,6 +6,7 @@ extends State
 
 func enter() -> void:
 	super()
+	parent.state = "drone attack state"
 	parent.velocity = Vector2.ZERO
 
 func process_physics(delta: float) -> State:

@@ -14,6 +14,7 @@ var sentinel: CharacterBody2D
 
 func enter() -> void:
 	super()
+	parent.state = "player hurt state"
 	is_hurt = true
 	Global.player_centric = true
 	

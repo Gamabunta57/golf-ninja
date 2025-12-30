@@ -11,6 +11,8 @@ extends State
 
 func enter() -> void:
 	super()
+	parent.state = "drone chase state"
+
 	#time_since_last_path_recalc = 0.0
 	#print("chase")
 

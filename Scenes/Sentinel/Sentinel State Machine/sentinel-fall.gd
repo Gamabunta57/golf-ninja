@@ -10,6 +10,7 @@ var last_y_velocity: float = 0
 
 func enter() -> void:
 	super()
+	parent.state = "sentinel fall state"
 
 func process_physics(delta: float) -> State:
 	

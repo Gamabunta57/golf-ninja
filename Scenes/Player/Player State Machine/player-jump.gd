@@ -5,20 +5,23 @@ extends State
 @export var move_state: State
 @export var hurt_state: State
 @export var slide_state: State
-@export var jump_velocity_curve: Curve
 
 @export var max_jump_time: float = 0.22
-@export var max_jump_speed: float = 300.0
+@export var max_jump_speed: float = 400.0
+
+@export var move_speed: float = 600
+@export var max_speed: float = 400
+@export var deceleration: float = 12000
 
 var time_elapsed: float = 0.0
 var curve_ratio: float
 
 func enter() -> void:
 	super()
-	print("jump state")
+	parent.state = "player jump state"
+	parent.jump_count += 1
 	Global.player_centric = true
 	time_elapsed = 0.0
-	curve_ratio = 1.0 / max_jump_time
 	parent.is_jumping = true
 
 func process_physics(delta: float) -> State:
@@ -28,12 +31,15 @@ func process_physics(delta: float) -> State:
 	
 	# 2. Apply Velocity from Curve
 	if time_elapsed < max_jump_time:
-		# Note: We use sample() on the curve. 
-		# Ensure your curve Y-axis goes from 0 to 1 (or -1 to 0 depending on setup)
-		parent.velocity.y = -jump_velocity_curve.sample(time_elapsed * curve_ratio) * max_jump_speed
+		parent.velocity.y = -(time_elapsed / max_jump_time) * max_jump_speed
 	else:
 		return fall_state
-
+	
+	if inputs.get_x_input() != 0:
+		parent.velocity.x = movements.horizontal_movement(parent.velocity.x, deceleration, move_speed, max_speed, delta, inputs)
+	else:
+		parent.velocity.x = move_toward(parent.velocity.x, 0, deceleration * delta)
+	
 	parent.move_and_slide()
 	
 	# 3. Handle Jump Release (Variable Jump Height)
@@ -61,9 +67,6 @@ func process_physics(delta: float) -> State:
 					return slide_state
 
 	return null
-
-func exit() -> void:
-	print("exit jummp")
 
 func _on_damage_received() -> State:
 	return hurt_state

@@ -5,6 +5,7 @@ extends CharacterBody2D
 @onready var movements: Node = $Movements
 @export var player: CharacterBody2D
 
+var state: String
 var grapple_origin_offest: Vector2 = Vector2(0,-25)
 var grapple_angle: Vector2 = Vector2(-1,0).rotated(2*PI/3)
 var anchor_position: Vector2 = Vector2.ZERO

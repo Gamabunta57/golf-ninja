@@ -33,9 +33,9 @@ var ball_radius: float = 1.0
 @export var ball_color: Color = Color(0, 0, 0)
 @export var collision_shape: CollisionShape2D
 @export var ground_check: RayCast2D
-@export var max_ball_speed := 900.0
-@export var max_force: float = 100
-@export var strength: float = 8
+@export var max_ball_speed := 1800.0
+@export var max_force: float = 200
+@export var strength: float = 12
 @export var max_preview_distance: float = 500.0 
 @export var preview_max_points: int = 64
 @export var trajectory_color: Color = Color(1, 1, 1)    # Base color
@@ -57,7 +57,7 @@ func _ready() -> void:
 	call_deferred("post_ready_setup")
 	rng.randomize()
 	ball_radius = rng.randf_range(8.0, 20.0)
-	mass = ball_radius * 0.1
+	mass = ball_radius * 0.05
 	update_ball_size()
 
 func post_ready_setup() -> void:

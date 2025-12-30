@@ -10,6 +10,10 @@ extends State
 @export var deceleration: float = 400
 @export var moving_threshold: float = 100
 
+func enter() -> void:
+	super()
+	parent.state = "player landing state"
+
 func process_physics(delta: float) -> State:
 	var x_input = inputs.get_x_input()
 	parent.velocity.x = movements.horizontal_deceleration(parent.velocity.x, delta)

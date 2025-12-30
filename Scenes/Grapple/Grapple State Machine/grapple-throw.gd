@@ -6,8 +6,8 @@ extends State
 @export var speed: float = 4000
 
 func enter() -> void:
-	print("Grapple Throw State")
 	super()
+	parent.state = "grapple throw state"
 	parent.global_position = parent.player.global_position + parent.grapple_origin_offest
 
 #func process_input(event: InputEvent) -> State:

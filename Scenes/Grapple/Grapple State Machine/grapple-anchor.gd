@@ -5,8 +5,9 @@ extends State
 var should_return: bool = false
 
 func enter() -> void:
-	parent.global_position = parent.anchor_position
 	super()
+	parent.global_position = parent.anchor_position
+	parent.state = "grapple anchor state"
 
 #func process_input(event: InputEvent) -> State:
 	#return null

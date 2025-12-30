@@ -12,11 +12,14 @@ extends State
 
 func enter() -> void:
 	super()
-	print("grappling state")
+	parent.state = "player grappling state"
 	Global.player_centric = true
 	# No need to clear points array anymore
 
 func process_physics(delta: float) -> State:
+	if inputs.get_jump_just_release():
+		Global.can_grapple = false
+		return fall_state
 	
 	# 1. Handle "Hit Wall" Logic (Stop player if they bump into something)
 	if wall_collider.is_colliding():
@@ -31,7 +34,7 @@ func process_physics(delta: float) -> State:
 	#print(parent.velocity.y)
 	parent.velocity.y = move_toward(parent.velocity.x, 0, delta)
 	
-	movements.flip_direction(inputs, parent)
+	movements.flip_direction(inputs)
 	parent.move_and_slide()
 	
 	# 3. Check Distance (Simple direct distance)

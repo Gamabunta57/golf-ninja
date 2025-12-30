@@ -11,29 +11,39 @@ extends State
 
 @export var slide_velocity: float = 150
 
+@export var move_speed: float = 600
+@export var max_speed: float = 400
+@export var deceleration: float = 12000
+
 var last_y_velocity: float = 0
 var time_ellapsed: float = 0.0
 var facing_slope: bool = false
 
 func enter() -> void:
 	super()
-	print("slide")
+	parent.state = "player slide state"
 	parent.velocity = Vector2.ZERO
 	time_ellapsed = 0.0
-
+	parent.jump_count = 0
+	parent.grapple_count = 0
+	Global.can_grapple = false
 
 func process_physics(delta: float) -> State:
 		
 	if wall_collider.is_colliding() and parent.get_floor_angle() == 0:
 		return idle_state
 	
-	if parent.can_jump:
-		return jump_state
+	#if parent.can_jump:
+		#return jump_state
+		#
+	#if Global.can_grapple and not Global.grapple_cooldown_ongoing:
+		#return grappling_state
+	
+	if parent.is_on_floor() and inputs.get_jump_input_just_pressed():
+		if parent.jump_count < parent.max_jump_count:
+			return jump_state
 		
-	if Global.can_grapple and not Global.grapple_cooldown_ongoing:
-		return grappling_state
-		
-	movements.flip_direction(inputs, parent)
+	movements.flip_direction(inputs)
 	
 	var floor_normal := parent.get_floor_normal()
 
@@ -45,7 +55,7 @@ func process_physics(delta: float) -> State:
 
 	# Set the velocity along slope
 	if sign(inputs.get_x_input()) == sign(floor_normal.x):
-		parent.velocity.x = movements.horizontal_movement(parent.velocity.x, delta, inputs, parent)
+		parent.velocity.x = movements.horizontal_movement(parent.velocity.x, deceleration, move_speed, max_speed, delta, inputs)
 		parent.velocity.y += gravity * delta
 		
 	else:

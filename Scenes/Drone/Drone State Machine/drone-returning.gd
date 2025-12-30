@@ -8,6 +8,7 @@ extends State
 
 func enter() -> void:
 	super()
+	parent.state = "drone returning state"
 	navigation_agent.target_position = parent.origin_position
 	#print("returning")
 	

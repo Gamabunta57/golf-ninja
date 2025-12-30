@@ -12,6 +12,7 @@ extends State
 
 func enter() -> void:
 	super()
+	parent.state = "sentinel chase state"
 
 func process_physics(delta: float) -> State:
 	

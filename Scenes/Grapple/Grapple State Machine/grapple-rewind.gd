@@ -7,7 +7,7 @@ var should_return: bool = false
 
 func enter() -> void:
 	super()
-	#print("grapple rewind state")
+	parent.state = "grapple rewind state"
 	Global.grapple_is_anchored = false
 	parent.set_collision_mask_value(2, false)
 

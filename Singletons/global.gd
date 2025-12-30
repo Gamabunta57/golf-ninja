@@ -4,7 +4,7 @@ var player_body: CharacterBody2D
 var grapple_body: CharacterBody2D
 var player_health: int = 7
 var player_max_health: int = 7
-var grapple_distance: float = 900
+var grapple_distance: float = 800
 var player_hidden: bool = false
 var player_falling: bool = false
 var shooting_action: bool = false

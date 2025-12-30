@@ -14,7 +14,7 @@ extends CharacterBody2D
 @export var grapple_body : CharacterBody2D
 @export var grapple_cooldown_timer : Timer
 
-
+var state: String
 var should_coyote: bool = false
 var can_jump: bool = false
 var can_throw_grapple: bool = false
@@ -53,7 +53,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	state_machine.process_input(event)
 
 func _physics_process(delta: float) -> void:
-		
+	print(state)
 	if not inputs.get_shooting_input():
 		cancel_shooting = false
 	
@@ -69,37 +69,37 @@ func _physics_process(delta: float) -> void:
 	#print("jump count: ", jump_count, ", grapple count: ", grapple_count, ", is on floor: ", is_on_floor())
 
 	# 1. Reset logic (Button release or Grounded)
-	if inputs.get_jump_just_release():
-		Global.can_grapple = false
-		can_jump = false
-		is_jumping = false
-	
-	if not inputs.get_jump_input():
-		if is_on_floor():
-			jump_count = 0
-			grapple_count = 0
-			
-	if grapple_cooldown_timer.time_left == 0.0:
-		Global.grapple_cooldown_ongoing = false
-	# 2. Main Logic
-	if inputs.get_jump_input():
-		if grappling_collider.is_colliding():
-			if grapple_count < max_grapple_count:
-				Global.can_grapple = true
-				
-		else:
-			if jump_count < max_jump_count and is_on_floor():
-				can_jump = true
-	
-	if inputs.get_jump_input_just_pressed():
-		if grappling_collider.is_colliding():
-			if grapple_count < max_grapple_count and not Global.grapple_cooldown_ongoing:
-				Global.can_grapple = true
-				grapple_count += 1
-				grapple_cooldown_timer.start()
-		else:
-			if jump_count < max_jump_count and is_on_floor():
-				jump_count += 1
+	#if inputs.get_jump_just_release():
+		#Global.can_grapple = false
+		#can_jump = false
+		#is_jumping = false
+	#
+	#if not inputs.get_jump_input():
+		#if is_on_floor():
+			#jump_count = 0
+			#grapple_count = 0
+			#
+	#if grapple_cooldown_timer.time_left == 0.0:
+		#Global.grapple_cooldown_ongoing = false
+	## 2. Main Logic
+	#if inputs.get_jump_input():
+		#if grappling_collider.is_colliding():
+			#if grapple_count < max_grapple_count:
+				#Global.can_grapple = true
+				#
+		#else:
+			#if jump_count < max_jump_count and is_on_floor():
+				#can_jump = true
+	#
+	#if inputs.get_jump_input_just_pressed():
+		#if grappling_collider.is_colliding():
+			#if grapple_count < max_grapple_count and not Global.grapple_cooldown_ongoing:
+				#Global.can_grapple = true
+				#grapple_count += 1
+				#grapple_cooldown_timer.start()
+		#else:
+			#if jump_count < max_jump_count and is_on_floor():
+				#jump_count += 1
 		
 	#print("grapple_cooldown_ongoing: ", Global.grapple_cooldown_ongoing, ", timer: ", grapple_cooldown_timer.time_left)
 	state_machine.process_physics(delta)

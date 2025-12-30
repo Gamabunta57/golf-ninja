@@ -5,6 +5,7 @@ extends CharacterBody2D
 @export var cooldown_timer: Timer
 
 #var target: CharacterBody2D = null 
+var state: String
 var direction: int = 1
 var player_in_attack_zone: bool = false
 var player_position: Vector2

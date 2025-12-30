@@ -11,9 +11,11 @@ extends State
 
 func enter() -> void:
 	super()
-	print("idle_state")
+	parent.state = "player idle state"
 	parent.velocity.x = 0
-
+	parent.jump_count = 0
+	parent.grapple_count = 0
+	Global.can_grapple = false
 
 func process_physics(delta: float) -> State:
 	if inputs.get_x_input() != 0:
@@ -25,11 +27,15 @@ func process_physics(delta: float) -> State:
 	if !parent.is_on_floor():
 		return fall_state
 	
-	if parent.can_jump:
-		return jump_state
+	if parent.is_on_floor() and inputs.get_jump_input_just_pressed():
+		if parent.jump_count < parent.max_jump_count:
+			return jump_state
+	
+	#if parent.can_jump:
+		#return jump_state
 
-	if Global.can_grapple and not Global.grapple_cooldown_ongoing:
-		return grappling_state
+	#if Global.can_grapple and not Global.grapple_cooldown_ongoing:
+		#return grappling_state
 	
 	if parent.is_on_floor() and parent.get_floor_angle() > 1:
 		return slide_state

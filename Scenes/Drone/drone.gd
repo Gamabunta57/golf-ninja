@@ -4,6 +4,7 @@ extends CharacterBody2D
 #@onready var attack_area = $AttackArea2D
 @export var path_recalculation_interval: float = 0.5
 
+var state: String
 var should_chase_player: bool = false
 var should_chase_ball: bool = false
 

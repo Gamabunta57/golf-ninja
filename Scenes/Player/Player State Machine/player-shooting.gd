@@ -10,6 +10,7 @@ var ball_vector: Vector2 = Vector2.ZERO
 
 func enter() -> void:
 	super()
+	parent.state = "player shooting state"
 	parent.velocity.x = 0
 	parent.cancel_shooting = false
 	Global.player_shooting = true

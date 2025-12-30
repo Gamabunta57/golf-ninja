@@ -8,10 +8,14 @@ extends State
 @export var hurt_state: State
 @export var slide_state: State
 @export var coyote_timer: Timer
+@export var grappling_collider : RayCast2D
 
 @export var landing_threshold: float = 1500
 @export var hurt_threshold: float = 3000
 
+@export var move_speed: float = 600
+@export var max_speed: float = 400
+@export var deceleration: float = 12000
 
 @export var fall_gravity_multiplier: float = 1
 
@@ -20,22 +24,25 @@ var last_y_velocity: float = 0
 func enter() -> void:
 	super()
 	coyote_timer.start()
-	print("fall state")
+	parent.state = "player fall state"
 
 func process_physics(delta: float) -> State:
 	
 	parent.velocity.y += gravity * fall_gravity_multiplier * delta
-	parent.velocity.x = movements.horizontal_movement(parent.velocity.x, delta, inputs, parent)
+	parent.velocity.x = movements.horizontal_movement(parent.velocity.x, deceleration, move_speed, max_speed, delta, inputs)
 
 	if parent.velocity.y > 0:
 		last_y_velocity = parent.velocity.y
 	
-	movements.flip_direction(inputs, parent)
+	movements.flip_direction(inputs)
 	
-	if Global.can_grapple and parent.velocity.y > 1 and not Global.grapple_cooldown_ongoing:
-		return grappling_state
-
-	parent.move_and_slide()
+	if inputs.get_jump_input_just_pressed():
+		if grappling_collider.is_colliding():
+			if parent.grapple_count < parent.max_grapple_count and not Global.grapple_cooldown_ongoing:
+				Global.can_grapple = true
+				parent.grapple_count += 1
+				parent.grapple_cooldown_timer.start()
+				return grappling_state
 	
 	if inputs.get_jump_input() and parent.should_coyote and parent.can_jump:
 		return jump_state
@@ -60,6 +67,8 @@ func process_physics(delta: float) -> State:
 				return hurt_state
 			else:
 				return landing_state
+	
+	parent.move_and_slide()
 	
 	return null
 

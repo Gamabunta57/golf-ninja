@@ -8,6 +8,7 @@ var should_attack: bool
 
 func enter() -> void:
 	super()
+	parent.state = "sentinel attack state"
 	should_attack = true
 	parent.flip()
 
