@@ -5,14 +5,17 @@ extends State
 func enter() -> void:
 	super()
 	parent.state = "kunai idle state"
-	parent.global_position = Global.player_body.global_position + parent.kunai_origin_offset
+	parent.global_position = parent.player.global_position
 	parent.velocity = Vector2.ZERO
 	parent.rotation = 0
 	parent.kunai_anchored = false
-
+	parent.sprite.hide()
+	Global.kunai_position = Vector2.ZERO
+	
 func process_physics(delta: float) -> State:
-	parent.global_position = Global.player_body.global_position + parent.kunai_origin_offset
+	parent.global_position = parent.player.global_position
 	parent.velocity = Vector2.ZERO
+	
 	
 	parent.move_and_slide()
 	

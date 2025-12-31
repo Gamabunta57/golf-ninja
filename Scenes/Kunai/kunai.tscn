@@ -11,15 +11,19 @@
 [ext_resource type="Script" uid="uid://g8r0yuq02t5x" path="res://Scenes/Kunai/Kunai State Machine/kunai_anchor.gd" id="7_jgyrp"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2nws0"]
-radius = 7.0
+radius = 5.0
 
-[node name="Kunai" type="CharacterBody2D" node_paths=PackedStringArray("clearance")]
+[node name="Kunai" type="CharacterBody2D" node_paths=PackedStringArray("sprite")]
 collision_layer = 4
 collision_mask = 2
 slide_on_ceiling = false
 floor_max_angle = 0.0
 script = ExtResource("1_1iiph")
-clearance = NodePath("Clearance")
+sprite = NodePath("Kunai")
+
+[node name="Kunai" type="Sprite2D" parent="."]
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_r0t48")
 
 [node name="Clearance" type="RayCast2D" parent="."]
 scale = Vector2(0.99999994, 0.99999994)
@@ -27,9 +31,9 @@ target_position = Vector2(0, -50)
 collision_mask = 2
 script = ExtResource("2_hmrol")
 
-[node name="Kunai" type="Sprite2D" parent="."]
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("2_r0t48")
+[node name="RayCollision" type="RayCast2D" parent="."]
+target_position = Vector2(0, -11)
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 scale = Vector2(0.99999994, 0.99999994)
@@ -50,10 +54,12 @@ starting_state = NodePath("Idle")
 script = ExtResource("5_xokmu")
 throw_state = NodePath("../Throw")
 
-[node name="Throw" type="Node" parent="state_machine" node_paths=PackedStringArray("anchor_state", "idle_state")]
+[node name="Throw" type="Node" parent="state_machine" node_paths=PackedStringArray("anchor_state", "idle_state", "ray_collision", "clearance")]
 script = ExtResource("6_rdqbq")
 anchor_state = NodePath("../Anchor")
 idle_state = NodePath("../Idle")
+ray_collision = NodePath("../../RayCollision")
+clearance = NodePath("../../Clearance")
 
 [node name="Anchor" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
 script = ExtResource("7_jgyrp")

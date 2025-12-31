@@ -13,7 +13,6 @@ func enter() -> void:
 	parent.velocity = Vector2.ZERO
 	parent.kunai_count += 1
 	parent.kunai_cooldown_timer.start()
-	Global.camera_mode = Global.CameraMode.KUNAI
 
 func process_physics(delta: float) -> State:
 	parent.velocity = Vector2.ZERO

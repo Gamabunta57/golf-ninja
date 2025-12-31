@@ -15,7 +15,7 @@ func enter() -> void:
 	original_rotation = parent.rotation
 	
 	parent.rotation = Global.kunai_normal.angle() + (PI / 2)
-	parent.global_position -= Global.kunai_normal * 7
+	#parent.global_position -= Global.kunai_normal * 7
 	
 
 func process_physics(delta: float) -> State:

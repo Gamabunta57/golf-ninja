@@ -29,6 +29,7 @@ var can_kunai: bool = false
 var kunai_cooldown_ongoing: bool = false
 var kunai_is_anchored: bool = false
 var kunai_normal: Vector2
+var kunai_idle_position: Vector2 = Vector2.ZERO
 
 #CAMERA LOGIC
 enum CameraMode { PLAYER, BALL, KUNAI, PREVIEW, HURT }

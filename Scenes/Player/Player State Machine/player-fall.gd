@@ -38,6 +38,7 @@ func process_physics(delta: float) -> State:
 	
 	movements.flip_direction(inputs)
 	
+	
 	if inputs.get_jump_input_just_pressed():
 			if parent.kunai_count < parent.max_kunai_count and not Global.kunai_cooldown_ongoing:
 				return kunai_state

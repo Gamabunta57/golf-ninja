@@ -61,6 +61,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	#print(state)
+	Global.kunai_idle_position = global_position + Vector2(0,-50)
+	
 	if not inputs.get_shooting_input():
 		cancel_shooting = false
 	
