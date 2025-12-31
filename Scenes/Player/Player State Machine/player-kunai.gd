@@ -13,6 +13,7 @@ func enter() -> void:
 	parent.velocity = Vector2.ZERO
 	parent.kunai_count += 1
 	parent.kunai_cooldown_timer.start()
+	Global.release_kunai = false
 
 func process_physics(delta: float) -> State:
 	parent.velocity = Vector2.ZERO
@@ -21,6 +22,9 @@ func process_physics(delta: float) -> State:
 		return teleport_state
 		
 	if inputs.get_jump_just_release():
+		Global.release_kunai = true
+	
+	if inputs.get_jump_input_just_pressed():
 		if parent.is_on_floor():
 			return idle_state
 		else:

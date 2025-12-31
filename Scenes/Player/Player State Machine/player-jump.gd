@@ -22,12 +22,16 @@ func enter() -> void:
 	parent.jump_count += 1
 	time_elapsed = 0.0
 	parent.is_jumping = true
+	parent.is_jump_released = false
 
 func process_physics(delta: float) -> State:
 	
 	# 1. Update Jump Timer
 	time_elapsed += delta
 	
+	if not inputs.get_jump_input():
+		parent.is_jump_released = true
+		
 	# 2. Apply Velocity from Curve
 	if time_elapsed < max_jump_time:
 		parent.velocity.y = -(time_elapsed / max_jump_time) * max_jump_speed

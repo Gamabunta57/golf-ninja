@@ -43,6 +43,7 @@ shape = SubResource("CircleShape2D_2nws0")
 script = ExtResource("2_2nws0")
 
 [node name="Inputs" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("3_r0t48")
 
 [node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]

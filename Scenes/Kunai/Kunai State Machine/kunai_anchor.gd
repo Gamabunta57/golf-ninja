@@ -8,7 +8,7 @@ func enter() -> void:
 	parent.state = "kunai anchor state"
 	parent.velocity = Vector2.ZERO
 	Global.kunai_is_anchored = true
-	print(Global.player_body.rotation)
+	#print(Global.player_body.rotation)
 	parent.velocity = Vector2.ZERO
 	time_ellapsed = 0.0
 

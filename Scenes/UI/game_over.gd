@@ -7,5 +7,5 @@ func _ready() -> void:
 	
 func _process(delta):
 	if Input.is_action_just_pressed("jump"):
-		print("go back")
+		#print("go back")
 		get_tree().change_scene_to_packed(world)

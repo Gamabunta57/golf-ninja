@@ -3,6 +3,7 @@ extends State
 @export var fall_state: State
 @export var hurt_state: State
 @export var idle_state: State
+@export var move_state: State
 
 var original_rotation : float = 0.0
 
@@ -21,12 +22,18 @@ func enter() -> void:
 func process_physics(delta: float) -> State:
 	parent.velocity = Vector2.ZERO
 	
-	if inputs.get_jump_just_release():
+	if not inputs.get_jump_input():
 		if parent.is_on_floor():
 			return idle_state
 		else:
 			return fall_state
-	
+			
+	if sign(inputs.get_x_input()) != Global.direction and inputs.get_x_input() != 0:
+		if parent.is_on_floor():
+			return move_state
+		else:
+			return fall_state
+		
 	parent.move_and_slide()
 	
 	return null

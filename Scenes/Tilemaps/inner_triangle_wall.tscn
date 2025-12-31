@@ -20,8 +20,8 @@ polygon = PackedVector2Array(199, 73, 217, 104, 199, 136, -199, 136, -217, 105, 
 collision_layer = 0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
-position = Vector2(-1, 0)
-polygon = PackedVector2Array(-125, 75, -125, 136, 0, 136, 116, 138, 117, 77, 3, -150)
+position = Vector2(0, -10)
+polygon = PackedVector2Array(-125, 75, -125, 136, 1, 211, 132, 135, 117, 77, 3, -150)
 
 [node name="Inner" type="Sprite2D" parent="."]
 texture = ExtResource("2_1mho8")

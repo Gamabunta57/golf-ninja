@@ -48,6 +48,7 @@ var grapple_cooldown_ongoing : bool = false
 var kunai_count: int = 0
 @export var max_kunai_count: int = 20
 var kunai_cooldown_ongoing : bool = false
+var is_jump_released: bool = true
 
 func _ready() -> void:
 	get_tree().call_group('UI', 'set_health')
@@ -83,7 +84,7 @@ func _on_ball_detection_body_entered(body: Node2D) -> void:
 	if body.outside_bin:
 		is_ball_nearby = true
 		ball_body = body
-		print(is_ball_nearby)
+		#print(is_ball_nearby)
 		SignalBus.ball_in_range.emit(body, true)
 
 func _on_ball_detection_body_exited(body: Node2D) -> void:

@@ -33,7 +33,7 @@ func _process(delta: float) -> void:
 		return
 	
 	if Input.is_action_just_pressed("shooting"):
-		print("should heal")
+		#print("should heal")
 		Global.player_health += 1
 		Global.total_money -= life_cost
 		max_sales -= 1

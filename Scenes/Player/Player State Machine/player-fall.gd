@@ -38,16 +38,19 @@ func process_physics(delta: float) -> State:
 	
 	movements.flip_direction(inputs)
 	
-	
-	if inputs.get_jump_input_just_pressed():
-			if parent.kunai_count < parent.max_kunai_count and not Global.kunai_cooldown_ongoing:
-				return kunai_state
-	
 	if inputs.get_jump_input() and parent.should_coyote and parent.can_jump:
 		return jump_state
 	
 	if not parent.should_coyote:
 		parent.can_jump = false
+	
+	if not inputs.get_jump_input():
+		parent.is_jump_released = true
+		
+	if inputs.get_jump_input() and parent.is_jump_released:
+		if parent.kunai_count < parent.max_kunai_count and not Global.kunai_cooldown_ongoing:
+			parent.is_jump_released = false
+			return kunai_state
 	
 	if parent.is_on_floor() and parent.get_floor_angle() > 1:
 			return slide_state

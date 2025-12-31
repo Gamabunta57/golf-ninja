@@ -80,9 +80,6 @@ visible = false
 position = Vector2(0, -24.75)
 shape = SubResource("RectangleShape2D_glx4g")
 
-[node name="Inputs" type="Node" parent="."]
-script = ExtResource("4_megsn")
-
 [node name="Timers" type="Node2D" parent="."]
 
 [node name="HurtTimer" type="Timer" parent="Timers"]
@@ -102,6 +99,9 @@ wait_time = 0.5
 
 [node name="Movements" type="Node" parent="."]
 script = ExtResource("4_yoq75")
+
+[node name="Inputs" type="Node" parent="."]
+script = ExtResource("4_megsn")
 
 [node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
 script = ExtResource("3_gntrk")
@@ -156,11 +156,12 @@ idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
 teleport_state = NodePath("../Teleport")
 
-[node name="Teleport" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "hurt_state", "idle_state")]
+[node name="Teleport" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "hurt_state", "idle_state", "move_state")]
 script = ExtResource("11_yb677")
 fall_state = NodePath("../Fall")
 hurt_state = NodePath("../Hurt")
 idle_state = NodePath("../Idle")
+move_state = NodePath("../Move")
 
 [node name="Grappling" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "hurt_state", "idle_state", "move_state", "rewind_state", "wall_collider")]
 script = ExtResource("8_0u84n")
