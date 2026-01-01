@@ -46,6 +46,7 @@ func process_physics(delta: float) -> State:
 		Global.kunai_normal = ray_collision.get_collision_normal()
 		parent.kunai_anchored = true
 		Global.kunai_position = ray_collision.get_collision_point()
+		Global.kunai_anchor_object = ray_collision.get_collider()
 		return anchor_state
 	
 	clearance.force_raycast_update()

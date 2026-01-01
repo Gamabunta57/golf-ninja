@@ -31,6 +31,8 @@ var kunai_is_anchored: bool = false
 var kunai_normal: Vector2
 var kunai_idle_position: Vector2 = Vector2.ZERO
 var release_kunai: bool = false
+var kunai_anchor_object: Node2D = null
+var rotate_platform: bool = false
 
 #CAMERA LOGIC
 enum CameraMode { PLAYER, BALL, KUNAI, PREVIEW, HURT }

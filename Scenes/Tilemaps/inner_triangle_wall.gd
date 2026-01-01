@@ -28,9 +28,13 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	#$Area2D.global_rotation = 0
 	
-	if Input.is_action_just_pressed("shooting") and player_inside and not is_rotating and not Global.player_shooting:
-		start_rotation_animation()
-
+	#if Input.is_action_just_pressed("shooting") and player_inside and not is_rotating and not Global.player_shooting:
+		#start_rotation_animation()
+	if Global.rotate_platform:
+		if Global.kunai_anchor_object == self:
+			start_rotation_animation()
+			Global.rotate_platform = false # Reset the flag
+	
 	if is_rotating:
 		process_rotation_animation(delta)
 
