@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://djvi8dyyfdrkw"]
+[gd_scene load_steps=20 format=3 uid="uid://djvi8dyyfdrkw"]
 
 [ext_resource type="Script" uid="uid://eojnyblkkyhe" path="res://Scenes/Player/player.gd" id="1_kyqiw"]
 [ext_resource type="Texture2D" uid="uid://dm443rurrb8q0" path="res://Assets/player.png" id="1_rpqav"]
@@ -10,10 +10,8 @@
 [ext_resource type="Script" uid="uid://caxuxbrjh180f" path="res://Scenes/Player/Player State Machine/player-fall.gd" id="5_5ixxa"]
 [ext_resource type="Script" uid="uid://cvifrmoiqkhmr" path="res://Scenes/Player/Player State Machine/player-move.gd" id="5_52ee3"]
 [ext_resource type="Script" uid="uid://b3p30u3docj7x" path="res://Scenes/Player/Player State Machine/player-jump.gd" id="5_nn08x"]
-[ext_resource type="Script" uid="uid://bhjsifxk5x7me" path="res://Scenes/Player/Player State Machine/player-grappling.gd" id="8_0u84n"]
 [ext_resource type="Script" uid="uid://cqym3jl820dxf" path="res://Scenes/Player/Player State Machine/player-landing.gd" id="8_bhhdu"]
 [ext_resource type="Script" uid="uid://2cjjy7d53gob" path="res://Scenes/Player/Player State Machine/player-kunai.gd" id="10_1e6p3"]
-[ext_resource type="Script" uid="uid://dxr0hfjxmcism" path="res://Scenes/Player/Player State Machine/player-rewind.gd" id="10_spxdj"]
 [ext_resource type="Script" uid="uid://1tiwoc1g5a47" path="res://Scenes/Player/Player State Machine/player-hurt.gd" id="11_ksbbd"]
 [ext_resource type="Script" uid="uid://3fu2itljt17n" path="res://Scenes/Player/Player State Machine/player teleport.gd" id="11_yb677"]
 [ext_resource type="Script" uid="uid://ge0e831jnq7n" path="res://Scenes/Player/Player State Machine/player-shooting.gd" id="13_miouo"]
@@ -95,7 +93,7 @@ wait_time = 0.5
 wait_time = 0.7
 
 [node name="KunaiCoolDown" type="Timer" parent="Timers"]
-wait_time = 0.5
+wait_time = 0.7
 
 [node name="Movements" type="Node" parent="."]
 script = ExtResource("4_yoq75")
@@ -138,7 +136,7 @@ slide_state = NodePath("../Slide")
 [node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "grappling_state", "kunai_state", "idle_state", "move_state", "landing_state", "hurt_state", "slide_state", "coyote_timer")]
 script = ExtResource("5_5ixxa")
 jump_state = NodePath("../Jump")
-grappling_state = NodePath("../Grappling")
+grappling_state = NodePath("")
 kunai_state = NodePath("../Kunai")
 idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
@@ -156,29 +154,13 @@ idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
 teleport_state = NodePath("../Teleport")
 
-[node name="Teleport" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "hurt_state", "idle_state", "move_state")]
+[node name="Teleport" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "hurt_state", "idle_state", "move_state", "original_parent")]
 script = ExtResource("11_yb677")
 fall_state = NodePath("../Fall")
 hurt_state = NodePath("../Hurt")
 idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
-
-[node name="Grappling" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "hurt_state", "idle_state", "move_state", "rewind_state", "wall_collider")]
-script = ExtResource("8_0u84n")
-fall_state = NodePath("../Fall")
-hurt_state = NodePath("../Hurt")
-idle_state = NodePath("../Idle")
-move_state = NodePath("../Move")
-rewind_state = NodePath("../Rewind")
-wall_collider = NodePath("../../Flippables/WallCollision")
-fall_gravity_multiplier = 0.0
-
-[node name="Rewind" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "hurt_state", "idle_state", "move_state")]
-script = ExtResource("10_spxdj")
-fall_state = NodePath("../Fall")
-hurt_state = NodePath("../Hurt")
-idle_state = NodePath("../Idle")
-move_state = NodePath("../Move")
+original_parent = NodePath("..")
 
 [node name="Landing" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "jump_state", "move_state", "fall_state", "hurt_state", "slide_state")]
 script = ExtResource("8_bhhdu")
@@ -205,7 +187,7 @@ move_state = NodePath("../Move")
 script = ExtResource("15_esmjy")
 jump_state = NodePath("../Jump")
 move_state = NodePath("../Move")
-grappling_state = NodePath("../Grappling")
+grappling_state = NodePath("")
 idle_state = NodePath("../Idle")
 fall_state = NodePath("../Fall")
 hurt_state = NodePath("../Hurt")

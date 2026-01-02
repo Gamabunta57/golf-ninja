@@ -11,7 +11,7 @@
 [ext_resource type="Script" uid="uid://g8r0yuq02t5x" path="res://Scenes/Kunai/Kunai State Machine/kunai_anchor.gd" id="7_jgyrp"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2nws0"]
-radius = 5.0
+radius = 2.0
 
 [node name="Kunai" type="CharacterBody2D" node_paths=PackedStringArray("sprite")]
 collision_layer = 4

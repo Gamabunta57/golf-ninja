@@ -12,7 +12,7 @@ var total_money: int = 0
 
 var direction: int = 1
 var rope_points: PackedVector2Array = PackedVector2Array([])
-
+var is_clipping_world : bool = false
 
 var bin_position: Vector2 = Vector2.ZERO
 
@@ -30,7 +30,10 @@ var kunai_cooldown_ongoing: bool = false
 var kunai_is_anchored: bool = false
 var kunai_normal: Vector2
 var kunai_idle_position: Vector2 = Vector2.ZERO
+var kunai_anchor_object: Node2D
+var rotate_platform: bool = false
 var release_kunai: bool = false
+var kunai_stop_throw: bool = false
 
 #CAMERA LOGIC
 enum CameraMode { PLAYER, BALL, KUNAI, PREVIEW, HURT }

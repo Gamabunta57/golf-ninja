@@ -15,7 +15,7 @@ var anchor_position: Vector2 = Vector2.ZERO
 var kunai_position: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
-	state_machine.init(self)
+	state_machine.init(self, inputs, movements)
 
 func _unhandled_input(event: InputEvent) -> void:
 	state_machine.process_input(event)

@@ -12,6 +12,8 @@ var target_angle: float = 0.0
 @export var rotation_curve: Curve
 @export var rotation_duration: float = 1.0
 
+var stop_rotation: bool = false
+
 func _ready() -> void:
 	rng.randomize()
 	
@@ -28,10 +30,23 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	#$Area2D.global_rotation = 0
 	
-	if Input.is_action_just_pressed("shooting") and player_inside and not is_rotating and not Global.player_shooting:
-		start_rotation_animation()
-
+	#if Input.is_action_just_pressed("shooting") and player_inside and not is_rotating and not Global.player_shooting:
+		#start_rotation_animation()
+	if Global.rotate_platform:
+		if Global.kunai_anchor_object == self:
+			start_rotation_animation()
+			Global.rotate_platform = false # Reset the flag
+	
+	if Global.is_clipping_world:
+		print("should stop")
+		stop_rotation = true
+	
+	if stop_rotation and not player_inside:
+		stop_rotation = false
+		
 	if is_rotating:
+		if stop_rotation:
+			return
 		process_rotation_animation(delta)
 
 func start_rotation_animation() -> void:
