@@ -3,7 +3,7 @@ extends State
 @export var attack_state: State
 @export var idle_state: State
 @export var chase_state: State
-@export var speed: float = 100.0
+@export var speed: float = 300.0
 @export var navigation_agent: NavigationAgent2D
 
 func enter() -> void:

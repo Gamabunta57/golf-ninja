@@ -6,7 +6,7 @@ extends State
 @export var move_state: State
 @export var teleport_state: State
 
-@export var kunai_max_reach: float = 250
+@export var kunai_max_reach: float = 350
 
 var kunai_distance: float = 0.0
 

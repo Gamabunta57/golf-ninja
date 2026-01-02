@@ -24,6 +24,7 @@ var ready_to_fire: bool = true
 
 func _ready() -> void:
 	state_machine.init(self)
+	await get_tree().process_frame
 	origin_position = global_position
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -49,4 +50,3 @@ func _on_attack_zone_body_exited(body: Node2D) -> void:
 func _on_attack_cooldown_timeout() -> void:
 	ready_to_fire = true
 	attack_cooldown_timer.start()
-	

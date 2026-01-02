@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://dcjbahndyneo0"]
+
+[ext_resource type="Script" uid="uid://5v78t2h7be1l" path="res://Scenes/Drone/drone_tile.gd" id="1_1fub5"]
+[ext_resource type="PackedScene" uid="uid://b1id28axcsihs" path="res://Scenes/Drone/drone.tscn" id="2_ikk3q"]
+
+[node name="Drone-Tile" type="Node2D"]
+script = ExtResource("1_1fub5")
+drone = ExtResource("2_ikk3q")

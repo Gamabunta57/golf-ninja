@@ -3,7 +3,7 @@ extends State
 @export var anchor_state: State
 @export var idle_state: State
 
-@export var speed: float = 800
+@export var speed: float = 1200
 @export var deceleration: float = 100
 @export var gravity_multiplier: float = 2
 
@@ -26,7 +26,7 @@ func enter() -> void:
 	if inputs.get_x_input() == 0 and inputs.get_y_input() == 0:
 		intitial_angle = parent.kunai_angle * Vector2(Global.direction, 1)
 	else:
-		intitial_angle = Vector2(inputs.get_x_input(), -inputs.get_y_input())
+		intitial_angle = Vector2(inputs.get_x_input(), -inputs.get_y_input()).normalized()
 		
 	parent.velocity = intitial_angle * speed
 	

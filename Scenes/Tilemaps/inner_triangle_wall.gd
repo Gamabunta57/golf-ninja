@@ -1,5 +1,7 @@
 extends StaticBody2D
 
+@onready var nav_region: NavigationRegion2D = $NavigationRegion2D
+
 var rng = RandomNumberGenerator.new()
 var player_inside: bool = false
 
@@ -11,6 +13,8 @@ var target_angle: float = 0.0
 
 @export var rotation_curve: Curve
 @export var rotation_duration: float = 1.0
+@export var ball: PackedScene
+@export var sentinel: PackedScene
 
 var stop_rotation: bool = false
 
@@ -26,6 +30,17 @@ func _ready() -> void:
 	
 	var index = rng.rand_weighted(weights)
 	rotation_degrees = angles[index]
+	
+	if rotation_degrees == 0:
+		if rng.randi_range(1, 5) == 1:
+			var new_ball = ball.instantiate()
+			get_tree().current_scene.add_child(new_ball)
+			new_ball.global_position = global_position
+		
+		if rng.randi_range(1, 10) == 1:
+			var new_sentinel = sentinel.instantiate()
+			get_tree().current_scene.add_child(new_sentinel)
+			new_sentinel.global_position = global_position
 
 func _physics_process(delta: float) -> void:
 	#$Area2D.global_rotation = 0
@@ -38,7 +53,7 @@ func _physics_process(delta: float) -> void:
 			Global.rotate_platform = false # Reset the flag
 	
 	if Global.is_clipping_world:
-		print("should stop")
+		#print("should stop")
 		stop_rotation = true
 	
 	if stop_rotation and not player_inside:
@@ -74,8 +89,8 @@ func process_rotation_animation(delta: float) -> void:
 		# Optional: Ensure it lands exactly on the target to avoid float drift
 		rotation_degrees = target_angle
 
-func _on_area_2d_body_entered(body: Node2D) -> void:
+func _on_player_detection_body_entered(body: Node2D) -> void:
 	player_inside = true
 
-func _on_area_2d_body_exited(body: Node2D) -> void:
+func _on_player_detection_body_exited(body: Node2D) -> void:
 	player_inside = false

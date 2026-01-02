@@ -18,7 +18,7 @@ func process_physics(delta: float) -> State:
 		parent.ready_to_fire = false
 		
 		var new_bullet = bullet.instantiate()
-		parent.bullets.add_child(new_bullet)
+		parent.get_tree().current_scene.add_child(new_bullet)
 		new_bullet.global_position = parent.global_position 
 		
 		var bullet_direction = (Global.player_body.global_position - Vector2(0,25) - parent.global_position).normalized()

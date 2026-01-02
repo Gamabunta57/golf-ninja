@@ -14,10 +14,10 @@
 radius = 25.019993
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_n202n"]
-radius = 335.096
+radius = 567.00793
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_uuft2"]
-radius = 124.004
+radius = 283.00177
 
 [node name="Drone" type="CharacterBody2D" node_paths=PackedStringArray("target_check", "attack_cooldown_timer")]
 z_index = 2
@@ -65,7 +65,7 @@ navigation_agent = NodePath("../NavigationAgent2D")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 path_metadata_flags = 0
-avoidance_mask = 0
+debug_enabled = true
 
 [node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
 script = ExtResource("3_x74uf")

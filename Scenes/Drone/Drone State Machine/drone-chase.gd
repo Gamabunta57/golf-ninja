@@ -2,7 +2,7 @@ extends State
 
 @export var attack_state: State
 @export var idle_state: State
-@export var speed: float = 100.0
+@export var speed: float = 200.0
 @export var min_distance_to_target: float = 10
 @export var navigation_agent: NavigationAgent2D
 
