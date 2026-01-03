@@ -33,6 +33,7 @@ func enter() -> void:
 		#intitial_angle = Vector2(inputs.get_x_input(), -inputs.get_y_input()).normalized()
 		
 	parent.velocity = intitial_angle * speed
+	parent.light.show()
 	
 
 func process_physics(delta: float) -> State:
@@ -72,4 +73,5 @@ func process_physics(delta: float) -> State:
 
 func exit() -> void:
 	parent.sprite.hide()
+	parent.light.hide()
 	time_ellapsed = 0.0

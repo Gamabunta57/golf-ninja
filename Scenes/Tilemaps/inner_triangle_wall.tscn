@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://sm8r31tgwux8"]
+[gd_scene load_steps=8 format=3 uid="uid://sm8r31tgwux8"]
 
 [ext_resource type="Script" uid="uid://bysek2i573xtr" path="res://Scenes/Tilemaps/inner_triangle_wall.gd" id="1_1mho8"]
 [ext_resource type="Texture2D" uid="uid://8y7mdflsy8ps" path="res://Assets/Moving tilemap 2/inner.png" id="2_1mho8"]
@@ -12,6 +12,9 @@ point_count = 3
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1mho8"]
 radius = 105.0
 height = 436.0
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_s46vh"]
+polygon = PackedVector2Array(-199, 73, 199, 73, 217, 104, 199, 136, -199, 136, -217, 105)
 
 [node name="Inner-triangle-wall" type="StaticBody2D"]
 collision_layer = 2
@@ -34,6 +37,9 @@ collision_layer = 0
 position = Vector2(0, 105)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_1mho8")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("OccluderPolygon2D_s46vh")
 
 [connection signal="body_entered" from="PlayerDetection" to="." method="_on_player_detection_body_entered"]
 [connection signal="body_exited" from="PlayerDetection" to="." method="_on_player_detection_body_exited"]

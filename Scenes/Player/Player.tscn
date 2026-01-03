@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://djvi8dyyfdrkw"]
+[gd_scene load_steps=23 format=3 uid="uid://djvi8dyyfdrkw"]
 
 [ext_resource type="Script" uid="uid://eojnyblkkyhe" path="res://Scenes/Player/player.gd" id="1_kyqiw"]
 [ext_resource type="Texture2D" uid="uid://dm443rurrb8q0" path="res://Assets/player.png" id="1_rpqav"]
@@ -16,6 +16,9 @@
 [ext_resource type="Script" uid="uid://3fu2itljt17n" path="res://Scenes/Player/Player State Machine/player teleport.gd" id="11_yb677"]
 [ext_resource type="Script" uid="uid://ge0e831jnq7n" path="res://Scenes/Player/Player State Machine/player-shooting.gd" id="13_miouo"]
 [ext_resource type="Script" uid="uid://ogfr5i1gg671" path="res://Scenes/Player/Player State Machine/player-slide.gd" id="15_esmjy"]
+[ext_resource type="Script" uid="uid://c7yfo5eaypmm" path="res://Scenes/Player/player_light.gd" id="18_0objx"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6tu5v"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kyqiw"]
 radius = 24.0
@@ -23,6 +26,18 @@ height = 100.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_miouo"]
 size = Vector2(48, 34)
+
+[sub_resource type="Gradient" id="Gradient_spxdj"]
+offsets = PackedFloat32Array(0.9979839, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.030241935, 0.030241935, 0.030241935, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_0objx"]
+gradient = SubResource("Gradient_spxdj")
+width = 2048
+height = 2028
+fill = 1
+fill_from = Vector2(0.50213677, 0.4957265)
+fill_to = Vector2(0.51282054, 0)
 
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("wall_collider", "flippables", "grapple_cooldown_timer", "kunai_cooldown_timer") groups=["Player"]]
 collision_mask = 5250
@@ -41,6 +56,10 @@ grapple_cooldown_timer = NodePath("Timers/GrappleCoolDown")
 kunai_cooldown_timer = NodePath("Timers/KunaiCoolDown")
 
 [node name="Flippables" type="Node2D" parent="."]
+
+[node name="animations" type="AnimatedSprite2D" parent="Flippables"]
+visible = false
+sprite_frames = SubResource("SpriteFrames_6tu5v")
 
 [node name="WallCollision" type="RayCast2D" parent="Flippables"]
 position = Vector2(0, -16)
@@ -120,10 +139,9 @@ move_state = NodePath("../Move")
 hurt_state = NodePath("../Hurt")
 slide_state = NodePath("../Slide")
 
-[node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "grappling_state", "kunai_state", "idle_state", "move_state", "landing_state", "hurt_state", "slide_state", "coyote_timer")]
+[node name="Fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "kunai_state", "idle_state", "move_state", "landing_state", "hurt_state", "slide_state", "coyote_timer")]
 script = ExtResource("5_5ixxa")
 jump_state = NodePath("../Jump")
-grappling_state = NodePath("")
 kunai_state = NodePath("../Kunai")
 idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
@@ -170,15 +188,24 @@ script = ExtResource("13_miouo")
 idle_state = NodePath("../Idle")
 move_state = NodePath("../Move")
 
-[node name="Slide" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "move_state", "grappling_state", "idle_state", "fall_state", "hurt_state", "wall_collider")]
+[node name="Slide" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "move_state", "idle_state", "fall_state", "hurt_state", "wall_collider")]
 script = ExtResource("15_esmjy")
 jump_state = NodePath("../Jump")
 move_state = NodePath("../Move")
-grappling_state = NodePath("")
 idle_state = NodePath("../Idle")
 fall_state = NodePath("../Fall")
 hurt_state = NodePath("../Hurt")
 wall_collider = NodePath("../../Flippables/WallCollision")
+
+[node name="PlayerLight" type="PointLight2D" parent="."]
+visible = false
+position = Vector2(0, -50)
+enabled = false
+color = Color(1, 1, 0, 1)
+energy = 100.0
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_0objx")
+script = ExtResource("18_0objx")
 
 [connection signal="body_entered" from="BallDetection" to="." method="_on_ball_detection_body_entered"]
 [connection signal="body_exited" from="BallDetection" to="." method="_on_ball_detection_body_exited"]

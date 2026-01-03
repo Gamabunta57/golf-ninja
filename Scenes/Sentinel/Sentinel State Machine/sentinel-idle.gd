@@ -16,9 +16,9 @@ var player: CharacterBody2D
 func enter() -> void:
 	super()
 	parent.state = "sentinel idle state"
-
 	parent.velocity.x = 0
-	player = get_tree().get_first_node_in_group("Player")
+	player = Global.player_body
+	idle_timer.start()
 
 func exit() -> void:
 	idle_timer.stop()
@@ -31,14 +31,14 @@ func process_physics(delta: float) -> State:
 	if !parent.is_on_floor():
 		return fall_state
 	
-	var distance = parent.global_position.distance_to(player.global_position)
-	
-	if distance < detection_range:
-		if idle_timer.time_left == 0.0:
-			idle_timer.start()
-	else:
-		if idle_timer.time_left > 0.0:
-			idle_timer.stop()
+	#var distance = parent.global_position.distance_to(player.global_position)
+	#
+	#if distance < detection_range:
+		#if idle_timer.time_left == 0.0:
+			#idle_timer.start()
+	#else:
+		#if idle_timer.time_left > 0.0:
+			#idle_timer.stop()
 	
 	
 	if player_check.is_colliding() and not parent.attack_cooldown:

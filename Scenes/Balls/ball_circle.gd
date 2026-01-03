@@ -37,14 +37,14 @@ var ball_radius: float = 1.0
 @export var max_force: float = 200
 @export var strength: float = 12
 @export var max_preview_distance: float = 1000.0 
-@export var preview_max_points: int = 64
+@export var preview_max_points: int = 512
 @export var trajectory_color: Color = Color(1, 1, 1)    # Base color
 @export var alpha_increment: float = 0.05
 @export var par_distance: float = 300
 @export var par_cost: float = 10
 @export var collison_velocity_threshold: float = 100
 @export var min_line_width: float = 1.0
-@export var max_line_width: float = 5.0
+@export var max_line_width: float = 10.0
 
 var last_position: Vector2
 
@@ -98,10 +98,10 @@ func _physics_process(delta: float) -> void:
 	
 	#print(int(linear_velocity.length()))
 	# collides with enemies if airborn only
-	if ground_check.is_colliding():
-		set_collision_mask_value(7, false)
-	else:
-		set_collision_mask_value(7, true)
+	#if ground_check.is_colliding():
+		#set_collision_mask_value(7, false)
+	#else:
+		#set_collision_mask_value(7, true)
 	
 	if ball_body == self and outside_bin:
 		last_velocity = linear_velocity.length()
@@ -126,7 +126,7 @@ func _physics_process(delta: float) -> void:
 		if last_position:
 			var target_ball_diff_x = abs(self.global_position.x - last_position.x)
 			var target_ball_diff_y = abs(self.global_position.y - last_position.y)
-			var threshold : float = self.linear_velocity.length() / 50
+			var threshold : float = self.linear_velocity.length() / 10
 			
 			if target_ball_diff_x + target_ball_diff_y < threshold:
 				Global.camera_mode = Global.CameraMode.BALL

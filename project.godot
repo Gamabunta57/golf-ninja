@@ -123,7 +123,11 @@ shooting={
 
 [rendering]
 
+occlusion_culling/bvh_build_quality=1
+occlusion_culling/jitter_projection=false
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+2d/shadow_atlas/size=512
+occlusion_culling/occlusion_rays_per_thread=128
 environment/defaults/default_clear_color=Color(0.78352344, 0.7835234, 0.7835234, 1)

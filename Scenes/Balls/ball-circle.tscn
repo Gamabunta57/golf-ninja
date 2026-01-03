@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dvgf2y0bh4flh"]
+[gd_scene load_steps=13 format=3 uid="uid://dvgf2y0bh4flh"]
 
 [ext_resource type="Texture2D" uid="uid://cxrd7odlckoo0" path="res://Assets/ball.png" id="1_2r1ht"]
 [ext_resource type="Script" uid="uid://yxwpuynrmy1q" path="res://Scenes/Balls/ball_circle.gd" id="1_pfq2l"]
@@ -6,6 +6,7 @@
 [ext_resource type="FontFile" uid="uid://cdhh8d4afh4kr" path="res://Assets/Fonts/Tiny5-Regular.ttf" id="3_u8r6l"]
 [ext_resource type="Script" uid="uid://cr4tr1pwgi5gy" path="res://Scenes/Balls/tooltip.gd" id="3_v1uin"]
 [ext_resource type="Script" uid="uid://cpfblrr2almno" path="res://Scenes/Balls/sound.gd" id="6_ob887"]
+[ext_resource type="Script" uid="uid://c7yfo5eaypmm" path="res://Scenes/Player/player_light.gd" id="8_hlhdp"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_pfq2l"]
 friction = 10.0
@@ -27,9 +28,21 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 anti_aliasing = false
 
+[sub_resource type="Gradient" id="Gradient_mvbuu"]
+offsets = PackedFloat32Array(0.99596775, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_5hdjf"]
+gradient = SubResource("Gradient_mvbuu")
+width = 1024
+height = 1024
+fill = 1
+fill_from = Vector2(0.49786323, 0.4957265)
+fill_to = Vector2(0.4957265, 0)
+
 [node name="BallCircle" type="RigidBody2D" node_paths=PackedStringArray("collision_shape", "ground_check") groups=["Ball"]]
 collision_layer = 16
-collision_mask = 16482
+collision_mask = 16418
 mass = 0.4
 physics_material_override = SubResource("PhysicsMaterial_pfq2l")
 gravity_scale = 0.5
@@ -39,8 +52,6 @@ max_contacts_reported = 1
 script = ExtResource("1_pfq2l")
 collision_shape = NodePath("CollisionShape2D")
 ground_check = NodePath("GroundCheck")
-alpha_increment = 0.08
-collison_velocity_threshold = 500.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 visible = false
@@ -137,5 +148,14 @@ vertical_alignment = 1
 
 [node name="Sound" type="Node2D" parent="."]
 script = ExtResource("6_ob887")
+
+[node name="PlayerLight" type="PointLight2D" parent="."]
+visible = false
+enabled = false
+color = Color(0, 1, 1, 1)
+energy = 100.0
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_5hdjf")
+script = ExtResource("8_hlhdp")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

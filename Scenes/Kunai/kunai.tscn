@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dqccr4yr37v3b"]
+[gd_scene load_steps=14 format=3 uid="uid://dqccr4yr37v3b"]
 
 [ext_resource type="Script" uid="uid://baf7ebt1ve7xl" path="res://Scenes/Kunai/kunai.gd" id="1_1iiph"]
 [ext_resource type="Script" uid="uid://bj5v5m40sjk23" path="res://Scenes/Player/Player State Machine/player-movements.gd" id="2_2nws0"]
@@ -9,17 +9,31 @@
 [ext_resource type="Script" uid="uid://dlkoidqyqxglp" path="res://Scenes/Kunai/Kunai State Machine/kunai_idle.gd" id="5_xokmu"]
 [ext_resource type="Script" uid="uid://x6j3bhguoxhl" path="res://Scenes/Kunai/Kunai State Machine/kunai_throw.gd" id="6_rdqbq"]
 [ext_resource type="Script" uid="uid://g8r0yuq02t5x" path="res://Scenes/Kunai/Kunai State Machine/kunai_anchor.gd" id="7_jgyrp"]
+[ext_resource type="Script" uid="uid://c7yfo5eaypmm" path="res://Scenes/Player/player_light.gd" id="11_rdqbq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2nws0"]
 radius = 2.0
 
-[node name="Kunai" type="CharacterBody2D" node_paths=PackedStringArray("sprite")]
+[sub_resource type="Gradient" id="Gradient_spxdj"]
+offsets = PackedFloat32Array(0.9979839, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.030241935, 0.030241935, 0.030241935, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_hmrol"]
+gradient = SubResource("Gradient_spxdj")
+width = 512
+height = 512
+fill = 1
+fill_from = Vector2(0.50213677, 0.4957265)
+fill_to = Vector2(0.51282054, 0)
+
+[node name="Kunai" type="CharacterBody2D" node_paths=PackedStringArray("sprite", "light")]
 collision_layer = 4
 collision_mask = 2
 slide_on_ceiling = false
 floor_max_angle = 0.0
 script = ExtResource("1_1iiph")
 sprite = NodePath("Kunai")
+light = NodePath("PlayerLight")
 
 [node name="Kunai" type="Sprite2D" parent="."]
 scale = Vector2(0.1, 0.1)
@@ -65,3 +79,13 @@ clearance = NodePath("../../Clearance")
 [node name="Anchor" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
 script = ExtResource("7_jgyrp")
 idle_state = NodePath("../Idle")
+
+[node name="PlayerLight" type="PointLight2D" parent="."]
+visible = false
+position = Vector2(0, -50)
+enabled = false
+color = Color(1, 1, 0, 1)
+energy = 100.0
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_hmrol")
+script = ExtResource("11_rdqbq")

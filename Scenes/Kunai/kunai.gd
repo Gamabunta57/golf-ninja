@@ -6,6 +6,7 @@ extends CharacterBody2D
 
 @export var player: CharacterBody2D
 @export var sprite: Sprite2D
+@export var light: Light2D
 
 var state: String
 var kunai_origin_offset: Vector2 = Vector2(0,-50)
@@ -15,6 +16,7 @@ var anchor_position: Vector2 = Vector2.ZERO
 var kunai_position: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
+	light.hide()
 	state_machine.init(self, inputs, movements)
 
 func _unhandled_input(event: InputEvent) -> void:
