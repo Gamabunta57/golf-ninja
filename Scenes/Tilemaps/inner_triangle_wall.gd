@@ -36,11 +36,13 @@ func _ready() -> void:
 			var new_ball = ball.instantiate()
 			get_tree().current_scene.add_child(new_ball)
 			new_ball.global_position = global_position
+			return
 		
 		if rng.randi_range(1, 10) == 1:
 			var new_sentinel = sentinel.instantiate()
 			get_tree().current_scene.add_child(new_sentinel)
 			new_sentinel.global_position = global_position
+			return
 
 func _physics_process(delta: float) -> void:
 	#$Area2D.global_rotation = 0

@@ -57,6 +57,8 @@ script = ExtResource("3_tlods")
 
 [node name="Tooltip" type="Node2D" parent="."]
 unique_name_in_owner = true
+z_index = 4
+z_as_relative = false
 position = Vector2(0, 6)
 scale = Vector2(2, 2)
 script = ExtResource("3_v1uin")

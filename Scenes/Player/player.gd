@@ -26,6 +26,7 @@ var grapple_throwing_iteration: int = 0
 var enemy_position: Vector2
 var is_hidden: bool = false
 var is_ball_nearby: bool = false
+var nearby_balls: Array[RigidBody2D] = []
 var ball_body: Node2D
 var cancel_shooting: bool = false
 
@@ -82,24 +83,32 @@ func _on_damage_received(origin_position) -> void:
 
 func _on_ball_detection_body_entered(body: Node2D) -> void:
 	if body.outside_bin:
-		is_ball_nearby = true
-		ball_body = body
-		#print(is_ball_nearby)
-		SignalBus.ball_in_range.emit(body, true)
+		# Add new ball to the end of the list
+		if not nearby_balls.has(body):
+			nearby_balls.append(body)
+		
+		# Only update the active ball if we weren't already tracking one
+		if ball_body == null:
+			_update_active_ball()
 
 func _on_ball_detection_body_exited(body: Node2D) -> void:
-	is_ball_nearby = false
-	ball_body = null
-	SignalBus.ball_in_range.emit(body, false)
+	nearby_balls.erase(body)
+	
+	# If the ball we were shooting just left, pick the next one in line
+	if ball_body == body:
+		_update_active_ball()
 
-
-func _on_hidden_room_body_entered(body: Node2D) -> void:
-	is_hidden = true
-	Global.player_hidden = true
-
-func _on_hidden_room_body_exited(body: Node2D) -> void:
-	is_hidden = false
-	Global.player_hidden = false
+func _update_active_ball() -> void:
+	if nearby_balls.size() > 0:
+		is_ball_nearby = true
+		ball_body = nearby_balls[0] # The "First In, First Out" principle
+		SignalBus.ball_in_range.emit(ball_body, true)
+	else:
+		is_ball_nearby = false
+		ball_body = null
+		# We don't necessarily want to emit false here if we want 
+		# the UI to stay hidden, but for safety:
+		SignalBus.ball_in_range.emit(null, false)
 
 func _on_grapple_cool_down_timeout() -> void:
 	Global.grapple_cooldown_ongoing = false

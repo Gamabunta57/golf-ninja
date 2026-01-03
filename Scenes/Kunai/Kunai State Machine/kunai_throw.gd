@@ -23,10 +23,14 @@ func enter() -> void:
 	Global.camera_mode = Global.CameraMode.KUNAI
 	#parent.velocity = parent.kunai_angle * speed * Vector2(Global.direction, 1)
 	parent.sprite.show()
+	
 	if inputs.get_x_input() == 0 and inputs.get_y_input() == 0:
 		intitial_angle = parent.kunai_angle * Vector2(Global.direction, 1)
-	else:
-		intitial_angle = Vector2(inputs.get_x_input(), -inputs.get_y_input()).normalized()
+	elif inputs.get_y_input() >= 0:
+		intitial_angle = parent.kunai_angle * Vector2(Global.direction, 1)
+	elif inputs.get_y_input() < 0:
+		intitial_angle = parent.kunai_angle * Vector2(Global.direction, -1)
+		#intitial_angle = Vector2(inputs.get_x_input(), -inputs.get_y_input()).normalized()
 		
 	parent.velocity = intitial_angle * speed
 	
