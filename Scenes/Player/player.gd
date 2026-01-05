@@ -11,7 +11,6 @@ extends CharacterBody2D
 @export var grappling_collider : RayCast2D
 @export var wall_collider : RayCast2D
 @export var flippables : Node2D
-
 var state: String
 var should_coyote: bool = false
 var can_jump: bool = false

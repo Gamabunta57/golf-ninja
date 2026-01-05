@@ -34,11 +34,14 @@ var kunai_anchor_object: Node2D
 var rotate_platform: bool = false
 var release_kunai: bool = false
 var kunai_stop_throw: bool = false
+var kunai_rotation_valid: bool = false
 
 #CAMERA LOGIC
 enum CameraMode { PLAYER, BALL, KUNAI, PREVIEW, HURT }
 var camera_mode: CameraMode = CameraMode.PLAYER
 
+#TILEMAP
+var level_tilemap: TileMapLayer
 
 #OBSOLETE
 var grapple_body: CharacterBody2D

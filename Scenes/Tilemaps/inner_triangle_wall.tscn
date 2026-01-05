@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://sm8r31tgwux8"]
+[gd_scene load_steps=9 format=3 uid="uid://sm8r31tgwux8"]
 
 [ext_resource type="Script" uid="uid://bysek2i573xtr" path="res://Scenes/Tilemaps/inner_triangle_wall.gd" id="1_1mho8"]
-[ext_resource type="Texture2D" uid="uid://8y7mdflsy8ps" path="res://Assets/Moving tilemap 2/inner.png" id="2_1mho8"]
 [ext_resource type="PackedScene" uid="uid://dvgf2y0bh4flh" path="res://Scenes/Balls/ball-circle.tscn" id="2_04hqw"]
 [ext_resource type="PackedScene" uid="uid://cwfkdmyy53qiv" path="res://Scenes/Sentinel/sentinel.tscn" id="3_s46vh"]
+[ext_resource type="Texture2D" uid="uid://bnfrs4mwpwtx7" path="res://Assets/Moving tilemap 2/platform-stroke.png" id="4_naqy7"]
+[ext_resource type="Texture2D" uid="uid://cvtggn05fmdro" path="res://Assets/Moving tilemap 2/platform.png" id="4_s46vh"]
 
 [sub_resource type="Curve" id="Curve_1mho8"]
 _data = [Vector2(0, 0), 0.0, 0.14477539, 0, 0, Vector2(0.40989405, 0.13294536), 0.9125255, 0.9125255, 0, 0, Vector2(1, 1), -1.23177, 0.0, 0, 0]
@@ -17,6 +18,8 @@ height = 436.0
 polygon = PackedVector2Array(-199, 73, 199, 73, 217, 104, 199, 136, -199, 136, -217, 105)
 
 [node name="Inner-triangle-wall" type="StaticBody2D"]
+z_index = 2
+z_as_relative = false
 collision_layer = 2
 collision_mask = 597
 script = ExtResource("1_1mho8")
@@ -24,11 +27,16 @@ rotation_curve = SubResource("Curve_1mho8")
 ball = ExtResource("2_04hqw")
 sentinel = ExtResource("3_s46vh")
 
+[node name="PlatformStroke" type="Sprite2D" parent="."]
+z_index = -1
+z_as_relative = false
+texture = ExtResource("4_naqy7")
+
 [node name="ground" type="CollisionPolygon2D" parent="."]
 polygon = PackedVector2Array(199, 73, 217, 104, 199, 136, -199, 136, -217, 105, -199, 73)
 
-[node name="Inner" type="Sprite2D" parent="."]
-texture = ExtResource("2_1mho8")
+[node name="Platform" type="Sprite2D" parent="."]
+texture = ExtResource("4_s46vh")
 
 [node name="PlayerDetection" type="Area2D" parent="."]
 collision_layer = 0
@@ -40,6 +48,7 @@ shape = SubResource("CapsuleShape2D_1mho8")
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="."]
 occluder = SubResource("OccluderPolygon2D_s46vh")
+sdf_collision = false
 
 [connection signal="body_entered" from="PlayerDetection" to="." method="_on_player_detection_body_entered"]
 [connection signal="body_exited" from="PlayerDetection" to="." method="_on_player_detection_body_exited"]

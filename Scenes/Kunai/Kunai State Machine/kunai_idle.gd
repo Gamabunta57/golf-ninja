@@ -11,6 +11,7 @@ func enter() -> void:
 	parent.kunai_anchored = false
 	parent.sprite.hide()
 	Global.kunai_position = Vector2.ZERO
+	Global.kunai_rotation_valid = false
 	
 func process_physics(delta: float) -> State:
 	parent.global_position = parent.player.global_position

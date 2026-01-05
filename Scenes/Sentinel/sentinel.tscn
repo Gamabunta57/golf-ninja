@@ -126,6 +126,9 @@ cooldown = NodePath("../../AttackCooldown")
 script = ExtResource("4_omg0t")
 idle_state = NodePath("../Idle")
 
+[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
+rect = Rect2(-235, -155, 470, 310)
+
 [connection signal="body_entered" from="AttackZone" to="." method="_on_attack_zone_body_entered"]
 [connection signal="body_entered" from="AttackZone" to="state_machine/Attack" method="_on_attack_zone_body_entered"]
 [connection signal="body_exited" from="AttackZone" to="." method="_on_attack_zone_body_exited"]

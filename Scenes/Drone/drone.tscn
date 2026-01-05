@@ -97,6 +97,9 @@ idle_state = NodePath("../Idle")
 attack_cooldown_timer = NodePath("../../AttackCooldown")
 bullet = ExtResource("9_uuft2")
 
+[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
+rect = Rect2(-235, -155, 470, 310)
+
 [connection signal="timeout" from="ReturnTimer" to="state_machine/Idle" method="_on_return_timer_timeout"]
 [connection signal="body_entered" from="DetectionZone" to="TargetCheck" method="_on_detection_zone_body_entered"]
 [connection signal="body_exited" from="DetectionZone" to="TargetCheck" method="_on_detection_zone_body_exited"]

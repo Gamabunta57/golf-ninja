@@ -5,6 +5,7 @@ extends State
 @export var idle_state: State
 @export var move_state: State
 @export var original_parent: Node
+
 var platform: Node2D
 
 var original_rotation : float = 0.0
@@ -14,28 +15,37 @@ func enter() -> void:
 	parent.state = "player teleport state"
 	#parent.set_collision_mask_value(2, false)
 	
-	if Global.kunai_anchor_object and is_instance_valid(Global.kunai_anchor_object):
-		platform = Global.kunai_anchor_object
-		original_parent = parent.get_parent()
+	if Global.kunai_anchor_object:
+		# 1. Get the TileMap reference
+		var tilemap = Global.level_tilemap
 		
-		# 1. Use the hit position as the base
-		var hit_pos = Global.kunai_position 
-		
-		# 2. Parent the player
-		original_parent.remove_child(parent)
-		platform.add_child(parent)
+		# 2. Determine the platform (Swap if it's a TileMap)
+		if Global.kunai_anchor_object == tilemap and Global.kunai_rotation_valid:
+				var local_pos = tilemap.to_local(Global.kunai_position)
+				var map_pos = tilemap.local_to_map(local_pos)
+				#var map_pos = tilemap.get_coords_for_body_rid(Global.kunai_anchor_rid)
+				platform = tilemap.swap_tile_for_scene(map_pos)
+		else:
+			platform = Global.kunai_anchor_object
 
-		parent.global_position = hit_pos + Global.kunai_normal
-		
-		# 5. Set Rotation
-		parent.global_rotation = Global.kunai_normal.angle() + (PI / 2)
+		# 3. SAFETY CHECK: Only proceed if platform was successfully found/created
+		if platform != null:
+			original_parent = parent.get_parent()
+			var hit_pos = Global.kunai_position 
+			
+			original_parent.remove_child(parent)
+			platform.add_child(parent) # This will no longer crash
+			
+			parent.global_position = hit_pos + Global.kunai_normal
+			parent.global_rotation = Global.kunai_normal.angle() + (PI / 2)
 	
 	Global.is_clipping_world = false
-
+	
 func process_physics(delta: float) -> State:
 	parent.velocity = Vector2.ZERO
 	if inputs.get_shooting_just_pressed():
-		Global.rotate_platform = true
+		if platform and platform.has_method("trigger_rotation"):
+			platform.trigger_rotation()
 	
 	
 	for i in parent.get_slide_collision_count():

@@ -33,7 +33,6 @@ func enter() -> void:
 		#intitial_angle = Vector2(inputs.get_x_input(), -inputs.get_y_input()).normalized()
 		
 	parent.velocity = intitial_angle * speed
-	parent.light.show()
 	
 
 func process_physics(delta: float) -> State:
@@ -58,6 +57,7 @@ func process_physics(delta: float) -> State:
 		parent.kunai_anchored = true
 		Global.kunai_position = ray_collision.get_collision_point()
 		Global.kunai_anchor_object = ray_collision.get_collider()
+		
 		return anchor_state
 	
 	clearance.force_raycast_update()
@@ -73,5 +73,12 @@ func process_physics(delta: float) -> State:
 
 func exit() -> void:
 	parent.sprite.hide()
-	parent.light.hide()
 	time_ellapsed = 0.0
+
+
+func _on_platform_detection_body_entered(body: Node2D) -> void:
+	Global.kunai_rotation_valid = true
+
+
+func _on_platform_detection_body_exited(body: Node2D) -> void:
+	Global.kunai_rotation_valid = false

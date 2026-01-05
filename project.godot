@@ -98,7 +98,7 @@ shooting={
 2d_physics/layer_1="Player"
 2d_navigation/layer_1="Drone"
 2d_physics/layer_2="World"
-2d_physics/layer_3="Grapple"
+2d_physics/layer_3="Kunai"
 2d_physics/layer_4="Stairs"
 2d_physics/layer_5="Ball"
 2d_physics/layer_6="Bin"
@@ -112,6 +112,7 @@ shooting={
 2d_physics/layer_14="Hidden"
 2d_physics/layer_15="Ball Detection"
 2d_physics/layer_16="Vending Machine"
+2d_physics/layer_17="Kunai detection zone"
 
 [navigation]
 
@@ -119,15 +120,25 @@ shooting={
 
 [physics]
 
+common/physics_ticks_per_second=30
 2d/default_linear_damp=0.10000000000000007
 
 [rendering]
 
-occlusion_culling/bvh_build_quality=1
+occlusion_culling/bvh_build_quality=0
 occlusion_culling/jitter_projection=false
-textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
+lights_and_shadows/directional_shadow/size=512
+lights_and_shadows/directional_shadow/size.mobile=512
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=0
+lights_and_shadows/positional_shadow/soft_shadow_filter_quality=0
 2d/shadow_atlas/size=512
 occlusion_culling/occlusion_rays_per_thread=128
+lights_and_shadows/tighter_shadow_caster_culling=false
 environment/defaults/default_clear_color=Color(0.78352344, 0.7835234, 0.7835234, 1)
+lightmapping/bake_quality/medium_quality_probe_ray_count=128
+lights_and_shadows/positional_shadow/atlas_size=1024
+lights_and_shadows/positional_shadow/atlas_size.mobile=1024
+lights_and_shadows/positional_shadow/atlas_quadrant_0_subdiv=1

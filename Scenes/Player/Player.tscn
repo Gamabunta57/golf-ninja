@@ -18,6 +18,19 @@
 [ext_resource type="Script" uid="uid://ogfr5i1gg671" path="res://Scenes/Player/Player State Machine/player-slide.gd" id="15_esmjy"]
 [ext_resource type="Script" uid="uid://c7yfo5eaypmm" path="res://Scenes/Player/player_light.gd" id="18_0objx"]
 
+[sub_resource type="Gradient" id="Gradient_spxdj"]
+interpolation_mode = 1
+colors = PackedColorArray(1, 1, 1, 1, 0.030241935, 0.030241935, 0.030241935, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_0objx"]
+resource_local_to_scene = true
+gradient = SubResource("Gradient_spxdj")
+width = 2048
+height = 2048
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_6tu5v"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kyqiw"]
@@ -25,21 +38,11 @@ radius = 24.0
 height = 100.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_miouo"]
-size = Vector2(48, 34)
-
-[sub_resource type="Gradient" id="Gradient_spxdj"]
-offsets = PackedFloat32Array(0.9979839, 1)
-colors = PackedColorArray(1, 1, 1, 1, 0.030241935, 0.030241935, 0.030241935, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_0objx"]
-gradient = SubResource("Gradient_spxdj")
-width = 2048
-height = 2028
-fill = 1
-fill_from = Vector2(0.50213677, 0.4957265)
-fill_to = Vector2(0.51282054, 0)
+size = Vector2(48, 33)
 
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("wall_collider", "flippables", "grapple_cooldown_timer", "kunai_cooldown_timer") groups=["Player"]]
+z_index = 3
+z_as_relative = false
 collision_mask = 5250
 slide_on_ceiling = false
 floor_stop_on_slope = false
@@ -54,6 +57,17 @@ wall_collider = NodePath("Flippables/WallCollision")
 flippables = NodePath("Flippables")
 grapple_cooldown_timer = NodePath("Timers/GrappleCoolDown")
 kunai_cooldown_timer = NodePath("Timers/KunaiCoolDown")
+
+[node name="PlayerLight" type="PointLight2D" parent="."]
+position = Vector2(0, -49.29)
+energy = 100.0
+range_z_min = -2
+range_z_max = 2
+range_layer_min = -1
+range_layer_max = 1
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_0objx")
+script = ExtResource("18_0objx")
 
 [node name="Flippables" type="Node2D" parent="."]
 
@@ -80,7 +94,7 @@ collision_layer = 16384
 collision_mask = 16
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BallDetection"]
-position = Vector2(0, -16)
+position = Vector2(0, -16.5)
 shape = SubResource("RectangleShape2D_miouo")
 debug_color = Color(0.867958, 0.353193, 0, 0.42)
 
@@ -196,16 +210,6 @@ idle_state = NodePath("../Idle")
 fall_state = NodePath("../Fall")
 hurt_state = NodePath("../Hurt")
 wall_collider = NodePath("../../Flippables/WallCollision")
-
-[node name="PlayerLight" type="PointLight2D" parent="."]
-visible = false
-position = Vector2(0, -50)
-enabled = false
-color = Color(1, 1, 0, 1)
-energy = 100.0
-shadow_enabled = true
-texture = SubResource("GradientTexture2D_0objx")
-script = ExtResource("18_0objx")
 
 [connection signal="body_entered" from="BallDetection" to="." method="_on_ball_detection_body_entered"]
 [connection signal="body_exited" from="BallDetection" to="." method="_on_ball_detection_body_exited"]
