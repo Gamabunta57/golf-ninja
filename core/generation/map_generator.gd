@@ -59,6 +59,14 @@ func generate(config: GenerationConfig, prng: PrngService) -> BuildingData:
 	building.player_start_cell = start_cell
 	_reserve(reserved[0], start_cell)
 
+	# Ball begins on the top floor at its own free cell.
+	var ball_cell: Vector2i = _pick_free_cell(building.floors[0], reserved[0], start_stream)
+	if ball_cell == INVALID_CELL:
+		ball_cell = Vector2i(building.floors[0].width - 2, building.floors[0].height - 2)
+	building.ball_start_floor = 0
+	building.ball_start_cell = ball_cell
+	_reserve(reserved[0], ball_cell)
+
 	# 4. Exactly one hole per floor (drops straight to the floor below).
 	var hole_stream: PrngService = prng.get_stream("holes")
 	for f in floor_count:

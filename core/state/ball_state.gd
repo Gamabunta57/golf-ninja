@@ -17,8 +17,10 @@ func _init(p_current_floor: int = 0, p_grid_position: Vector2 = Vector2.ZERO) ->
 	grid_position = p_grid_position
 
 
+## The integer cell currently occupied. grid_position is a continuous cell
+## coordinate (cell center is c + 0.5), so the occupied cell is its floor.
 func cell() -> Vector2i:
-	return Vector2i(roundi(grid_position.x), roundi(grid_position.y))
+	return Vector2i(floori(grid_position.x), floori(grid_position.y))
 
 
 func is_moving() -> bool:

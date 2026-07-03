@@ -14,6 +14,7 @@ const ACT_RIGHT := "gn_move_right"
 const ACT_UP := "gn_move_up"
 const ACT_DOWN := "gn_move_down"
 const ACT_INTERACT := "gn_interact"
+const ACT_CANCEL := "gn_cancel"
 
 
 func _init() -> void:
@@ -27,6 +28,7 @@ static func ensure_actions() -> void:
 	_add_action(ACT_UP, [_key(KEY_W), _key(KEY_UP), _joy_axis(JOY_AXIS_LEFT_Y, -1.0)])
 	_add_action(ACT_DOWN, [_key(KEY_S), _key(KEY_DOWN), _joy_axis(JOY_AXIS_LEFT_Y, 1.0)])
 	_add_action(ACT_INTERACT, [_key(KEY_E), _key(KEY_SPACE), _joy_button(JOY_BUTTON_A)])
+	_add_action(ACT_CANCEL, [_key(KEY_ESCAPE), _joy_button(JOY_BUTTON_B)])
 
 
 ## Reads current device state into a fresh PlayerIntent. `interact_pressed` uses
@@ -35,6 +37,7 @@ func poll() -> PlayerIntent:
 	var intent: PlayerIntent = PlayerIntent.new()
 	intent.move = Input.get_vector(ACT_LEFT, ACT_RIGHT, ACT_UP, ACT_DOWN)
 	intent.interact_pressed = Input.is_action_just_pressed(ACT_INTERACT)
+	intent.cancel_pressed = Input.is_action_just_pressed(ACT_CANCEL)
 	return intent
 
 

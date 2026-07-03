@@ -11,6 +11,9 @@ var elevator_network: Dictionary = {}
 var seed_used: int = 0
 var player_start_floor: int = 0
 var player_start_cell: Vector2i = Vector2i.ZERO
+## Where the ball begins its descent (top floor).
+var ball_start_floor: int = 0
+var ball_start_cell: Vector2i = Vector2i.ZERO
 
 
 func floor_count() -> int:

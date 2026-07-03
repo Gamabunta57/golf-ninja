@@ -10,6 +10,7 @@ func _initialize() -> void:
 		{"name": "Map generation guarantees", "instance": TestMapGenerationGuarantees.new()},
 		{"name": "Door/card reachability", "instance": TestDoorCardReachability.new()},
 		{"name": "Elevator navigation", "instance": TestElevatorNavigation.new()},
+		{"name": "Ball physics", "instance": TestBallPhysics.new()},
 	]
 
 	var total_failures: int = 0

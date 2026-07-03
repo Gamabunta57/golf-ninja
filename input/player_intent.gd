@@ -11,8 +11,12 @@ extends RefCounted
 ## device's own clamping so analog sticks keep their magnitude.
 var move: Vector2 = Vector2.ZERO
 
-## True only on the frame interact was pressed (edge, not held).
+## True only on the frame interact was pressed (edge, not held). Doubles as
+## "confirm shot" while aiming.
 var interact_pressed: bool = false
+
+## True only on the frame cancel was pressed (edge). Aborts an in-progress aim.
+var cancel_pressed: bool = false
 
 
 func has_movement() -> bool:
