@@ -8,11 +8,20 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="Golf Ninja"
-config/features=PackedStringArray("4.4", "GL Compatibility")
+config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Prng="*res://autoload/prng_autoload.gd"
+Game="*res://autoload/game_state_autoload.gd"
 
 [rendering]
 
