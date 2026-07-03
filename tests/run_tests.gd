@@ -9,6 +9,7 @@ func _initialize() -> void:
 		{"name": "PRNG determinism", "instance": TestPrngDeterminism.new()},
 		{"name": "Map generation guarantees", "instance": TestMapGenerationGuarantees.new()},
 		{"name": "Door/card reachability", "instance": TestDoorCardReachability.new()},
+		{"name": "Elevator navigation", "instance": TestElevatorNavigation.new()},
 	]
 
 	var total_failures: int = 0

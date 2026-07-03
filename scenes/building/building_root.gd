@@ -1,22 +1,24 @@
 extends Node2D
 
-## Phase 4 debug harness: generates a BuildingData from a GenerationConfig and
-## lets a developer step through the floors visually. No player character or
-## gameplay systems yet — this exists purely to inspect generator output.
+## Game root (evolving through the phases). Phase 4 rendered floors passively;
+## Phase 5 adds a controllable player that walks the current floor and rides
+## elevators between floors. Detection/ball/guards arrive in later phases.
 ##
 ## Controls:
-##   ] / Down / Page Down  -> next floor (deeper)
-##   [ / Up  / Page Up     -> previous floor
-##   R                     -> regenerate with a new seed
-##   Enter                 -> regenerate with the config's fixed seed
+##   WASD / arrows / left stick -> move
+##   E / Space / gamepad A      -> interact (ride an elevator you stand on)
+##   R                          -> regenerate with a new seed
+##   Enter                      -> regenerate with the config's fixed seed
 
 @export var config: GenerationConfig
 
 var _building: BuildingData
-var _current_floor: int = 0
+var _player_state: PlayerState
 var _renderer: FloorRenderer
+var _player: Player
 var _camera: Camera2D
 var _hud: Label
+var _elevators: ElevatorSystem = ElevatorSystem.new()
 var _seed_counter: int = 0
 
 
@@ -26,6 +28,10 @@ func _ready() -> void:
 
 	_renderer = FloorRenderer.new()
 	add_child(_renderer)
+
+	_player = Player.new()
+	add_child(_player)
+	_player.interacted.connect(_on_player_interacted)
 
 	_camera = Camera2D.new()
 	_camera.enabled = true
@@ -50,59 +56,78 @@ func _regenerate(seed_value: int, random: bool) -> void:
 	_building = generator.generate(config, Prng.service)
 	Game.set_building(_building)
 
-	var validator: GenerationValidator = GenerationValidator.new()
-	var result: Dictionary = validator.check_all(_building, config)
+	var result: Dictionary = GenerationValidator.new().check_all(_building, config)
 	if not result["valid"]:
 		push_warning("Generated building FAILED validation: %s" % str(result["errors"]))
 
-	_current_floor = 0
-	_show_floor(0, result)
+	_player_state = PlayerState.new(config.player_health)
+	_player_state.current_floor = _building.player_start_floor
+	_player_state.grid_position = _building.player_start_cell
+
+	var start_floor: FloorData = _building.get_floor(_building.player_start_floor)
+	_player.setup(start_floor, _building.player_start_cell)
+	_show_floor(_building.player_start_floor)
 
 
-func _show_floor(index: int, validation: Dictionary = {}) -> void:
-	if _building == null or _building.floor_count() == 0:
+func _show_floor(index: int) -> void:
+	if _building == null:
 		return
-	_current_floor = clampi(index, 0, _building.floor_count() - 1)
-	var fd: FloorData = _building.get_floor(_current_floor)
+	_player_state.current_floor = index
+	var fd: FloorData = _building.get_floor(index)
 
 	var start_cell: Vector2i = Vector2i(-1, -1)
-	if _current_floor == _building.player_start_floor:
+	if index == _building.player_start_floor:
 		start_cell = _building.player_start_cell
 	_renderer.set_floor_data(fd, start_cell)
 
-	# Centre the camera on the floor and fit it to the viewport.
+	# Fit the camera to the whole floor and centre it.
 	var size_px: Vector2 = _renderer.pixel_size()
 	_camera.position = size_px * 0.5
 	var vp: Vector2 = get_viewport_rect().size
-	var margin: float = 0.85
-	var zoom_factor: float = minf(vp.x / size_px.x, vp.y / size_px.y) * margin
+	var zoom_factor: float = minf(vp.x / size_px.x, vp.y / size_px.y) * 0.85
 	_camera.zoom = Vector2(zoom_factor, zoom_factor)
 
-	_update_hud(validation)
+
+func _on_player_interacted(cell: Vector2i) -> void:
+	var dest: int = _elevators.next_destination(_building, _player_state.current_floor, cell)
+	if dest < 0:
+		return
+	var dest_floor: FloorData = _building.get_floor(dest)
+	_player.move_to_floor(dest_floor, cell)
+	_player_state.current_floor = dest
+	_show_floor(dest)
 
 
-func _update_hud(validation: Dictionary) -> void:
-	var valid_txt: String = "valid" if validation.get("valid", true) else "INVALID: %s" % str(validation.get("errors", []))
-	var fd: FloorData = _building.get_floor(_current_floor)
-	var lines: Array[String] = [
-		"seed: %d   (%s)" % [_building.seed_used, valid_txt],
-		"floor %d / %d%s" % [_current_floor, _building.floor_count() - 1, "  [TOP]" if _current_floor == 0 else ("  [FINAL HOLE]" if _current_floor == _building.final_floor_index() else "")],
-		"hole %s | conduits %d | elevators %d | doors %d | keycards %d | cameras %d | guards %d" % [
-			fd.hole_position, fd.conduits.size(), fd.elevator_positions.size(), fd.doors.size(), fd.keycards.size(), fd.camera_zones.size(), fd.guard_patrols.size()
-		],
-		"[ / ] step floors    R = new seed    Enter = reset seed",
+func _process(_delta: float) -> void:
+	_update_hud()
+
+
+func _update_hud() -> void:
+	if _building == null:
+		return
+	var f: int = _player_state.current_floor
+	var tag: String = ""
+	if f == 0:
+		tag = "  [TOP]"
+	elif f == _building.final_floor_index():
+		tag = "  [FINAL HOLE]"
+
+	var hint: String = ""
+	var cell: Vector2i = _player.current_cell()
+	if _elevators.can_use(_building, f, cell):
+		var dest: int = _elevators.next_destination(_building, f, cell)
+		hint = "   [E] ride to floor %d" % dest
+
+	_hud.text = "seed %d   HP %d/%d   floor %d/%d%s%s" % [
+		_building.seed_used, _player_state.health, _player_state.max_health,
+		f, _building.final_floor_index(), tag, hint,
 	]
-	_hud.text = "\n".join(lines)
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.pressed and not event.echo):
 		return
 	match event.keycode:
-		KEY_BRACKETRIGHT, KEY_DOWN, KEY_PAGEDOWN:
-			_show_floor(_current_floor + 1)
-		KEY_BRACKETLEFT, KEY_UP, KEY_PAGEUP:
-			_show_floor(_current_floor - 1)
 		KEY_R:
 			_seed_counter += 1
 			_regenerate(_seed_counter, false)
