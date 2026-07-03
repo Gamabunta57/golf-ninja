@@ -52,7 +52,7 @@ sources/0 = SubResource("TileSetAtlasSource_75hpu")
 [node name="Tilemap" type="Node2D"]
 
 [node name="Background tilemap" type="TileMapLayer" parent="."]
-position = Vector2(-1, 4)
+position = Vector2(1, 0)
 tile_set = SubResource("TileSet_u6sxe")
 collision_enabled = false
 navigation_enabled = false
@@ -72,8 +72,7 @@ config = NodePath("../GeneratorConfiguration")
 
 [node name="GeneratorConfiguration" type="Node" parent="."]
 script = ExtResource("3_j6h4s")
-mapSeed = 4147817337
-useRandomSeed = true
+mapSeed = 2468257048
 mapSize = Vector2i(16, 16)
 radius = 11.0
 metadata/_custom_type_script = "uid://cypa22ua04kft"

@@ -3,6 +3,12 @@ class_name MapRawData extends Node
 @export var showRadiusOnly: bool
 @export var config: GeneratorConfiguration
 
+const TILE_BLOCKED = 0x00
+const TILE_NAVIGABLE = 0x01
+const TILE_EMPTY = 0x02
+const TILE_PATH = TILE_NAVIGABLE
+const TILE_EMPTY_WALL = TILE_NAVIGABLE | TILE_EMPTY
+
 var noiseGenerator: PerlinNoise
 
 signal mapGenerated
@@ -37,13 +43,13 @@ func generateMap() -> void:
 			index += 1
 
 	var startFixTime = Time.get_ticks_usec()
-	var correctedMap = HexMapHealer.healMap(rawGrid, config.mapSize)
+	#var correctedMap = HexMapHealer.healMap(rawGrid, config.mapSize)
 	print_debug("fix time (in usec): ", (Time.get_ticks_usec() - startFixTime))
-	mapGenerated.emit(correctedMap)
+	mapGenerated.emit(rawGrid)
 
 func getTileIdFromValue(value: float) -> int:
 	if (value < .35):
-		return 0
+		return TILE_BLOCKED
 	elif (value < .48):
-		return 2
-	return 3
+		return TILE_NAVIGABLE
+	return TILE_EMPTY_WALL

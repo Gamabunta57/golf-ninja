@@ -42,58 +42,41 @@ func updateTileMap(map: Array[int]) -> void:
 
 			var centerCoord = backgroundCoordToForegroundCoord(x, y)
 
-			if (cellValue == 3):
-				tileMap.set_cell(allInnerCells[0], atlasId, Vector2i(navigationCell, 0))
-				tileMap.set_cell(allInnerCells[1], atlasId, Vector2i(navigationCell, 0))
-				tileMap.set_cell(allInnerCells[2], atlasId, Vector2i(navigationCell, 0))
-				tileMap.set_cell(allInnerCells[3], atlasId, Vector2i(navigationCell, 0))
-				tileMap.set_cell(allInnerCells[4], atlasId, Vector2i(navigationCell, 0))
-				tileMap.set_cell(allInnerCells[5], atlasId, Vector2i(navigationCell, 0))
-				tileMap.set_cell(allInnerCells[6], atlasId, Vector2i(navigationCell, 0))
+			if (cellValue & 0x0f == 3):
+				#tileMap.set_cell(allInnerCells[0], atlasId, Vector2i(navigationCell, 0))
+				#tileMap.set_cell(allInnerCells[1], atlasId, Vector2i(navigationCell, 0))
+				#tileMap.set_cell(allInnerCells[2], atlasId, Vector2i(navigationCell, 0))
+				#tileMap.set_cell(allInnerCells[3], atlasId, Vector2i(navigationCell, 0))
+				#tileMap.set_cell(allInnerCells[4], atlasId, Vector2i(navigationCell, 0))
+				#tileMap.set_cell(allInnerCells[5], atlasId, Vector2i(navigationCell, 0))
+				#tileMap.set_cell(allInnerCells[6], atlasId, Vector2i(navigationCell, 0))
 
-				var coord = centerCoord + Vector2i(-1, -1)
-				if topLeftCellValue == 0:
-					tileMap.set_cell(coord, atlasId, Vector2i(slashCell, 0))
-				elif topLeftCellValue == 3:
-					tileMap.set_cell(coord, atlasId, Vector2i(navigationCell, 0))
-
-				coord = centerCoord + Vector2i(-1, 1)
-				if bottomLeftCellValue == 0:
-					tileMap.set_cell(coord, atlasId, Vector2i(backslashCell, 0))
-				elif bottomLeftCellValue == 3:
-					tileMap.set_cell(coord, atlasId, Vector2i(navigationCell, 0))
-
-				coord = centerCoord + Vector2i(0, 2)
-				if bottomCellValue == 0:
+				var coord = centerCoord + Vector2i(0, -2)
+				if topCellValue & 0x0f == 0 || topCellValue & 0x0f == 2:
 					tileMap.set_cell(coord, atlasId, Vector2i(groundCell, 0))
-				elif bottomCellValue == 3:
-					tileMap.set_cell(coord, atlasId, Vector2i(navigationCell, 0))
-
-				coord = centerCoord + Vector2i(2, 1)
-				if bottomRightCellValue == 0:
-					tileMap.set_cell(coord, atlasId, Vector2i(slashCell, 0))
-				elif bottomRightCellValue == 3:
+				elif topCellValue & 0x0f == 3:
 					tileMap.set_cell(coord, atlasId, Vector2i(navigationCell, 0))
 
 				coord = centerCoord + Vector2i(2, -1)
-				if topRightCellValue == 0:
+				if topRightCellValue & 0x0f == 0 || topRightCellValue & 0x0f == 2:
 					tileMap.set_cell(coord, atlasId, Vector2i(backslashCell, 0))
-				elif topRightCellValue == 3:
+				elif topRightCellValue & 0x0f == 3:
+					tileMap.set_cell(coord, atlasId, Vector2i(navigationCell, 0))
+					
+				coord = centerCoord + Vector2i(2, 1)
+				if bottomRightCellValue & 0x0f == 0 || bottomRightCellValue & 0x0f == 2:
+					tileMap.set_cell(coord, atlasId, Vector2i(slashCell, 0))
+				elif bottomRightCellValue & 0x0f == 3:
 					tileMap.set_cell(coord, atlasId, Vector2i(navigationCell, 0))
 
-				coord = centerCoord + Vector2i(0, -2)
-				if topCellValue == 0:
-					tileMap.set_cell(coord, atlasId, Vector2i(groundCell, 0))
-				elif topCellValue == 3:
-					tileMap.set_cell(coord, atlasId, Vector2i(navigationCell, 0))
-
-				if topLeftCellValue == 3 && bottomLeftCellValue == 3:
+				if topLeftCellValue & 0x0f == 3 && bottomLeftCellValue & 0x0f == 3:
 					coord = centerCoord + Vector2i(-2, 0)
 					tileMap.set_cell(coord, atlasId, Vector2i(navigationCell, 0))
 		
-				if bottomLeftCellValue == 3 && bottomCellValue == 3:
+				if bottomLeftCellValue & 0x0f == 3 && bottomCellValue & 0x0f == 3:
 					coord = centerCoord + Vector2i(-1, 2)
 					tileMap.set_cell(coord, atlasId, Vector2i(navigationCell, 0))
+					
 				continue
 
 
@@ -109,23 +92,22 @@ func updateTileMap(map: Array[int]) -> void:
 			#tileMap.set_cell(allInnerCells[10], atlasId, Vector2i(groundCell, 0))
 			#tileMap.set_cell(allInnerCells[12], atlasId, Vector2i(groundCell, 0))
 
-			if topLeftCellValue & 0x0f != 2:
-				var coord = centerCoord + Vector2i(-1, -1)
-				tileMap.set_cell(coord, atlasId, Vector2i(slashCell, 0))
+			#if topCellValue & 0x0f != 2:
+			#	var coord = centerCoord + Vector2i(0, -2)
+			#	tileMap.set_cell(coord, atlasId, Vector2i(groundCell, 0))
 
-			if bottomLeftCellValue & 0x0f != 2:
-				var coord = centerCoord + Vector2i(-1, 1)
-				tileMap.set_cell(coord, atlasId, Vector2i(backslashCell, 0))
+			#if topLeftCellValue & 0x0f != 2:
+			#	var coord = centerCoord + Vector2i(-1, -1)
+			#	tileMap.set_cell(coord, atlasId, Vector2i(slashCell, 0))
 
-			if bottomCellValue & 0x0f != 2:
-				var coord = centerCoord + Vector2i(0, 2)
-				tileMap.set_cell(coord, atlasId, Vector2i(groundCell, 0))
+			#if bottomLeftCellValue & 0x0f != 2:
+			#	var coord = centerCoord + Vector2i(-1, 1)
+			#	tileMap.set_cell(coord, atlasId, Vector2i(backslashCell, 0))
 
 			if cellValue & TOP_RIGHT_CONNECTED == TOP_RIGHT_CONNECTED:
 				tileMap.set_cell(allInnerCells[9], atlasId, Vector2i(navigationCell, 0))
 			else:
 				tileMap.set_cell(allInnerCells[9], atlasId, Vector2i(backslashCell, 0))
-			
 
 			if cellValue & BOTTOM_RIGHT_CONNECTED == BOTTOM_RIGHT_CONNECTED:
 				tileMap.set_cell(allInnerCells[11], atlasId, Vector2i(navigationCell, 0))
@@ -135,7 +117,7 @@ func updateTileMap(map: Array[int]) -> void:
 			if cellValue & BOTTOM_CONNECTED == BOTTOM_CONNECTED:
 				tileMap.set_cell(allInnerCells[13], atlasId, Vector2i(navigationCell, 0))
 			else:
-				tileMap.set_cell(allInnerCells[7], atlasId, Vector2i(groundCell, 0))
+				tileMap.set_cell(allInnerCells[13], atlasId, Vector2i(groundCell, 0))
 
 
 
@@ -218,7 +200,7 @@ func getAllInnerCellFromBackgroundCoord(x: int, y: int) -> Array[Vector2i]:
 	return _cellBuffer
 
 func digPath(map: Array[int]) -> void:
-	var mapData = tileMap.tile_map_data	
+	var mapData = tileMap.tile_map_data
 	var currentCell = HexMapHealer.findFirstNonEmptyCell(map, config.mapSize.x)
 	var centerCoord = backgroundCoordToForegroundCoord(currentCell.x, currentCell.y)
 
@@ -235,8 +217,6 @@ func digPath(map: Array[int]) -> void:
 	_cellBuffer[6] = centerCoord + Vector2i(1, -1) # top right
 
 
-	
-
 func _on_map_raw_data_map_generated(map: Array[int]) -> void:
 	updateTileMap(map)
-	digPath(map)
+	#digPath(map)
