@@ -23,8 +23,6 @@ const COL_CONDUIT: Color = Color(0.95, 0.55, 0.15)
 const COL_ELEVATOR: Color = Color(0.25, 0.55, 0.95)
 const COL_DOOR: Color = Color(0.85, 0.2, 0.25)
 const COL_KEYCARD: Color = Color(0.95, 0.85, 0.2)
-const COL_CAMERA: Color = Color(0.7, 0.35, 0.9)
-const COL_CAMERA_ZONE: Color = Color(0.7, 0.35, 0.9, 0.15)
 const COL_GUARD: Color = Color(0.95, 0.35, 0.35)
 const COL_GUARD_PATH: Color = Color(0.95, 0.35, 0.35, 0.5)
 const COL_PLAYER_START: Color = Color(0.3, 0.9, 0.4)
@@ -56,12 +54,11 @@ func _draw() -> void:
 	if _floor == null:
 		return
 	_draw_grid()
-	_draw_camera_zones()  # translucent, under markers
+	# Camera zones are drawn by live SecurityCamera nodes (Phase 7), not here.
 	_draw_holes_and_conduits()
 	_draw_elevators()
 	_draw_doors()
 	_draw_keycards()
-	_draw_cameras()
 	_draw_guards()
 	_draw_player_start()
 
@@ -87,12 +84,6 @@ func _draw_grid() -> void:
 		draw_line(Vector2(x * CELL_SIZE, 0), Vector2(x * CELL_SIZE, h_px), COL_GRID)
 	for y in range(_floor.height + 1):
 		draw_line(Vector2(0, y * CELL_SIZE), Vector2(w_px, y * CELL_SIZE), COL_GRID)
-
-
-func _draw_camera_zones() -> void:
-	for cam: CameraZoneData in _floor.camera_zones:
-		for cell: Vector2i in cam.observed_cells:
-			draw_rect(_cell_rect(cell), COL_CAMERA_ZONE, true)
 
 
 func _draw_holes_and_conduits() -> void:
@@ -130,11 +121,6 @@ func _draw_keycards() -> void:
 		]
 		draw_colored_polygon(pts, COL_KEYCARD)
 		_label(card.position, "%d" % card.access_level)
-
-
-func _draw_cameras() -> void:
-	for cam: CameraZoneData in _floor.camera_zones:
-		draw_circle(_cell_center(cam.position), CELL_SIZE * 0.22, COL_CAMERA)
 
 
 func _draw_guards() -> void:

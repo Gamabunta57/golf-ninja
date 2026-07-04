@@ -28,6 +28,8 @@ var _hud: Label
 var _input: PlayerInput = PlayerInput.new()
 var _elevators: ElevatorSystem = ElevatorSystem.new()
 var _aim: ShotAimController = ShotAimController.new()
+var _detection: DetectionResolver = DetectionResolver.new()
+var _cameras: Array[SecurityCamera] = []
 
 var _seed_counter: int = 0
 var _shots_taken: int = 0
@@ -40,19 +42,27 @@ func _ready() -> void:
 		config = GenerationConfig.new()
 
 	_renderer = FloorRenderer.new()
+	_renderer.z_index = 0
 	add_child(_renderer)
 
 	_ball = Ball.new()
+	_ball.z_index = 3
 	add_child(_ball)
 	_ball.stopped.connect(_on_ball_stopped)
 	_ball.reached_floor.connect(_on_ball_reached_floor)
 	_ball.reached_final_hole.connect(_on_ball_reached_final_hole)
 
 	_player = Player.new()
+	_player.z_index = 4
 	add_child(_player)
 
 	_aim_ui = ShotAimUI.new()
+	_aim_ui.z_index = 5
 	add_child(_aim_ui)
+
+	_detection.alarm_triggered.connect(_on_alarm_triggered)
+	_detection.alarm_searching.connect(_on_alarm_searching)
+	_detection.alarm_cleared.connect(_on_alarm_cleared)
 
 	_camera = Camera2D.new()
 	_camera.enabled = true
@@ -90,6 +100,7 @@ func _regenerate(seed_value: int, random: bool) -> void:
 	_out_of_shots = false
 	_aim.cancel()
 	_aim_ui.hide_aim()
+	_detection.alarm = AlarmState.new()
 
 	_ball.setup(_building, config)
 	_player.setup(_building.get_floor(_building.player_start_floor), _building.player_start_cell)
@@ -100,7 +111,9 @@ func _show_floor(index: int) -> void:
 	if _building == null:
 		return
 	_player_state.current_floor = index
-	_renderer.set_floor_data(_building.get_floor(index), _start_marker_for(index))
+	var fd: FloorData = _building.get_floor(index)
+	_renderer.set_floor_data(fd, _start_marker_for(index))
+	_spawn_cameras(fd, index)
 
 	var size_px: Vector2 = _renderer.pixel_size()
 	_camera.position = size_px * 0.5
@@ -114,6 +127,22 @@ func _start_marker_for(index: int) -> Vector2i:
 	if index == _building.player_start_floor:
 		return _building.player_start_cell
 	return Vector2i(-1, -1)
+
+
+func _spawn_cameras(fd: FloorData, index: int) -> void:
+	_clear_cameras()
+	for cam: CameraZoneData in fd.camera_zones:
+		var node: SecurityCamera = SecurityCamera.new()
+		node.z_index = 1
+		node.setup(cam, index, _detection)
+		add_child(node)
+		_cameras.append(node)
+
+
+func _clear_cameras() -> void:
+	for cam in _cameras:
+		cam.queue_free()
+	_cameras.clear()
 
 
 func _physics_process(delta: float) -> void:
@@ -133,7 +162,23 @@ func _physics_process(delta: float) -> void:
 		if intent.interact_pressed:
 			_handle_interact()
 
+	_run_detection(delta)
 	_update_ball_visibility()
+
+
+## Runs the alarm state machine for every floor each frame. The player can only
+## be seen on the floor they occupy; other floors receive seen=false so any
+## ACTIVE alarm decays through SEARCHING to INACTIVE, and SEARCHING timers keep
+## ticking after the player rides away (elevators break line of sight).
+func _run_detection(delta: float) -> void:
+	var now: int = Time.get_ticks_msec()
+	var player_cell: Vector2i = _player.current_cell()
+	var pf: int = _player_state.current_floor
+	for f in _building.floor_count():
+		var seen: bool = false
+		if f == pf:
+			seen = _detection.camera_sees_cell(_building.get_floor(f), player_cell, now)
+		_detection.update_floor(f, seen, player_cell, config.alarm_search_duration_sec, delta)
 
 
 func _handle_interact() -> void:
@@ -205,6 +250,20 @@ func _on_ball_reached_final_hole() -> void:
 	_cancel_aim()
 
 
+# --- alarm signal handlers (guards hook into these in Phase 8) ---------------
+
+func _on_alarm_triggered(_floor_index: int) -> void:
+	pass
+
+
+func _on_alarm_searching(_floor_index: int, _last_known_position: Vector2i) -> void:
+	pass
+
+
+func _on_alarm_cleared(_floor_index: int) -> void:
+	pass
+
+
 # --- HUD --------------------------------------------------------------------
 
 func _process(_delta: float) -> void:
@@ -231,10 +290,21 @@ func _update_hud() -> void:
 	elif bf != pf:
 		status = "\n(ball is on floor %d — find an elevator route down)" % bf
 
-	_hud.text = "seed %d   HP %d/%d   shots %d\nplayer floor %d/%d   ball floor %d%s" % [
-		_building.seed_used, _player_state.health, _player_state.max_health, _shots_taken,
+	_hud.text = "seed %d   HP %d/%d   shots %d   %s\nplayer floor %d/%d   ball floor %d%s" % [
+		_building.seed_used, _player_state.health, _player_state.max_health, _shots_taken, _alarm_text(pf),
 		pf, _building.final_floor_index(), bf, status,
 	]
+
+
+## Alarm status string for the player's current floor.
+func _alarm_text(floor_index: int) -> String:
+	match _detection.alarm.get_state(floor_index):
+		AlarmState.State.ACTIVE:
+			return "[!! ALARM: SPOTTED !!]"
+		AlarmState.State.SEARCHING:
+			return "[alarm: SEARCHING %.1fs]" % _detection.alarm.get_search_timer(floor_index)
+		_:
+			return "[alarm: clear]"
 
 
 func _unhandled_input(event: InputEvent) -> void:
