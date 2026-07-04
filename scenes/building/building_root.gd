@@ -29,8 +29,12 @@ var _input: PlayerInput = PlayerInput.new()
 var _elevators: ElevatorSystem = ElevatorSystem.new()
 var _aim: ShotAimController = ShotAimController.new()
 var _detection: DetectionResolver = DetectionResolver.new()
+var _hiding: HidingSystem = HidingSystem.new()
 var _cameras: Array[SecurityCamera] = []
 var _guards: Array[Guard] = []
+var _lockers: Array[Locker] = []
+var _hidden: bool = false
+var _hidden_locker: Locker = null
 
 var _seed_counter: int = 0
 var _shots_taken: int = 0
@@ -101,6 +105,9 @@ func _regenerate(seed_value: int, random: bool) -> void:
 	_won = false
 	_out_of_shots = false
 	_caught = false
+	_hidden = false
+	_hidden_locker = null
+	_player.visible = true
 	_aim.cancel()
 	_aim_ui.hide_aim()
 	_detection.alarm = AlarmState.new()
@@ -118,6 +125,7 @@ func _show_floor(index: int) -> void:
 	_renderer.set_floor_data(fd, _start_marker_for(index))
 	_spawn_cameras(fd, index)
 	_spawn_guards(fd)
+	_spawn_lockers(fd)
 
 	var size_px: Vector2 = _renderer.pixel_size()
 	_camera.position = size_px * 0.5
@@ -170,6 +178,38 @@ func _clear_guards() -> void:
 	_guards.clear()
 
 
+func _spawn_lockers(fd: FloorData) -> void:
+	_clear_lockers()
+	for cell: Vector2i in fd.locker_positions:
+		var locker: Locker = Locker.new()
+		locker.z_index = 2
+		locker.setup(cell)
+		add_child(locker)
+		_lockers.append(locker)
+
+
+func _clear_lockers() -> void:
+	for locker in _lockers:
+		locker.queue_free()
+	_lockers.clear()
+	_hidden_locker = null
+
+
+func _locker_at(cell: Vector2i) -> Locker:
+	for locker in _lockers:
+		if locker.cell == cell:
+			return locker
+	return null
+
+
+## Live guard field-of-view data for HidingSystem (Godot-agnostic dicts).
+func _guard_views() -> Array:
+	var views: Array = []
+	for g in _guards:
+		views.append(g.fov_view())
+	return views
+
+
 func _physics_process(delta: float) -> void:
 	if _building == null:
 		return
@@ -182,6 +222,10 @@ func _physics_process(delta: float) -> void:
 			_cancel_aim()
 		elif intent.interact_pressed and _aim.can_fire():
 			_fire_shot()
+	elif _hidden:
+		# Hidden: frozen and concealed until the player chooses to come out.
+		if intent.interact_pressed or intent.cancel_pressed:
+			_exit_hide()
 	elif not _run_over():
 		_player.move(intent.move, delta)
 		if intent.interact_pressed:
@@ -204,7 +248,9 @@ func _run_detection(delta: float) -> void:
 	var pf: int = _player_state.current_floor
 	for f in _building.floor_count():
 		var seen: bool = false
-		if f == pf:
+		# A hidden player is concealed: no camera or guard can spot them, so the
+		# alarm decays through SEARCHING to INACTIVE while they stay hidden.
+		if f == pf and not _hidden:
 			seen = _detection.camera_sees_cell(_building.get_floor(f), player_cell, now)
 			if not seen:
 				for g in _guards:
@@ -215,15 +261,44 @@ func _run_detection(delta: float) -> void:
 
 
 func _handle_interact() -> void:
-	# Aiming a nearby, at-rest ball on this floor takes priority over elevators.
+	# Priority: aim a nearby ball -> hide in a locker -> ride an elevator.
 	if _can_aim():
 		_begin_aim()
 		return
 	var cell: Vector2i = _player.current_cell()
+	if _can_hide_at(cell):
+		_enter_hide(cell)
+		return
 	var dest: int = _elevators.next_destination(_building, _player_state.current_floor, cell)
 	if dest >= 0:
 		_player.move_to_floor(_building.get_floor(dest), cell)
 		_show_floor(dest)
+
+
+## True if the player stands on a locker and is currently unobserved (hiding
+## must precede detection — GDD §3.3).
+func _can_hide_at(cell: Vector2i) -> bool:
+	var fd: FloorData = _building.get_floor(_player_state.current_floor)
+	if not _hiding.has_locker(fd, cell):
+		return false
+	return _hiding.can_conceal(_detection, fd, cell, Time.get_ticks_msec(), _guard_views())
+
+
+func _enter_hide(cell: Vector2i) -> void:
+	_hidden = true
+	_player.visible = false
+	_cancel_aim()
+	_hidden_locker = _locker_at(cell)
+	if _hidden_locker != null:
+		_hidden_locker.set_occupied(true)
+
+
+func _exit_hide() -> void:
+	_hidden = false
+	_player.visible = true
+	if _hidden_locker != null:
+		_hidden_locker.set_occupied(false)
+		_hidden_locker = null
 
 
 func _can_aim() -> bool:
@@ -335,10 +410,14 @@ func _update_hud() -> void:
 		status = "\n>>> CAUGHT BY A GUARD (R to play again)"
 	elif _out_of_shots:
 		status = "\n>>> OUT OF SHOTS (R to play again)"
+	elif _hidden:
+		status = "\n[hidden] [E] leave the locker"
 	elif _aim.active:
 		status = "\n[E] fire   [Esc] cancel   (move to aim / adjust power)"
 	elif _can_aim():
 		status = "\n[E] aim the ball"
+	elif _can_hide_at(_player.current_cell()):
+		status = "\n[E] hide in locker"
 	elif _elevators.can_use(_building, pf, _player.current_cell()):
 		status = "\n[E] ride to floor %d" % _elevators.next_destination(_building, pf, _player.current_cell())
 	elif bf != pf:

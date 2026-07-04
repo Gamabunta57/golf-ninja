@@ -13,6 +13,7 @@ func _initialize() -> void:
 		{"name": "Ball physics", "instance": TestBallPhysics.new()},
 		{"name": "Detection & alarm", "instance": TestDetectionAlarm.new()},
 		{"name": "Guard AI", "instance": TestGuardAi.new()},
+		{"name": "Hiding", "instance": TestHiding.new()},
 	]
 
 	var total_failures: int = 0

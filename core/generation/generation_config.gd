@@ -43,6 +43,8 @@ extends Resource
 @export_group("Stealth")
 @export var cameras_per_floor_range: Vector2i = Vector2i(0, 2)
 @export var guards_per_floor_range: Vector2i = Vector2i(0, 3)
+## Lockers the player can hide in (breaks line of sight when unobserved).
+@export var lockers_per_floor_range: Vector2i = Vector2i(1, 3)
 @export var ball_jam_radius_cells: int = 2
 @export var camera_jam_duration_sec: float = 3.0
 @export var alarm_search_duration_sec: float = 8.0

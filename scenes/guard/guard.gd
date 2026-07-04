@@ -93,6 +93,17 @@ func hp() -> int:
 	return _sm.hp if _sm != null else 0
 
 
+## Current field-of-view as plain data (for HidingSystem, which stays Godot- and
+## Guard-agnostic).
+func fov_view() -> Dictionary:
+	return {
+		"origin": current_cell(),
+		"facing": _facing,
+		"angle": data.fov_angle_degrees,
+		"range": data.fov_range_cells,
+	}
+
+
 # --- behaviours -------------------------------------------------------------
 
 func _do_patrol(delta: float) -> void:

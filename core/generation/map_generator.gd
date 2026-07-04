@@ -85,6 +85,7 @@ func generate(config: GenerationConfig, prng: PrngService) -> BuildingData:
 	# 7. Stealth: cameras and guard patrols (no bearing on completability).
 	_generate_cameras(building, config, prng.get_stream("cameras"), reserved)
 	_generate_guards(building, config, prng.get_stream("guards"), reserved)
+	_generate_lockers(building, config, prng.get_stream("lockers"), reserved)
 
 	return building
 
@@ -309,6 +310,20 @@ func _generate_guards(building: BuildingData, config: GenerationConfig, prng: Pr
 				break
 			var guard: GuardPatrolData = GuardPatrolData.new(f, path, config.guard_fov_angle_degrees, config.guard_fov_range_cells)
 			fd.guard_patrols.append(guard)
+
+
+func _generate_lockers(building: BuildingData, config: GenerationConfig, prng: PrngService, reserved: Array[Dictionary]) -> void:
+	var lo: int = maxi(0, config.lockers_per_floor_range.x)
+	var hi: int = maxi(lo, config.lockers_per_floor_range.y)
+	for f in building.floor_count():
+		var fd: FloorData = building.floors[f]
+		var count: int = prng.randi_range(lo, hi)
+		for _i in count:
+			var cell: Vector2i = _pick_free_cell(fd, reserved[f], prng)
+			if cell == INVALID_CELL:
+				break
+			_reserve(reserved[f], cell)
+			fd.locker_positions.append(cell)
 
 
 ## Builds a short patrol loop of walkable waypoints near a random start cell.

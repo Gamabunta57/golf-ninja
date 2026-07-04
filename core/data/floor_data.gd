@@ -19,6 +19,7 @@ var doors: Array[DoorData] = []
 var keycards: Array[KeycardData] = []
 var camera_zones: Array[CameraZoneData] = []
 var guard_patrols: Array[GuardPatrolData] = []
+var locker_positions: Array[Vector2i] = []
 var walkable_grid: Array = []  # Array[Array] of bool, indexed [y][x]
 
 
@@ -56,6 +57,10 @@ func set_walkable(cell: Vector2i, value: bool) -> void:
 
 func has_elevator_at(cell: Vector2i) -> bool:
 	return elevator_positions.has(cell)
+
+
+func has_locker_at(cell: Vector2i) -> bool:
+	return locker_positions.has(cell)
 
 
 func get_door_at(cell: Vector2i) -> DoorData:
