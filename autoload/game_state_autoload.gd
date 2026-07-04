@@ -1,18 +1,11 @@
 extends Node
 
-## Autoload singleton (registered as `Game`) that will own the GameStateManager
-## — the single source of truth for player/guard health, ball position, and
-## win/loss resolution (plan Phase 11). Scaffolded now so the autoload exists
-## from Phase 0; the manager is wired in when Phase 11 lands.
+## Autoload singleton (registered as `Game`) owning the GameStateManager — the
+## single source of truth for win/loss resolution and player health/shots
+## (plan Phase 11) — plus a reference to the active building.
 
-# Populated in Phase 11:
-# var manager: GameStateManager
-
+var manager: GameStateManager = GameStateManager.new()
 var current_building: BuildingData
-
-
-func _ready() -> void:
-	pass
 
 
 ## Stores the active building so systems can query generated layout data.

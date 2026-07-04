@@ -39,11 +39,8 @@ var _keycards: Array[KeycardPickup] = []
 var _hidden: bool = false
 var _hidden_locker: Locker = null
 
+var _manager: GameStateManager
 var _seed_counter: int = 0
-var _shots_taken: int = 0
-var _won: bool = false
-var _out_of_shots: bool = false
-var _caught: bool = false
 
 
 func _ready() -> void:
@@ -72,6 +69,10 @@ func _ready() -> void:
 	_detection.alarm_triggered.connect(_on_alarm_triggered)
 	_detection.alarm_searching.connect(_on_alarm_searching)
 	_detection.alarm_cleared.connect(_on_alarm_cleared)
+
+	_manager = Game.manager
+	_manager.game_won.connect(_on_game_won)
+	_manager.game_lost.connect(_on_game_lost)
 
 	_camera = Camera2D.new()
 	_camera.enabled = true
@@ -103,11 +104,8 @@ func _regenerate(seed_value: int, random: bool) -> void:
 	_player_state = PlayerState.new(config.player_health)
 	_player_state.current_floor = _building.player_start_floor
 	_player_state.grid_position = _building.player_start_cell
+	_manager.start(_player_state)
 
-	_shots_taken = 0
-	_won = false
-	_out_of_shots = false
-	_caught = false
 	_hidden = false
 	_hidden_locker = null
 	_player.visible = true
@@ -376,10 +374,8 @@ func _cancel_aim() -> void:
 func _fire_shot() -> void:
 	_ball.shoot(_aim.aim_direction(), _aim.power)
 	_cancel_aim()
-	_player_state.spend_health(1)
-	_shots_taken += 1
-	if _player_state.is_out_of_health():
-		_out_of_shots = true
+	# The manager owns health/shot accounting and the out-of-shots loss.
+	_manager.register_player_shot()
 
 
 func _update_ball_visibility() -> void:
@@ -389,7 +385,7 @@ func _update_ball_visibility() -> void:
 
 
 func _run_over() -> bool:
-	return _won or _out_of_shots or _caught
+	return _manager.is_over()
 
 
 # --- ball signal handlers ---------------------------------------------------
@@ -403,8 +399,7 @@ func _on_ball_reached_floor(_floor_index: int) -> void:
 
 
 func _on_ball_reached_final_hole() -> void:
-	_won = true
-	_cancel_aim()
+	_manager.on_ball_reached_final_hole()
 
 
 # --- alarm signal handlers (guards hook into these in Phase 8) ---------------
@@ -435,9 +430,17 @@ func _on_guard_shot_ball(_guard_id: int, _hp_remaining: int) -> void:
 
 
 func _on_player_caught() -> void:
-	if not _run_over():
-		_caught = true
-		_cancel_aim()
+	_manager.on_player_caught()
+
+
+# --- game-state signal handlers (single source of truth: GameStateManager) --
+
+func _on_game_won() -> void:
+	_cancel_aim()
+
+
+func _on_game_lost(_reason: String) -> void:
+	_cancel_aim()
 
 
 # --- HUD --------------------------------------------------------------------
@@ -453,11 +456,11 @@ func _update_hud() -> void:
 	var bf: int = _ball.state.current_floor if _ball.state != null else 0
 
 	var status: String = ""
-	if _won:
-		status = "\n>>> YOU WIN in %d shots! (R to play again)" % _shots_taken
-	elif _caught:
+	if _manager.has_won():
+		status = "\n>>> YOU WIN in %d shots! (R to play again)" % _manager.shots_fired
+	elif _manager.result() == GameStateManager.REASON_CAUGHT:
 		status = "\n>>> CAUGHT BY A GUARD (R to play again)"
-	elif _out_of_shots:
+	elif _manager.result() == GameStateManager.REASON_OUT_OF_SHOTS:
 		status = "\n>>> OUT OF SHOTS (R to play again)"
 	elif _hidden:
 		status = "\n[hidden] [E] leave the locker"
@@ -474,7 +477,7 @@ func _update_hud() -> void:
 
 	var cards: String = str(_player_state.keycards_held) if not _player_state.keycards_held.is_empty() else "none"
 	_hud.text = "seed %d   HP %d/%d   shots %d   %s\nplayer floor %d/%d   ball floor %d   guards %d   cards %s%s" % [
-		_building.seed_used, _player_state.health, _player_state.max_health, _shots_taken, _alarm_text(pf),
+		_building.seed_used, _player_state.health, _player_state.max_health, _manager.shots_fired, _alarm_text(pf),
 		pf, _building.final_floor_index(), bf, _guards.size(), cards, status,
 	]
 
