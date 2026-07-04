@@ -12,6 +12,7 @@ func _initialize() -> void:
 		{"name": "Elevator navigation", "instance": TestElevatorNavigation.new()},
 		{"name": "Ball physics", "instance": TestBallPhysics.new()},
 		{"name": "Detection & alarm", "instance": TestDetectionAlarm.new()},
+		{"name": "Guard AI", "instance": TestGuardAi.new()},
 	]
 
 	var total_failures: int = 0

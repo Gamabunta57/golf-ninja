@@ -23,8 +23,6 @@ const COL_CONDUIT: Color = Color(0.95, 0.55, 0.15)
 const COL_ELEVATOR: Color = Color(0.25, 0.55, 0.95)
 const COL_DOOR: Color = Color(0.85, 0.2, 0.25)
 const COL_KEYCARD: Color = Color(0.95, 0.85, 0.2)
-const COL_GUARD: Color = Color(0.95, 0.35, 0.35)
-const COL_GUARD_PATH: Color = Color(0.95, 0.35, 0.35, 0.5)
 const COL_PLAYER_START: Color = Color(0.3, 0.9, 0.4)
 const COL_TEXT: Color = Color(1, 1, 1, 0.9)
 
@@ -59,7 +57,7 @@ func _draw() -> void:
 	_draw_elevators()
 	_draw_doors()
 	_draw_keycards()
-	_draw_guards()
+	# Guards are drawn by live Guard nodes (Phase 8), not here.
 	_draw_player_start()
 
 
@@ -121,15 +119,6 @@ func _draw_keycards() -> void:
 		]
 		draw_colored_polygon(pts, COL_KEYCARD)
 		_label(card.position, "%d" % card.access_level)
-
-
-func _draw_guards() -> void:
-	for guard: GuardPatrolData in _floor.guard_patrols:
-		# Patrol path.
-		for i in range(guard.patrol_path.size() - 1):
-			draw_line(_cell_center(guard.patrol_path[i]), _cell_center(guard.patrol_path[i + 1]), COL_GUARD_PATH, 2.0)
-		# Spawn marker.
-		draw_circle(_cell_center(guard.spawn_cell()), CELL_SIZE * 0.24, COL_GUARD)
 
 
 func _draw_player_start() -> void:

@@ -30,11 +30,13 @@ var _elevators: ElevatorSystem = ElevatorSystem.new()
 var _aim: ShotAimController = ShotAimController.new()
 var _detection: DetectionResolver = DetectionResolver.new()
 var _cameras: Array[SecurityCamera] = []
+var _guards: Array[Guard] = []
 
 var _seed_counter: int = 0
 var _shots_taken: int = 0
 var _won: bool = false
 var _out_of_shots: bool = false
+var _caught: bool = false
 
 
 func _ready() -> void:
@@ -98,6 +100,7 @@ func _regenerate(seed_value: int, random: bool) -> void:
 	_shots_taken = 0
 	_won = false
 	_out_of_shots = false
+	_caught = false
 	_aim.cancel()
 	_aim_ui.hide_aim()
 	_detection.alarm = AlarmState.new()
@@ -114,6 +117,7 @@ func _show_floor(index: int) -> void:
 	var fd: FloorData = _building.get_floor(index)
 	_renderer.set_floor_data(fd, _start_marker_for(index))
 	_spawn_cameras(fd, index)
+	_spawn_guards(fd)
 
 	var size_px: Vector2 = _renderer.pixel_size()
 	_camera.position = size_px * 0.5
@@ -145,6 +149,27 @@ func _clear_cameras() -> void:
 	_cameras.clear()
 
 
+func _spawn_guards(fd: FloorData) -> void:
+	_clear_guards()
+	var gid: int = 0
+	for gp: GuardPatrolData in fd.guard_patrols:
+		var g: Guard = Guard.new()
+		g.z_index = 3
+		g.setup(gid, gp, fd, _detection, config.guard_health)
+		g.defeated.connect(_on_guard_defeated)
+		g.shot_ball.connect(_on_guard_shot_ball)
+		g.caught_player.connect(_on_player_caught)
+		add_child(g)
+		_guards.append(g)
+		gid += 1
+
+
+func _clear_guards() -> void:
+	for g in _guards:
+		g.queue_free()
+	_guards.clear()
+
+
 func _physics_process(delta: float) -> void:
 	if _building == null:
 		return
@@ -163,6 +188,9 @@ func _physics_process(delta: float) -> void:
 			_handle_interact()
 
 	_run_detection(delta)
+	if not _run_over():
+		for g in _guards:
+			g.act(delta, _detection.alarm, _player, _ball)
 	_update_ball_visibility()
 
 
@@ -178,6 +206,11 @@ func _run_detection(delta: float) -> void:
 		var seen: bool = false
 		if f == pf:
 			seen = _detection.camera_sees_cell(_building.get_floor(f), player_cell, now)
+			if not seen:
+				for g in _guards:
+					if g.sees_player(player_cell):
+						seen = true
+						break
 		_detection.update_floor(f, seen, player_cell, config.alarm_search_duration_sec, delta)
 
 
@@ -232,7 +265,7 @@ func _update_ball_visibility() -> void:
 
 
 func _run_over() -> bool:
-	return _won or _out_of_shots
+	return _won or _out_of_shots or _caught
 
 
 # --- ball signal handlers ---------------------------------------------------
@@ -264,6 +297,25 @@ func _on_alarm_cleared(_floor_index: int) -> void:
 	pass
 
 
+# --- guard signal handlers --------------------------------------------------
+
+func _on_guard_defeated(guard_id: int) -> void:
+	for i in range(_guards.size() - 1, -1, -1):
+		if _guards[i].id == guard_id:
+			_guards[i].queue_free()
+			_guards.remove_at(i)
+
+
+func _on_guard_shot_ball(_guard_id: int, _hp_remaining: int) -> void:
+	pass  # HUD/animation feedback hook
+
+
+func _on_player_caught() -> void:
+	if not _run_over():
+		_caught = true
+		_cancel_aim()
+
+
 # --- HUD --------------------------------------------------------------------
 
 func _process(_delta: float) -> void:
@@ -279,6 +331,8 @@ func _update_hud() -> void:
 	var status: String = ""
 	if _won:
 		status = "\n>>> YOU WIN in %d shots! (R to play again)" % _shots_taken
+	elif _caught:
+		status = "\n>>> CAUGHT BY A GUARD (R to play again)"
 	elif _out_of_shots:
 		status = "\n>>> OUT OF SHOTS (R to play again)"
 	elif _aim.active:
@@ -290,9 +344,9 @@ func _update_hud() -> void:
 	elif bf != pf:
 		status = "\n(ball is on floor %d — find an elevator route down)" % bf
 
-	_hud.text = "seed %d   HP %d/%d   shots %d   %s\nplayer floor %d/%d   ball floor %d%s" % [
+	_hud.text = "seed %d   HP %d/%d   shots %d   %s\nplayer floor %d/%d   ball floor %d   guards %d%s" % [
 		_building.seed_used, _player_state.health, _player_state.max_health, _shots_taken, _alarm_text(pf),
-		pf, _building.final_floor_index(), bf, status,
+		pf, _building.final_floor_index(), bf, _guards.size(), status,
 	]
 
 
