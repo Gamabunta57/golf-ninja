@@ -16,6 +16,7 @@ func _initialize() -> void:
 		{"name": "Hiding", "instance": TestHiding.new()},
 		{"name": "Door & keycard", "instance": TestDoorKeycard.new()},
 		{"name": "Game state", "instance": TestGameState.new()},
+		{"name": "Config defaults", "instance": TestConfigDefaults.new()},
 	]
 
 	var total_failures: int = 0

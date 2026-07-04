@@ -1,18 +1,24 @@
 extends Node2D
 
-## Game root (evolving through the phases). Phases 4–5 added floor rendering and
-## a player that rides elevators; Phase 6 adds the ball, aiming, and shooting.
-## The player follows the ball floor-to-floor via elevators and shoots it (1 HP
-## per shot) until it drops through the final hole (win) or runs out of shots.
-## Stealth/guards arrive in later phases.
+## Game root. The player follows the toxic ball floor-to-floor via elevators and
+## shoots it (1 HP/shot) past cameras and guards until it drops through the final
+## hole (win), health runs out, or a guard catches them (lose).
+##
+## Designer workflow (Phase 12): assign a GenerationConfig resource to `config`
+## in the Inspector and edit its values there; press Enter in-game to regenerate
+## with those values (no code changes, no project restart). If `config` is left
+## empty a default is created at runtime.
 ##
 ## Controls:
 ##   WASD / arrows / left stick -> move (or adjust aim while aiming)
-##   E / Space / gamepad A      -> interact: aim the nearby ball, or ride an
-##                                 elevator, or (while aiming) confirm the shot
-##   Esc / gamepad B            -> cancel aiming
-##   R / Enter                  -> regenerate (new seed / fixed seed)
+##   E / Space / gamepad A      -> interact: aim the nearby ball, hide in a
+##                                 locker, ride an elevator, or confirm a shot
+##   Esc / gamepad B            -> cancel aiming / leave a locker
+##   Enter                      -> regenerate with the current config values
+##   R                          -> regenerate a fresh random building
 
+## The sole tunable input to generation (plus the PRNG seed it carries). Edit its
+## values in the Inspector; see GenerationConfig for the full knob list.
 @export var config: GenerationConfig
 
 const AIM_RANGE_PX: float = 1.6 * FloorRenderer.CELL_SIZE
@@ -40,7 +46,6 @@ var _hidden: bool = false
 var _hidden_locker: Locker = null
 
 var _manager: GameStateManager
-var _seed_counter: int = 0
 
 
 func _ready() -> void:
@@ -85,16 +90,26 @@ func _ready() -> void:
 	_hud.add_theme_font_size_override("font_size", 14)
 	layer.add_child(_hud)
 
-	_regenerate(config.seed, config.use_random_seed)
+	_regenerate_from_config()
 
 
-func _regenerate(seed_value: int, random: bool) -> void:
-	config.seed = seed_value
-	config.use_random_seed = random
-	Prng.configure(config, seed_value)
+## Regenerates honouring the config asset exactly (deterministic when
+## use_random_seed is false) — the designer's "regenerate with current config".
+func _regenerate_from_config() -> void:
+	_build(config.make_prng(Time.get_ticks_usec()))
+
+
+## Regenerates a fresh random building regardless of the config's seed settings
+## (a quick-variety debug action) without mutating the config asset.
+func _regenerate_random() -> void:
+	_build(PrngService.new(true, 0, Time.get_ticks_usec()))
+
+
+func _build(prng: PrngService) -> void:
+	Prng.service = prng
 
 	var generator: MapGenerator = MapGenerator.new()
-	_building = generator.generate(config, Prng.service)
+	_building = generator.generate(config, prng)
 	Game.set_building(_building)
 
 	var result: Dictionary = GenerationValidator.new().check_all(_building, config)
@@ -498,7 +513,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	match event.keycode:
 		KEY_R:
-			_seed_counter += 1
-			_regenerate(_seed_counter, false)
+			_regenerate_random()
 		KEY_ENTER, KEY_KP_ENTER:
-			_regenerate(config.seed, false)
+			_regenerate_from_config()

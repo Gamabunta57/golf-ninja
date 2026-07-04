@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="GenerationConfig" format=3 uid="uid://d1nscbi6h8djy"]
+
+[ext_resource type="Script" uid="uid://dvlq0alvkmuhu" path="res://core/generation/generation_config.gd" id="1_cfg"]
+
+[resource]
+script = ExtResource("1_cfg")
+floor_count = 10

@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://bfd25nlwa7oq7"]
 
-[ext_resource type="Script" path="res://scenes/building/building_root.gd" id="1_root"]
+[ext_resource type="Script" uid="uid://etpasgn17krk" path="res://scenes/building/building_root.gd" id="1_root"]
+[ext_resource type="Resource" path="res://config/generation_config.tres" id="2_cfg"]
 
-[node name="BuildingRoot" type="Node2D"]
+[node name="BuildingRoot" type="Node2D" unique_id=1107516901]
 script = ExtResource("1_root")
+config = ExtResource("2_cfg")
