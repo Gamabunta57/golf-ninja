@@ -13,6 +13,14 @@ const COL_BODY: Color = Color(0.3, 0.9, 0.45)
 const COL_OUTLINE: Color = Color(0.05, 0.2, 0.1)
 
 var floor_data: FloorData
+var access: DoorKeycardSystem
+var player_state: PlayerState
+
+
+## Wires the access system + player inventory so locked doors block movement.
+func configure(access_system: DoorKeycardSystem, state: PlayerState) -> void:
+	access = access_system
+	player_state = state
 
 
 ## Places the player on `floor_data` at the centre of `start_cell`.
@@ -48,12 +56,23 @@ func move(move_vec: Vector2, delta: float) -> void:
 	global_position = pos
 
 
-## True if a small box around `world_pos` lies entirely on walkable cells.
+## True if a small box around `world_pos` lies entirely on passable cells
+## (walkable, and not blocked by a locked door the player can't open).
 func _is_free(world_pos: Vector2) -> bool:
 	if floor_data == null:
 		return false
 	for off in [Vector2(-RADIUS, -RADIUS), Vector2(RADIUS, -RADIUS), Vector2(-RADIUS, RADIUS), Vector2(RADIUS, RADIUS)]:
-		if not floor_data.is_walkable(_world_to_cell(world_pos + off)):
+		if not _cell_passable(_world_to_cell(world_pos + off)):
+			return false
+	return true
+
+
+func _cell_passable(cell: Vector2i) -> bool:
+	if not floor_data.is_walkable(cell):
+		return false
+	if access != null and player_state != null:
+		var door: DoorData = floor_data.get_door_at(cell)
+		if door != null and not access.player_can_pass(door, player_state):
 			return false
 	return true
 

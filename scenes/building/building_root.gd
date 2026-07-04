@@ -30,9 +30,12 @@ var _elevators: ElevatorSystem = ElevatorSystem.new()
 var _aim: ShotAimController = ShotAimController.new()
 var _detection: DetectionResolver = DetectionResolver.new()
 var _hiding: HidingSystem = HidingSystem.new()
+var _access: DoorKeycardSystem = DoorKeycardSystem.new()
 var _cameras: Array[SecurityCamera] = []
 var _guards: Array[Guard] = []
 var _lockers: Array[Locker] = []
+var _doors: Array[Door] = []
+var _keycards: Array[KeycardPickup] = []
 var _hidden: bool = false
 var _hidden_locker: Locker = null
 
@@ -113,6 +116,7 @@ func _regenerate(seed_value: int, random: bool) -> void:
 	_detection.alarm = AlarmState.new()
 
 	_ball.setup(_building, config)
+	_player.configure(_access, _player_state)
 	_player.setup(_building.get_floor(_building.player_start_floor), _building.player_start_cell)
 	_show_floor(_building.player_start_floor)
 
@@ -126,6 +130,7 @@ func _show_floor(index: int) -> void:
 	_spawn_cameras(fd, index)
 	_spawn_guards(fd)
 	_spawn_lockers(fd)
+	_spawn_access(fd)
 
 	var size_px: Vector2 = _renderer.pixel_size()
 	_camera.position = size_px * 0.5
@@ -195,6 +200,47 @@ func _clear_lockers() -> void:
 	_hidden_locker = null
 
 
+func _spawn_access(fd: FloorData) -> void:
+	_clear_access()
+	for door_data: DoorData in fd.doors:
+		var door: Door = Door.new()
+		door.z_index = 2
+		door.setup(door_data)
+		add_child(door)
+		_doors.append(door)
+	for card_data: KeycardData in fd.keycards:
+		if card_data.collected:
+			continue
+		var card: KeycardPickup = KeycardPickup.new()
+		card.z_index = 2
+		card.setup(card_data)
+		add_child(card)
+		_keycards.append(card)
+
+
+func _clear_access() -> void:
+	for door in _doors:
+		door.queue_free()
+	_doors.clear()
+	for card in _keycards:
+		card.queue_free()
+	_keycards.clear()
+
+
+## Auto-collects keycards under the player and opens accessible doors the player
+## steps onto. Called each frame during normal play.
+func _process_access() -> void:
+	var cell: Vector2i = _player.current_cell()
+	for i in range(_keycards.size() - 1, -1, -1):
+		var card: KeycardPickup = _keycards[i]
+		if card.data.position == cell and _access.try_collect(card.data, _player_state):
+			card.queue_free()
+			_keycards.remove_at(i)
+	for door in _doors:
+		if door.data.position == cell and _access.open_if_allowed(door.data, _player_state):
+			door.refresh()
+
+
 func _locker_at(cell: Vector2i) -> Locker:
 	for locker in _lockers:
 		if locker.cell == cell:
@@ -230,6 +276,9 @@ func _physics_process(delta: float) -> void:
 		_player.move(intent.move, delta)
 		if intent.interact_pressed:
 			_handle_interact()
+
+	if not _run_over() and not _hidden:
+		_process_access()
 
 	_run_detection(delta)
 	if not _run_over():
@@ -423,9 +472,10 @@ func _update_hud() -> void:
 	elif bf != pf:
 		status = "\n(ball is on floor %d — find an elevator route down)" % bf
 
-	_hud.text = "seed %d   HP %d/%d   shots %d   %s\nplayer floor %d/%d   ball floor %d   guards %d%s" % [
+	var cards: String = str(_player_state.keycards_held) if not _player_state.keycards_held.is_empty() else "none"
+	_hud.text = "seed %d   HP %d/%d   shots %d   %s\nplayer floor %d/%d   ball floor %d   guards %d   cards %s%s" % [
 		_building.seed_used, _player_state.health, _player_state.max_health, _shots_taken, _alarm_text(pf),
-		pf, _building.final_floor_index(), bf, _guards.size(), status,
+		pf, _building.final_floor_index(), bf, _guards.size(), cards, status,
 	]
 
 

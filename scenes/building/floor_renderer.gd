@@ -21,8 +21,6 @@ const COL_HOLE: Color = Color(0.0, 0.0, 0.0)
 const COL_HOLE_RING: Color = Color(0.9, 0.9, 0.95)
 const COL_CONDUIT: Color = Color(0.95, 0.55, 0.15)
 const COL_ELEVATOR: Color = Color(0.25, 0.55, 0.95)
-const COL_DOOR: Color = Color(0.85, 0.2, 0.25)
-const COL_KEYCARD: Color = Color(0.95, 0.85, 0.2)
 const COL_PLAYER_START: Color = Color(0.3, 0.9, 0.4)
 const COL_TEXT: Color = Color(1, 1, 1, 0.9)
 
@@ -55,9 +53,8 @@ func _draw() -> void:
 	# Camera zones are drawn by live SecurityCamera nodes (Phase 7), not here.
 	_draw_holes_and_conduits()
 	_draw_elevators()
-	_draw_doors()
-	_draw_keycards()
-	# Guards are drawn by live Guard nodes (Phase 8), not here.
+	# Doors, keycards, guards, cameras and lockers are drawn by their own live
+	# nodes (Phases 7–10) so they can reflect dynamic state.
 	_draw_player_start()
 
 
@@ -102,23 +99,6 @@ func _draw_elevators() -> void:
 		draw_rect(rect, COL_ELEVATOR, true)
 		draw_rect(rect, Color.WHITE, false, 2.0)
 		_label(pos, "E")
-
-
-func _draw_doors() -> void:
-	for door: DoorData in _floor.doors:
-		draw_rect(_cell_rect(door.position).grow(-8), COL_DOOR, true)
-		_label(door.position, "L%d" % door.required_access_level)
-
-
-func _draw_keycards() -> void:
-	for card: KeycardData in _floor.keycards:
-		var ctr: Vector2 = _cell_center(card.position)
-		var r: float = CELL_SIZE * 0.28
-		var pts: PackedVector2Array = [
-			ctr + Vector2(0, -r), ctr + Vector2(r, 0), ctr + Vector2(0, r), ctr + Vector2(-r, 0)
-		]
-		draw_colored_polygon(pts, COL_KEYCARD)
-		_label(card.position, "%d" % card.access_level)
 
 
 func _draw_player_start() -> void:
